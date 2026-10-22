@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" aria-label="Agent runtime loop">
+  <rect width="720" height="240" fill="#08090b"/>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#6b6a66">
+    <text x="24" y="28" letter-spacing="2">RUNTIME · LOOP &amp; BOUNDARIES</text>
+  </g>
+  <g stroke="#23252b" stroke-width="1"><line x1="24" y1="44" x2="696" y2="44"/></g>
+  <g font-family="-apple-system, Segoe UI, sans-serif" font-size="12.5">
+    <rect x="24" y="80" width="120" height="44" rx="3" fill="#121317" stroke="#2f3540"/>
+    <text x="44" y="107" fill="#6ea8c8">model</text>
+
+    <rect x="176" y="80" width="120" height="44" rx="3" fill="#121317" stroke="#35302a"/>
+    <text x="196" y="107" fill="#d8a657">tool call</text>
+
+    <rect x="328" y="80" width="140" height="44" rx="3" fill="#121317" stroke="#3a2c2c"/>
+    <text x="348" y="107" fill="#c9706b">permission</text>
+
+    <rect x="500" y="80" width="150" height="44" rx="3" fill="#121317" stroke="#2c3a2c"/>
+    <text x="520" y="107" fill="#7fa87f">result</text>
+  </g>
+  <g stroke="#7d6335" stroke-width="1.2" fill="none">
+    <path d="M144 102 H176"/>
+    <path d="M296 102 H328"/>
+    <path d="M468 102 H500"/>
+  </g>
+  <g fill="#7d6335">
+    <path d="M172 99 L178 102 L172 105 Z"/>
+    <path d="M324 99 L330 102 L324 105 Z"/>
+    <path d="M496 99 L502 102 L496 105 Z"/>
+  </g>
+  <g stroke="#2f3540" stroke-width="1" fill="none" stroke-dasharray="4 4">
+    <path d="M575 124 V170 H84 V124"/>
+  </g>
+  <g fill="#2f3540"><path d="M81 128 L84 122 L87 128 Z"/></g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#4a4d55">
+    <text x="300" y="186">loop carries context forward — the accumulation is the risk</text>
+    <text x="24" y="218">approval persists · rules outlive the task that justified them</text>
+  </g>
+</svg>

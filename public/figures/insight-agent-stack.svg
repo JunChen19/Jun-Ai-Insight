@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" width="720" height="260" role="img" aria-label="Agent stack map">
+  <rect width="720" height="260" fill="#08090b"/>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#6b6a66">
+    <text x="24" y="28" letter-spacing="2">AGENT STACK · LAYERS</text>
+  </g>
+  <g stroke="#23252b" stroke-width="1">
+    <line x1="24" y1="44" x2="696" y2="44"/>
+  </g>
+  <g font-family="-apple-system, Segoe UI, sans-serif" font-size="13">
+    <g>
+      <rect x="24" y="62" width="200" height="46" rx="3" fill="#121317" stroke="#2f3540"/>
+      <text x="40" y="90" fill="#6ea8c8">Interface</text>
+      <text x="120" y="90" fill="#4a4d55" font-size="11">human ↔ agent</text>
+    </g>
+    <g>
+      <rect x="236" y="62" width="200" height="46" rx="3" fill="#121317" stroke="#35302a"/>
+      <text x="252" y="90" fill="#d8a657">Harness</text>
+      <text x="318" y="90" fill="#4a4d55" font-size="11">permissions</text>
+    </g>
+    <g>
+      <rect x="448" y="62" width="248" height="46" rx="3" fill="#121317" stroke="#3a2c2c"/>
+      <text x="464" y="90" fill="#c9706b">Context intake</text>
+      <text x="562" y="90" fill="#4a4d55" font-size="11">repos / docs / web</text>
+    </g>
+  </g>
+  <g stroke="#7d6335" stroke-width="1" stroke-dasharray="3 4">
+    <line x1="224" y1="85" x2="236" y2="85"/>
+    <line x1="436" y1="85" x2="448" y2="85"/>
+  </g>
+  <g stroke="#23252b" stroke-width="1">
+    <line x1="24" y1="132" x2="696" y2="132"/>
+  </g>
+  <g font-family="-apple-system, Segoe UI, sans-serif" font-size="13">
+    <g>
+      <rect x="24" y="150" width="150" height="46" rx="3" fill="#121317" stroke="#23252b"/>
+      <text x="40" y="178" fill="#9b9a95">Post-training</text>
+    </g>
+    <g>
+      <rect x="186" y="150" width="150" height="46" rx="3" fill="#121317" stroke="#23252b"/>
+      <text x="202" y="178" fill="#9b9a95">Rollout</text>
+    </g>
+    <g>
+      <rect x="348" y="150" width="150" height="46" rx="3" fill="#121317" stroke="#23252b"/>
+      <text x="364" y="178" fill="#9b9a95">Serving</text>
+    </g>
+    <g>
+      <rect x="510" y="150" width="186" height="46" rx="3" fill="#121317" stroke="#23252b"/>
+      <text x="526" y="178" fill="#9b9a95">KV cache / transport</text>
+    </g>
+  </g>
+  <g stroke="#1a1c21" stroke-width="1">
+    <line x1="174" y1="173" x2="186" y2="173"/>
+    <line x1="336" y1="173" x2="348" y2="173"/>
+    <line x1="498" y1="173" x2="510" y2="173"/>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#4a4d55">
+    <text x="24" y="228">refit boundary</text>
+    <text x="186" y="228">token-level opt</text>
+    <text x="348" y="228">batching · scheduling</text>
+    <text x="510" y="228">prefix residency</text>
+  </g>
+</svg>

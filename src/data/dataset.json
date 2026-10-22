@@ -1,0 +1,576 @@
+{
+  "generatedAt": "2026-10-20T00:00:00Z",
+  "radar": [
+    {
+      "name": "Hugging Face Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "desc": { "en": "Daily paper discovery; follow through to arXiv and code.", "zh": "每日论文发现；跟进到 arXiv 与代码仓库。" },
+      "tier": "primary", "cadence": "daily", "beats": ["rl", "agents"]
+    },
+    {
+      "name": "arXiv cs.LG / cs.AI / cs.DC",
+      "url": "https://arxiv.org/list/cs.LG/recent",
+      "desc": { "en": "Algorithms, agent learning, distributed systems.", "zh": "算法、智能体学习、分布式系统。" },
+      "tier": "primary", "cadence": "daily", "beats": ["rl", "ai-infra"]
+    },
+    {
+      "name": "verl releases",
+      "url": "https://github.com/volcengine/verl/releases",
+      "desc": { "en": "Distributed post-training, estimators, rollout backends.", "zh": "分布式后训练、估计器、rollout 后端。" },
+      "tier": "primary", "cadence": "daily", "beats": ["rl"]
+    },
+    {
+      "name": "vLLM blog + releases",
+      "url": "https://github.com/vllm-project/vllm/releases",
+      "desc": { "en": "Serving architecture, KV transport, measured results.", "zh": "推理架构、KV 传输、实测结果。" },
+      "tier": "primary", "cadence": "daily", "beats": ["ai-infra"]
+    },
+    {
+      "name": "SGLang releases",
+      "url": "https://github.com/sgl-project/sglang/releases",
+      "desc": { "en": "Agent serving, radix cache, speculative decode, disaggregation.", "zh": "智能体推理、radix 缓存、投机解码、分离式部署。" },
+      "tier": "primary", "cadence": "daily", "beats": ["ai-infra"]
+    },
+    {
+      "name": "MCP specification",
+      "url": "https://modelcontextprotocol.io/",
+      "desc": { "en": "Transports, authorization, Tasks, identity.", "zh": "传输、授权、Tasks、身份。" },
+      "tier": "primary", "cadence": "daily", "beats": ["agents"]
+    },
+    {
+      "name": "Claude Code docs",
+      "url": "https://docs.claude.com/en/docs/claude-code/overview",
+      "desc": { "en": "Skills, hooks, permissions, MCP, headless and CI usage.", "zh": "技能、钩子、权限、MCP、无头与 CI 用法。" },
+      "tier": "primary", "cadence": "weekly", "beats": ["ai-coding", "agents"]
+    },
+    {
+      "name": "SWE-bench / Terminal-Bench / OSWorld",
+      "url": "https://www.swebench.com/",
+      "desc": { "en": "Job-specific results with harness and eval context.", "zh": "具体任务的结果，附带评测框架与语境。" },
+      "tier": "primary", "cadence": "weekly", "beats": ["agents", "ai-coding"]
+    },
+    {
+      "name": "AlphaSignal",
+      "url": "https://alphasignal.ai/",
+      "desc": { "en": "Trending paper, model and repo discovery. Leads only.", "zh": "热门论文、模型与仓库发现。仅作线索。" },
+      "tier": "signal", "cadence": "daily", "beats": ["agents", "rl"]
+    },
+    {
+      "name": "Latent Space",
+      "url": "https://www.latent.space/",
+      "desc": { "en": "Builder interviews and long-form engineering context.", "zh": "一线构建者访谈与长篇工程语境。" },
+      "tier": "signal", "cadence": "weekly", "beats": ["ai-coding", "agents"]
+    },
+    {
+      "name": "机器之心 / 量子位",
+      "url": "https://www.jiqizhixin.com/",
+      "desc": { "en": "China-market lead discovery; always follow to primaries.", "zh": "中文市场线索发现；务必回到原始件。" },
+      "tier": "signal", "cadence": "daily", "beats": ["rl", "multimodal"]
+    },
+    {
+      "name": "Lil'Log / Karpathy / Simon Willison",
+      "url": "https://lilianweng.github.io/",
+      "desc": { "en": "Durable mental models and practitioner interpretation.", "zh": "长期有效的思维模型与工程解读。" },
+      "tier": "context", "cadence": "weekly", "beats": ["rl", "agents"]
+    }
+  ],
+  "stories": [
+    {
+      "id": "harness-privilege-escalation",
+      "sample": true,
+      "title": {
+        "en": "From Approval to Abuse: privilege escalation through agent-proposed allow-rules",
+        "zh": "从审批到滥用：智能体自提的放行规则如何变成提权入口"
+      },
+      "standfirst": {
+        "en": "Approval fatigue is not a human-factors footnote — it is the mechanism by which a harness-protected coding agent gets talked into widening its own permissions.",
+        "zh": "审批疲劳不是一个可忽略的人因细节，它正是受权限保护的编程智能体被说服放宽自身权限的具体机制。"
+      },
+      "how": {
+        "en": "The agent proposes a permission rule, the human approves it under load, and the rule persists beyond the task that motivated it. Repeated across a session, the approved rule set becomes an attack surface an injected instruction can exploit.",
+        "zh": "智能体提出一条权限规则，人在疲劳状态下批准，规则则存续到触发它的任务之外。在一个会话里重复若干次后，被批准的规则集就成了注入指令可以利用的攻击面。"
+      },
+      "why": {
+        "en": "Treat the approval prompt as a security boundary that itself needs a design review, not as a UI affordance. Any harness that lets the agent author its own allow-rules inherits this class of vulnerability.",
+        "zh": "审批提示本身需要一次安全设计评审，而不是当成一个界面便捷功能。任何允许智能体自行编写放行规则的框架，都会继承这一类漏洞。"
+      },
+      "where": {
+        "en": "Coding agents with persisted tool permissions. Bounds: results come from preprint evaluation; do not generalise to harnesses that scope rules per-task or re-prompt on reuse.",
+        "zh": "适用于带持久化工具权限的编程智能体。边界：结论来自预印本评测；不要推广到按任务隔离规则、或在复用时重新询问的框架。"
+      },
+      "figure": "insight-agent-runtime",
+      "beats": ["ai-coding", "agents"],
+      "kinds": ["paper"],
+      "tags": ["agent-security", "permissions", "approval-fatigue"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "arXiv", "url": "https://arxiv.org/list/cs.CR/recent", "date": "2026-10-16", "tier": "primary", "kind": "paper" },
+        { "name": "AlphaSignal", "url": "https://alphasignal.ai/", "date": "2026-10-17", "tier": "signal", "kind": "blog" }
+      ]
+    },
+    {
+      "id": "repo-poisoning-toolchain",
+      "sample": true,
+      "title": {
+        "en": "Repository poisoning targets the agent's context, not its weights",
+        "zh": "仓库投毒瞄准的是智能体的上下文，而不是它的权重"
+      },
+      "standfirst": {
+        "en": "A poisoning framework that plants instructions in repository files an agent will read — the training-time threat model, moved to inference time.",
+        "zh": "一个投毒框架，把指令埋进智能体会读取的仓库文件里——把训练期的威胁模型搬到了推理期。"
+      },
+      "how": {
+        "en": "Poisoned issues, comments and docs enter the context window during a legitimate-looking task. The agent executes the planted instruction with whatever permissions it already holds; no model weights are touched.",
+        "zh": "被污染的 issue、评论与文档在一个看似正常的任务里进入上下文窗口。智能体用它已经持有的权限执行埋入的指令；整个过程不触碰任何模型权重。"
+      },
+      "why": {
+        "en": "Repository read access is effectively code execution for an agent. Review the diff before letting an agent work a fresh clone.",
+        "zh": "对智能体而言，读仓库权限实质上等同于代码执行。让智能体处理一个全新克隆之前，先看过 diff。"
+      },
+      "where": {
+        "en": "Any agent that ingests untrusted repository content. Bounds: samples focus on coding agents; agentic browsers reading arbitrary pages face the same shape with different plumbing.",
+        "zh": "适用于任何会摄入不可信仓库内容的智能体。边界：样本集中在编程智能体；读取任意网页的智能体浏览器是同一形状、不同管道。"
+      },
+      "figure": "insight-eval-map",
+      "beats": ["agents", "ai-coding"],
+      "kinds": ["paper"],
+      "tags": ["prompt-injection", "agent-security", "supply-chain"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "arXiv", "url": "https://arxiv.org/list/cs.CR/recent", "date": "2026-10-16", "tier": "primary", "kind": "paper" }
+      ]
+    },
+    {
+      "id": "kv-residency-agentic-workloads",
+      "sample": true,
+      "title": {
+        "en": "KV residency in production agentic workloads: what four internal traces show",
+        "zh": "生产级智能体负载中的 KV 驻留：四份内部轨迹揭示了什么"
+      },
+      "standfirst": {
+        "en": "Agentic traffic reuses prefixes far more aggressively than chat, which changes what a cache hit is worth.",
+        "zh": "智能体流量对前缀的复用远比对话激进，这直接改变了缓存命中值的定价。"
+      },
+      "how": {
+        "en": "Across coding-agent, deep-research, enterprise-chat and enterprise-assistant traces, a small set of long system-prompt prefixes dominates residency. Eviction policy tuned for chat under-weights exactly those prefixes.",
+        "zh": "在编程智能体、深度研究、企业对话与企业助手四类轨迹中，少数长系统提示前缀主导了驻留时长。为对话场景调优的驱逐策略恰好低估了这些前缀。"
+      },
+      "why": {
+        "en": "Cache-aware routing should key on the dominant prefix, not on round-robin or least-loaded. Measured hit-rate deltas are larger than most serving-config tuning gains.",
+        "zh": "缓存感知路由应以主导前缀为键，而不是轮询或最小负载。实测命中率差异大于多数推理配置调优的收益。"
+      },
+      "where": {
+        "en": "Serving teams running agent frameworks behind a shared gateway. Bounds: traces come from one vendor's family of products; re-measure on your own traffic before adopting eviction thresholds.",
+        "zh": "适用于在共享网关后面跑智能体框架的推理团队。边界：轨迹来自单一厂商的产品族；采纳驱逐阈值前请在自己的流量上重测。"
+      },
+      "figure": "insight-rl-pools",
+      "beats": ["ai-infra"],
+      "kinds": ["paper"],
+      "tags": ["kv-cache", "inference-serving", "tracing"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "arXiv", "url": "https://arxiv.org/list/cs.DC/recent", "date": "2026-10-16", "tier": "primary", "kind": "paper" }
+      ]
+    },
+    {
+      "id": "vllm-release",
+      "sample": true,
+      "title": {
+        "en": "vLLM ships a large maintenance release with first-timer contributor share at record high",
+        "zh": "vLLM 发布大规模维护版本，首次贡献者占比创新高"
+      },
+      "standfirst": {
+        "en": "The headline number is contributor breadth, not features — a signal about how the serving layer is consolidating.",
+        "zh": "值得看的数字是贡献者广度而非功能点——这是推理层正在收敛的一个信号。"
+      },
+      "how": {
+        "en": "A release spanning several hundred commits, the majority of them small fixes to scheduling, request routing and loaders, with a substantial first-time contributor cohort.",
+        "zh": "一个涵盖数百次提交的版本，其中多数是调度、请求路由与加载器的小修，首次贡献者占相当比例。"
+      },
+      "why": {
+        "en": "When the long tail of fixes is community-driven, feature velocity concentrates in a few maintainers. Track the commit authors of the scheduler, not the release notes.",
+        "zh": "当长尾修复由社区驱动时，功能演进速度集中在少数维护者身上。要追踪的是调度器相关提交的作者，而不是发布说明。"
+      },
+      "where": {
+        "en": "Teams pinning a serving stack. Bounds: version numbers and counts in this sample are illustrative; read the actual release notes before upgrading.",
+        "zh": "适用于锁定推理栈版本的团队。边界：此样例中的版本号与计数仅作示意；升级前请阅读真实发布说明。"
+      },
+      "figure": "insight-agent-stack",
+      "beats": ["ai-infra"],
+      "kinds": ["release"],
+      "tags": ["inference-serving", "vllm", "open-source"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "vllm-project/vllm · GitHub", "url": "https://github.com/vllm-project/vllm/releases", "date": "2026-10-18", "tier": "primary", "kind": "release" }
+      ]
+    },
+    {
+      "id": "sglang-release",
+      "sample": true,
+      "title": {
+        "en": "SGLang release adds model coverage and tightens the disaggregation path",
+        "zh": "SGLang 版本扩展模型覆盖，收紧分离式部署路径"
+      },
+      "standfirst": {
+        "en": "Model support lands first; the interesting part is the prefix-cache and prefill/decode separation work underneath it.",
+        "zh": "模型支持先落地；真正值得关注的是它底层的前缀缓存与 prefill/decode 分离工作。"
+      },
+      "how": {
+        "en": "New model architectures are wired into the frontend, while the radix cache and disaggregated serving paths get correctness and backpressure fixes.",
+        "zh": "新模型架构接入前端，同时 radix 缓存与分离式推理路径获得正确性与背压修复。"
+      },
+      "why": {
+        "en": "Agent serving is a prefix-cache problem more than a model-support problem. Judge a release by cache behaviour under multi-turn load.",
+        "zh": "智能体推理更是前缀缓存问题，而非模型支持问题。评估一个版本应当看多轮负载下的缓存行为。"
+      },
+      "where": {
+        "en": "Serving teams running long multi-turn agent sessions. Bounds: model list in this sample is illustrative, not a compatibility claim.",
+        "zh": "适用于运行长多轮智能体会话的推理团队。边界：此样例中的模型清单仅作示意，不构成兼容性声明。"
+      },
+      "figure": "insight-agent-stack",
+      "beats": ["ai-infra", "agents"],
+      "kinds": ["release"],
+      "tags": ["inference-serving", "sglang", "prefix-cache"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "sgl-project/sglang · GitHub", "url": "https://github.com/sgl-project/sglang/releases", "date": "2026-10-19", "tier": "primary", "kind": "release" }
+      ]
+    },
+    {
+      "id": "verl-low-precision-rollout",
+      "sample": true,
+      "title": {
+        "en": "verl unifies low-precision rollout behind one weight-quantization boundary",
+        "zh": "verl 用一条权重量化边界统一低精度 rollout"
+      },
+      "standfirst": {
+        "en": "QAT and low-precision rollout previously met at two different seams; collapsing them into one refit boundary removes a class of silent train/infer mismatch.",
+        "zh": "QAT 与低精度 rollout 原先在两个不同的接缝处相遇；把它们收敛为一条 refit 边界，消除了一类静默的训练/推理不一致。"
+      },
+      "how": {
+        "en": "A refactor puts quantization on the actor side of a single boundary and refits weights through it, so the rollout engine sees exactly the numerics the trainer produced.",
+        "zh": "一次重构把量化放到单一边界的 actor 侧，并通过该边界 refit 权重，使 rollout 引擎看到的数值与训练器产出一致。"
+      },
+      "why": {
+        "en": "Train/infer mismatch shows up as flat reward curves, not as an error. One boundary is far easier to test than two seams that must agree.",
+        "zh": "训练/推理不一致表现为奖励曲线走平，而不是报错。一条可测的边界远比两个必须保持一致的接缝好验证。"
+      },
+      "where": {
+        "en": "Post-training teams running GRPO or PPO with a separate rollout backend. Bounds: verify the refit path against your own importance-sampling ratios before trusting reward deltas.",
+        "zh": "适用于使用独立 rollout 后端运行 GRPO/PPO 的后训练团队。边界：在信任奖励差异之前，先用自己的重要性采样比值验证 refit 路径。"
+      },
+      "figure": "insight-rl-pools",
+      "beats": ["rl", "ai-infra"],
+      "kinds": ["commit"],
+      "tags": ["post-training", "quantization", "grpo", "verl"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "volcengine/verl · GitHub", "url": "https://github.com/volcengine/verl/commits/main", "date": "2026-10-19", "tier": "primary", "kind": "commit" }
+      ]
+    },
+    {
+      "id": "harness-permission-settings",
+      "sample": true,
+      "title": {
+        "en": "Agent CLI tightens hook and permission semantics in a point release",
+        "zh": "某智能体 CLI 在补丁版本中收紧钩子与权限语义"
+      },
+      "standfirst": {
+        "en": "Small release, but it changes when a plugin's hook may fire relative to an already-running earlier plugin — which is exactly the ordering that matters for audit logs.",
+        "zh": "是个小版本，但它改变了插件钩子相对于先前已在运行的插件何时可以触发——而这恰是审计日志最在意的顺序问题。"
+      },
+      "how": {
+        "en": "When a plugin registered earlier skips a hook another plugin modified, the transcript now records the event and the responsible plugin name explicitly.",
+        "zh": "当先注册的插件跳过了另一个插件修改过的钩子时，会话记录现在会显式记下该事件与责任插件名。"
+      },
+      "why": {
+        "en": "Hook ordering bugs are invisible until an audit trail is reconstructed. Naming the plugin turns a silent skip into a diagnosable event.",
+        "zh": "钩子顺序缺陷在重建审计轨迹之前都是不可见的。点出插件名，把一个静默跳过变成了可诊断事件。"
+      },
+      "where": {
+        "en": "Teams running agent CLIs in CI with plugin ecosystems. Bounds: behaviour is version-specific; pin the CLI in CI rather than floating to latest.",
+        "zh": "适用于在 CI 中运行带插件生态的智能体 CLI 的团队。边界：行为与版本强相关；CI 里应锁定版本而不是浮动到 latest。"
+      },
+      "figure": "insight-agent-runtime",
+      "beats": ["ai-coding", "agents"],
+      "kinds": ["changelog"],
+      "tags": ["hooks", "observability", "cli"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "anthropics/claude-code · GitHub", "url": "https://github.com/anthropics/claude-code/releases", "date": "2026-10-19", "tier": "primary", "kind": "changelog" }
+      ]
+    },
+    {
+      "id": "thin-orchestrator-pattern",
+      "sample": true,
+      "title": {
+        "en": "The thin orchestrator: routing and reliability checks, not reasoning",
+        "zh": "薄编排层：只做路由与可靠性检查，不做推理"
+      },
+      "standfirst": {
+        "en": "A production multi-agent design where the coordinator is deliberately kept dumb — about a thousand lines that fan work out to context-isolated sub-agents.",
+        "zh": "一种生产级多智能体设计，协调者被刻意做得很“笨”——约一千行代码，把任务扇出到上下文隔离的子智能体。"
+      },
+      "how": {
+        "en": "The orchestrator owns only routing, retry and reliability checks; each sub-agent gets an isolated context and cannot see its siblings' history. Coordination happens through explicit payloads.",
+        "zh": "编排层只负责路由、重试与可靠性检查；每个子智能体拥有隔离上下文，看不到兄弟智能体的历史。协调通过显式负载完成。"
+      },
+      "why": {
+        "en": "Context isolation is the reliability feature, not a performance trick. Bloated orchestrators fail by accumulating history they cannot summarise.",
+        "zh": "上下文隔离本身才是可靠性特性，不是性能技巧。臃肿的编排层死于累积了无法归纳的历史。"
+      },
+      "where": {
+        "en": "Teams scaling from one agent to a fan-out topology. Bounds: line counts and agent counts come from a single vendor blog post describing one workload; do not treat them as a target.",
+        "zh": "适用于从单智能体扩展到扇出拓扑的团队。边界：行数与智能体数量来自单一厂商描述单一负载的博文；不要把它们当成目标值。"
+      },
+      "figure": "insight-agent-runtime",
+      "beats": ["agents"],
+      "kinds": ["blog"],
+      "tags": ["orchestration", "context-isolation", "architecture"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "Meta Engineering Blog (RSS)", "url": "https://engineering.fb.com/", "date": "2026-10-19", "tier": "primary", "kind": "blog" },
+        { "name": "Hacker News", "url": "https://news.ycombinator.com/", "date": "2026-10-19", "tier": "signal", "kind": "blog" }
+      ]
+    },
+    {
+      "id": "dhs-procurement-order",
+      "sample": true,
+      "title": {
+        "en": "Federal procurement order extends to third-party builds, not just direct downloads",
+        "zh": "联邦采购禁令覆盖第三方构建，而不只是直接下载"
+      },
+      "standfirst": {
+        "en": "The compliance question is provenance of weights, and most enterprise MLOps inventory has no field for it.",
+        "zh": "合规问题问的是权重的来源，而多数企业 MLOps 的资产清单里根本没有这个字段。"
+      },
+      "how": {
+        "en": "The order directs civilian agencies to stop procuring and to remove covered products, explicitly including builds redistributed through third parties.",
+        "zh": "该命令要求民用机构停止采购并移除受约束产品，并明确包含经由第三方再分发的构建。"
+      },
+      "why": {
+        "en": "Model-provenance tracking moves from nice-to-have to procurement gate. If you cannot name the base weights of every model in production, this is a finding.",
+        "zh": "模型来源追踪从“有了更好”变成了采购准入门槛。如果你说不出生产环境每个模型的基座权重，这就已经是一条整改项。"
+      },
+      "where": {
+        "en": "US federal contractors and anyone selling into them. Bounds: procedural detail governs scope — read the order text before acting; this summary is not legal advice.",
+        "zh": "适用于美国联邦承包商及其供应链。边界：具体范围由程序性条款决定——行动前先读命令原文；本摘要不构成法律意见。"
+      },
+      "figure": "insight-eval-map",
+      "beats": ["policy"],
+      "kinds": ["policy"],
+      "tags": ["procurement", "provenance", "compliance"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "Hacker News", "url": "https://news.ycombinator.com/", "date": "2026-10-19", "tier": "signal", "kind": "blog" },
+        { "name": "AIHOT", "url": "https://aihot.virxact.com/", "date": "2026-10-19", "tier": "signal", "kind": "blog" }
+      ]
+    },
+    {
+      "id": "mcp-tasks-identity",
+      "sample": true,
+      "title": {
+        "en": "MCP's Tasks and identity work is where agent interoperability actually gets decided",
+        "zh": "MCP 的 Tasks 与身份工作是智能体互操作性真正的决胜点"
+      },
+      "standfirst": {
+        "en": "Transport and tool-calling are settled enough; the open questions are long-running task semantics and whose identity a delegated call carries.",
+        "zh": "传输与工具调用已经足够稳定；真正悬而未决的是长任务语义，以及一次委派调用究竟携带谁的身份。"
+      },
+      "how": {
+        "en": "Tasks introduce a handle for work that outlives a single request; identity work defines how authorization propagates when a server acts on behalf of an agent that was itself delegated to.",
+        "zh": "Tasks 引入一个可跨越单次请求存活的任务句柄；身份工作则定义当服务器代表一个本身已被委派的智能体行动时，授权如何传递。"
+      },
+      "why": {
+        "en": "Delegation chains are the attack surface of every multi-agent system. Get the identity model wrong and every downstream tool trusts a chain it never audited.",
+        "zh": "委派链是每个多智能体系统的攻击面。身份模型一旦出错，下游每个工具都会信任一条它从未审计过的链。"
+      },
+      "where": {
+        "en": "Anyone shipping a tool server or agent gateway. Bounds: the spec moves; pin to a revision and track the changelog rather than reading one snapshot.",
+        "zh": "适用于交付工具服务器或智能体网关的人。边界：规范在演进；应锁定某个修订版并追踪变更日志，而非只看一份快照。"
+      },
+      "figure": "insight-agent-stack",
+      "beats": ["agents", "policy"],
+      "kinds": ["spec"],
+      "tags": ["mcp", "authorization", "interop"],
+      "issue": "2026-10-20-daily",
+      "sources": [
+        { "name": "MCP specification", "url": "https://modelcontextprotocol.io/", "date": "2026-10-15", "tier": "primary", "kind": "spec" }
+      ]
+    },
+    {
+      "id": "terminal-bench-harness-context",
+      "sample": true,
+      "title": {
+        "en": "Terminal-agent benchmark scores mean little without the harness written next to them",
+        "zh": "不写下评测框架，终端智能体的基准分数意义有限"
+      },
+      "standfirst": {
+        "en": "The same model moves several points depending on retry budget, timeout and how much of the filesystem the harness pre-reads.",
+        "zh": "同一模型会随重试预算、超时设置和框架预读多少文件系统而移动数个百分点。"
+      },
+      "how": {
+        "en": "Benchmark reports vary in retry allowance, wall-clock budget and context injection. None of those are model properties, yet all are folded into the headline number.",
+        "zh": "基准报告在重试允许次数、墙钟预算与上下文注入上各不相同。这些都不是模型属性，却全被折进了头条分数。"
+      },
+      "why": {
+        "en": "Read benchmark tables for the harness column before the model column. A two-point gap inside the harness variance is not a finding.",
+        "zh": "读基准表格时先看框架那一列，再看模型那一列。落在框架方差内的两个百分点差距不构成结论。"
+      },
+      "where": {
+        "en": "Evaluation teams and anyone quoting a terminal-agent score in a deck. Bounds: variance magnitudes are workload-specific; measure your own before setting a decision threshold.",
+        "zh": "适用于评测团队，以及任何要在汇报里引用终端智能体分数的人。边界：方差量级与负载相关；在设定决策阈值前先自测。"
+      },
+      "figure": "insight-eval-map",
+      "beats": ["agents", "ai-coding"],
+      "kinds": ["benchmark", "paper"],
+      "tags": ["evaluation", "benchmarks", "reproducibility"],
+      "issue": "2026-10-19-daily",
+      "sources": [
+        { "name": "Terminal-Bench", "url": "https://www.tbench.ai/", "date": "2026-10-14", "tier": "primary", "kind": "benchmark" },
+        { "name": "SWE-bench", "url": "https://www.swebench.com/", "date": "2026-10-14", "tier": "primary", "kind": "benchmark" }
+      ]
+    },
+    {
+      "id": "grpo-importance-sampling-drift",
+      "sample": true,
+      "title": {
+        "en": "Importance-sampling ratios drift when the rollout engine and trainer disagree on numerics",
+        "zh": "当 rollout 引擎与训练器数值不一致时，重要性采样比值会漂移"
+      },
+      "standfirst": {
+        "en": "A flat reward curve with rising ratio variance is the signature of a train/infer mismatch, not of a bad dataset.",
+        "zh": "奖励曲线走平、同时比值方差上升，是训练/推理不一致的典型特征，而不是数据问题。"
+      },
+      "how": {
+        "en": "Log-probabilities from the serving engine and the trainer diverge slightly, so the ratio between them is biased. Clipping then masks a growing fraction of tokens, and the effective gradient shrinks.",
+        "zh": "推理引擎与训练器给出的对数概率存在细微差异，两者之比因此有偏。裁剪随后屏蔽掉越来越多的 token，有效梯度随之收缩。"
+      },
+      "why": {
+        "en": "Instrument the ratio distribution, not just the reward. Track clipped-token fraction as a first-class metric — it fails before the reward does.",
+        "zh": "要监控比值分布，而不只是奖励。把被裁剪 token 的比例作为一等指标——它比奖励更早失效。"
+      },
+      "where": {
+        "en": "GRPO/PPO post-training with a separate inference engine. Bounds: acceptable ratio variance depends on your clipping configuration; calibrate rather than adopting a published threshold.",
+        "zh": "适用于使用独立推理引擎的 GRPO/PPO 后训练。边界：可接受的比值方差取决于你的裁剪配置；应自行标定，而不是照搬公开阈值。"
+      },
+      "figure": "insight-rl-pools",
+      "beats": ["rl"],
+      "kinds": ["paper"],
+      "tags": ["grpo", "importance-sampling", "train-infer-consistency"],
+      "issue": "2026-10-19-daily",
+      "sources": [
+        { "name": "arXiv", "url": "https://arxiv.org/list/cs.LG/recent", "date": "2026-10-15", "tier": "primary", "kind": "paper" }
+      ]
+    },
+    {
+      "id": "doc-parsing-multimodal",
+      "sample": true,
+      "title": {
+        "en": "Document-parsing models are quietly setting the ceiling on multimodal agent accuracy",
+        "zh": "文档解析模型正在悄悄决定多模态智能体的准确率上限"
+      },
+      "standfirst": {
+        "en": "In end-to-end document workflows, the parser's table fidelity limits downstream reasoning more than the reasoning model does.",
+        "zh": "在端到端文档流程里，解析器的表格保真度比推理模型本身更限制下游推理。"
+      },
+      "how": {
+        "en": "Errors introduced at layout parsing — merged cells, dropped footnotes, broken reading order — are not recoverable by a downstream model, and they dominate the failure modes in measured pipelines.",
+        "zh": "版式解析阶段引入的错误——合并单元格、丢失脚注、阅读顺序错乱——下游模型无法恢复，且在实测流程的失效模式中占主导。"
+      },
+      "why": {
+        "en": "Budget engineering effort at the parser before swapping the reasoning model. Evaluate the pipeline end to end, with layout-heavy documents.",
+        "zh": "在更换推理模型之前，先把工程投入放在解析器上。要用版式复杂的文档做端到端评测。"
+      },
+      "where": {
+        "en": "Teams building document-grounded agents. Bounds: results depend heavily on document family; a parser that leads on academic PDFs may not lead on forms.",
+        "zh": "适用于构建文档接地智能体的团队。边界：结论与文档族高度相关；在学术 PDF 上领先的解析器未必在表单上领先。"
+      },
+      "figure": "insight-eval-map",
+      "beats": ["multimodal", "agents"],
+      "kinds": ["paper", "benchmark"],
+      "tags": ["document-parsing", "ocr", "evaluation"],
+      "issue": "2026-10-19-daily",
+      "sources": [
+        { "name": "arXiv", "url": "https://arxiv.org/list/cs.CV/recent", "date": "2026-10-13", "tier": "primary", "kind": "paper" },
+        { "name": "机器之心", "url": "https://www.jiqizhixin.com/", "date": "2026-10-14", "tier": "signal", "kind": "blog" }
+      ]
+    }
+  ],
+  "issues": [
+    {
+      "id": "2026-10-20-daily",
+      "date": "2026-10-20",
+      "headline": {
+        "en": "The permission layer becomes the attack surface",
+        "zh": "权限层成了攻击面"
+      },
+      "dek": {
+        "en": "This cycle's substance is not a model launch. It is a set of findings converging on one idea: the harness's own safeguards are the exploit path.",
+        "zh": "本轮真正的内容不是某个模型发布，而是一组指向同一结论的发现：框架自身的安全机制就是攻击路径。"
+      },
+      "deskTake": [
+        {
+          "en": "Two preprints land on the same point from opposite directions. One shows approval fatigue converting a human safeguard into a rubber stamp; the other shows an agent's read access to a repository being effectively code execution. Together they bracket the harness: what the human approves, and what the agent ingests.",
+          "zh": "两篇预印本从相反方向落到同一点。一篇表明审批疲劳把人这一侧的保障变成了橡皮图章；另一篇表明智能体对仓库的读权限实质上就是代码执行。合起来，它们夹住了框架的两端：人批准了什么，智能体摄入了什么。"
+        },
+        {
+          "en": "On the infra side the story is consolidation rather than novelty — a serving release whose headline is contributor breadth, and a post-training refactor that removes a seam instead of adding a feature. Both are the kind of change that matters six months later and reads as boring now.",
+          "zh": "基础设施侧的故事是收敛而不是新奇——一个以贡献者广度而非功能为头条的推理版本，以及一次去掉接缝而非增加功能的后训练重构。这两类改动半年后才见真章，此刻读起来很无聊。"
+        },
+        {
+          "en": "The policy item is the one most likely to be misread. The scope is set by procedural text, not by the summary circulating in group chats; anyone selling into federal buyers should read the order itself before rewriting an inventory.",
+          "zh": "政策那条最容易被误读。范围由程序性文本界定，而不是群聊里流传的摘要；任何面向联邦买家的供应商，在重写资产清单之前都应该读命令原文。"
+        }
+      ],
+      "signals": [
+        { "storyId": "harness-privilege-escalation", "text": { "en": "Agent-authored allow-rules widen permissions faster than review catches up.", "zh": "智能体自写的放行规则扩散得比人工审查更快。" } },
+        { "storyId": "repo-poisoning-toolchain", "text": { "en": "Poisoning moves to inference time; no weights are touched.", "zh": "投毒转向推理期；不触碰任何权重。" } },
+        { "storyId": "verl-low-precision-rollout", "text": { "en": "One refit boundary replaces two seams in QAT rollout.", "zh": "QAT rollout 中的两条接缝被一条 refit 边界取代。" } },
+        { "storyId": "vllm-release", "text": { "en": "Hundreds of commits, mostly small fixes, many first-time authors.", "zh": "数百次提交，多为小修，首次贡献者众多。" } },
+        { "storyId": "dhs-procurement-order", "text": { "en": "Third-party builds are in scope — provenance becomes a gate.", "zh": "第三方构建被纳入范围——来源成了准入门槛。" } }
+      ],
+      "sections": [
+        { "beat": "ai-coding", "storyIds": ["harness-privilege-escalation", "harness-permission-settings", "repo-poisoning-toolchain"] },
+        { "beat": "agents", "storyIds": ["thin-orchestrator-pattern", "mcp-tasks-identity", "repo-poisoning-toolchain"] },
+        { "beat": "rl", "storyIds": ["verl-low-precision-rollout"] },
+        { "beat": "ai-infra", "storyIds": ["kv-residency-agentic-workloads", "vllm-release", "sglang-release"] },
+        { "beat": "policy", "storyIds": ["dhs-procurement-order"] }
+      ],
+      "tags": ["agent-security", "rl-infra", "inference-serving", "ai-coding", "policy"]
+    },
+    {
+      "id": "2026-10-19-daily",
+      "date": "2026-10-19",
+      "headline": {
+        "en": "Scores without harnesses are not results",
+        "zh": "没有评测框架的分数算不上结果"
+      },
+      "dek": {
+        "en": "Benchmark numbers, parser ceilings and ratio drift: three ways the measurement instrument, not the model, decides the conclusion.",
+        "zh": "基准分数、解析器上限与比值漂移：三种由测量工具而非模型本身决定结论的路径。"
+      },
+      "deskTake": [
+        {
+          "en": "Three items today share a failure mode: the number being reported is a property of the apparatus. Benchmark harness variance, document-parser fidelity, and log-probability drift between trainer and serving engine all silently set the ceiling on what a result can mean.",
+          "zh": "今天三条共享同一个失效模式：被报告的数字其实是装置本身的属性。基准框架的方差、文档解析器的保真度、训练器与推理引擎之间的对数概率漂移，都在悄悄决定一个结论所能达到的上限。"
+        },
+        {
+          "en": "The practical instruction is unglamorous: instrument the apparatus. Report the harness alongside the score, the parser alongside the pipeline, and clipped-token fraction alongside the reward.",
+          "zh": "实用建议并不光鲜：把装置也测起来。报告分数时一并报告框架，报告流程时一并报告解析器，报告奖励时一并报告被裁剪 token 的比例。"
+        }
+      ],
+      "signals": [
+        { "storyId": "terminal-bench-harness-context", "text": { "en": "Same model, several points apart across harnesses.", "zh": "同一模型在不同框架下相差数个百分点。" } },
+        { "storyId": "grpo-importance-sampling-drift", "text": { "en": "Rising ratio variance is the early warning, not the reward.", "zh": "上升的比值方差是预警信号，而不是奖励。" } },
+        { "storyId": "doc-parsing-multimodal", "text": { "en": "The parser, not the reasoner, caps document-agent accuracy.", "zh": "决定文档智能体准确率上限的是解析器，不是推理模型。" } }
+      ],
+      "sections": [
+        { "beat": "agents", "storyIds": ["terminal-bench-harness-context"] },
+        { "beat": "rl", "storyIds": ["grpo-importance-sampling-drift"] },
+        { "beat": "multimodal", "storyIds": ["doc-parsing-multimodal"] }
+      ],
+      "tags": ["evaluation", "grpo", "document-parsing"]
+    }
+  ]
+}

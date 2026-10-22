@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" aria-label="Evaluation map">
+  <rect width="720" height="240" fill="#08090b"/>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#6b6a66">
+    <text x="24" y="28" letter-spacing="2">MEASUREMENT · WHERE THE NUMBER COMES FROM</text>
+  </g>
+  <g stroke="#23252b" stroke-width="1"><line x1="24" y1="44" x2="696" y2="44"/></g>
+  <g stroke="#23252b" stroke-width="1">
+    <line x1="24" y1="150" x2="696" y2="150"/>
+    <line x1="24" y1="100" x2="696" y2="100" stroke-dasharray="2 6"/>
+    <line x1="24" y1="200" x2="696" y2="200" stroke-dasharray="2 6"/>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#4a4d55">
+    <text x="600" y="96">ceiling</text>
+    <text x="600" y="146">reported</text>
+    <text x="600" y="196">floor</text>
+  </g>
+  <g>
+    <rect x="60" y="112" width="30" height="38" fill="#2f3540"/>
+    <rect x="110" y="104" width="30" height="46" fill="#2f3540"/>
+    <rect x="160" y="118" width="30" height="32" fill="#2f3540"/>
+    <rect x="210" y="96" width="30" height="54" fill="#35302a"/>
+    <rect x="260" y="108" width="30" height="42" fill="#35302a"/>
+    <rect x="310" y="88" width="30" height="62" fill="#35302a"/>
+    <rect x="360" y="116" width="30" height="34" fill="#2c3a2c"/>
+    <rect x="410" y="100" width="30" height="50" fill="#2c3a2c"/>
+    <rect x="460" y="110" width="30" height="40" fill="#3a2c2c"/>
+  </g>
+  <g font-family="-apple-system, Segoe UI, sans-serif" font-size="11" fill="#6b6a66">
+    <text x="60" y="226">harness</text>
+    <text x="210" y="226">retry budget</text>
+    <text x="360" y="226">parser fidelity</text>
+    <text x="460" y="226">drift</text>
+  </g>
+</svg>

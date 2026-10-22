@@ -1,0 +1,74 @@
+name: Daily pipeline and deploy
+
+# Runs the fetch pipeline twice a day, then rebuilds and publishes the site.
+#
+# Times are UTC. 00:00 and 12:00 UTC = 08:00 and 20:00 Beijing.
+on:
+  schedule:
+    - cron: '0 0 * * *'
+    - cron: '0 12 * * *'
+  workflow_dispatch: {}
+  push:
+    branches: [main, master]
+
+# Needed by actions/deploy-pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two runs publish at once; the second would clobber the first.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run fetch pipeline
+        id: pipeline
+        # A failing source must not block publishing the last good build, so this
+        # step reports its outcome instead of failing the job. The pipeline's own
+        # publish guard already decides whether data is worth writing.
+        continue-on-error: true
+        run: npm run pipeline
+
+      - name: Report pipeline outcome
+        if: steps.pipeline.outcome != 'success'
+        run: |
+          echo "::warning::Pipeline step reported a problem; building with whatever data is present."
+          cat src/data/health.json || true
+
+      - name: Ensure data files exist
+        run: node scripts/ensure-live.mjs
+
+      - name: Build site
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

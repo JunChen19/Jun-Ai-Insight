@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" role="img" aria-label="RL pools and refit boundary">
+  <rect width="720" height="240" fill="#08090b"/>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#6b6a66">
+    <text x="24" y="28" letter-spacing="2">POST-TRAINING · POOLS &amp; BOUNDARY</text>
+  </g>
+  <g stroke="#23252b" stroke-width="1"><line x1="24" y1="44" x2="696" y2="44"/></g>
+  <g font-family="-apple-system, Segoe UI, sans-serif" font-size="12.5">
+    <rect x="24" y="72" width="170" height="90" rx="3" fill="#121317" stroke="#35302a"/>
+    <text x="42" y="96" fill="#d8a657">trainer</text>
+    <text x="42" y="118" fill="#6b6a66" font-size="11">full precision actor</text>
+    <text x="42" y="136" fill="#6b6a66" font-size="11">refits through</text>
+    <text x="42" y="152" fill="#9b9a95" font-size="11">one quant boundary</text>
+
+    <rect x="256" y="72" width="170" height="90" rx="3" fill="#121317" stroke="#2f3540"/>
+    <text x="274" y="96" fill="#6ea8c8">rollout engine</text>
+    <text x="274" y="118" fill="#6b6a66" font-size="11">low precision</text>
+    <text x="274" y="136" fill="#6b6a66" font-size="11">sees trainer numerics</text>
+
+    <rect x="488" y="72" width="184" height="90" rx="3" fill="#121317" stroke="#2c3a2c"/>
+    <text x="506" y="96" fill="#7fa87f">advantage</text>
+    <text x="506" y="118" fill="#6b6a66" font-size="11">ratio ≈ 1</text>
+    <text x="506" y="136" fill="#6b6a66" font-size="11">clip fraction stable</text>
+  </g>
+  <g stroke="#7d6335" stroke-width="1.4" fill="none">
+    <path d="M194 117 H256"/>
+    <path d="M426 117 H488"/>
+  </g>
+  <g fill="#7d6335">
+    <path d="M252 113 L259 117 L252 121 Z"/>
+    <path d="M484 113 L491 117 L484 121 Z"/>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#4a4d55">
+    <text x="200" y="196">two seams → one boundary</text>
+    <text x="24" y="222">mismatch shows up as a flat curve, not an error</text>
+  </g>
+</svg>
