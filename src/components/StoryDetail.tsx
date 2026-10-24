@@ -41,9 +41,7 @@ export default function StoryDetail({ story, lang, onBack }: Props) {
       </div>
 
       <h1>{story.title[lang]}</h1>
-      <p className="detail-standfirst">
-        {story.machine && lang === 'zh' ? story.standfirst.en : story.standfirst[lang]}
-      </p>
+      <p className="detail-standfirst">{story.standfirst[lang]}</p>
 
       {story.machine && (
         <div
@@ -58,6 +56,9 @@ export default function StoryDetail({ story, lang, onBack }: Props) {
           }}
         >
           {t('machineNote', lang)}
+          {lang === 'zh' && story.translated && (
+            <span style={{ color: 'var(--ink-faint)' }}> · {t('machineTranslated', lang)}</span>
+          )}
         </div>
       )}
 
@@ -80,16 +81,25 @@ export default function StoryDetail({ story, lang, onBack }: Props) {
         <div className="field-label">{t('howItWorks', lang)}</div>
         <p>{story.how[lang]}</p>
         {/*
-         * Machine records carry no translation. Rather than render an empty
-         * field, show the fetched abstract verbatim and say what it is.
+         * When the zh body is machine translation, show the English original
+         * underneath. Readers checking a technical claim need the source
+         * wording, and a translation is not authoritative for terms.
          */}
-        {story.machine && lang === 'zh' && (
-          <>
-            <p style={{ fontSize: 13, color: 'var(--ink-faint)', marginTop: 10 }}>
-              {t('untranslated', lang)}
-            </p>
-            <p style={{ color: 'var(--ink-muted)', fontSize: 14 }}>{story.how.en}</p>
-          </>
+        {story.machine && lang === 'zh' && story.translated && story.how.en !== story.how.zh && (
+          <details style={{ marginTop: 12 }}>
+            <summary
+              style={{
+                cursor: 'pointer',
+                fontFamily: 'var(--mono)',
+                fontSize: 11,
+                letterSpacing: '0.08em',
+                color: 'var(--ink-faint)',
+              }}
+            >
+              EN
+            </summary>
+            <p style={{ color: 'var(--ink-muted)', fontSize: 14, marginTop: 8 }}>{story.how.en}</p>
+          </details>
         )}
       </div>
 

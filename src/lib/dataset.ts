@@ -30,6 +30,9 @@ interface LiveStory {
   key: string
   title: string
   summary: string
+  /** Machine translation of title/summary, filled by the pipeline. */
+  titleZh?: string
+  summaryZh?: string
   primaryDate: string
   sources: LiveSource[]
   beats: string[]
@@ -78,15 +81,23 @@ function adaptLive(s: LiveStory): Story {
   // The fetched body is the only honest source for "how it works". `why` and
   // `where` are left as explicit placeholders rather than invented.
   const body = plainText(s.summary)
+  const bodyZh = s.summaryZh ? plainText(s.summaryZh) : ''
+  const titleZh = s.titleZh && s.titleZh !== s.title ? s.titleZh : s.title
 
   return {
     id: `live-${slug(s.key)}`,
     machine: true,
-    title: { en: s.title, zh: s.title },
-    standfirst: { en: body.slice(0, 240), zh: '尚未翻译。以下摘要为抓取原文。' },
+    title: { en: s.title, zh: titleZh },
+    // `translated` lets the UI say whose words these are, rather than passing a
+    // machine translation off as editorial copy.
+    translated: Boolean(s.titleZh && s.titleZh !== s.title),
+    standfirst: {
+      en: body.slice(0, 240),
+      zh: bodyZh ? bodyZh.slice(0, 240) : body.slice(0, 240),
+    },
     how: {
       en: body,
-      zh: '机制摘要待补——抓取条目仅记录原文，不臆造结论。',
+      zh: bodyZh || body,
     },
     why: s.why ?? {
       en: 'Not assessed yet — this record was fetched automatically.',

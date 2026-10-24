@@ -70,3 +70,16 @@ export function MachineChip({ story, lang }: { story: Story; lang: Lang }) {
     </span>
   )
 }
+
+/**
+ * The zh text came from a translator, not a person. Shown only in the Chinese
+ * view, where a reader would otherwise assume the Chinese is the original.
+ */
+export function TranslatedChip({ story, lang }: { story: Story; lang: Lang }) {
+  if (!story.translated || lang !== 'zh') return null
+  return (
+    <span className="chip" title={t('machineTranslated', lang)}>
+      机翻
+    </span>
+  )
+}

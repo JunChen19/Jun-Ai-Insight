@@ -1,7 +1,7 @@
 import type { Story } from '../lib/types'
 import type { Lang } from '../lib/i18n'
 import { primaryDate } from '../lib/search'
-import { BeatChips, KindChips, LagBadge, MachineChip, MergeChip, SeedChip } from './Chips'
+import { BeatChips, KindChips, LagBadge, MachineChip, MergeChip, SeedChip, TranslatedChip } from './Chips'
 
 interface Props {
   story: Story
@@ -20,18 +20,12 @@ export default function StoryRow({ story, lang, onOpen }: Props) {
         <KindChips story={story} lang={lang} />
         <MergeChip story={story} lang={lang} />
         <LagBadge story={story} lang={lang} />
+        <TranslatedChip story={story} lang={lang} />
         <MachineChip story={story} lang={lang} />
         <SeedChip story={story} lang={lang} />
       </div>
       <h3 className="story-title">{story.title[lang]}</h3>
-      {/*
-       * Machine records have no translation. Showing the same "not translated"
-       * line on every row tells the reader nothing; show the real abstract
-       * instead, which at least lets them judge the story.
-       */}
-      <p className="story-standfirst">
-        {story.machine && lang === 'zh' ? story.standfirst.en : story.standfirst[lang]}
-      </p>
+      <p className="story-standfirst">{story.standfirst[lang]}</p>
       <div className="chips">
         {story.tags.slice(0, 5).map((tg) => (
           <span key={tg} className="chip">{tg}</span>

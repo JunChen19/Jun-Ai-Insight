@@ -24,6 +24,7 @@ import { classifyBeats, extractTags } from './lib/classify.mjs'
 import { resolveMany } from './lib/arxiv-lookup.mjs'
 import { readJson, writeJson, mergeStories, applyOverrides } from './lib/store.mjs'
 import { buildIssues } from './lib/issue.mjs'
+import { translateBatch } from './lib/translate.mjs'
 import { hasProxy } from './lib/fetch.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -31,6 +32,9 @@ const ROOT = resolve(HERE, '..')
 const LIVE = resolve(ROOT, 'src/data/live.json')
 const HEALTH = resolve(ROOT, 'src/data/health.json')
 const OVERRIDES = resolve(ROOT, 'src/data/overrides.json')
+// Translation memory, persisted so re-runs only pay for unseen strings.
+// Lives outside the repo like the other pipeline output.
+const TRANS_CACHE = resolve(ROOT, '.cache/translations.json')
 
 const args = process.argv.slice(2)
 const dryRun = args.includes('--dry-run')
@@ -160,6 +164,39 @@ async function main() {
   ).length
 
   console.log(`  total stories: ${merged.length}  (new this run: ${newCount})`)
+
+  // --- translate ---
+  //
+  // Titles and summaries are the only prose the site shows, so they are all that
+  // gets translated. The cache on disk means a daily run only pays for genuinely
+  // new text — typically tens of strings, not hundreds.
+  if (!args.includes('--no-translate')) {
+    const cache = await readJson(TRANS_CACHE, {})
+    const todo = []
+    for (const s of merged) {
+      todo.push(s.title, s.summary)
+    }
+    const before = Object.keys(cache).length
+    console.log(`  translating… (cache holds ${before})`)
+
+    const filled = await translateBatch(todo, {
+      cache,
+      concurrency: 3,
+      delayMs: 120,
+      onProgress: (d, total) => {
+        if (d % 25 === 0) process.stdout.write(`\r    ${d}/${total}`)
+      },
+    })
+    process.stdout.write('\r' + ' '.repeat(30) + '\r')
+
+    for (const s of merged) {
+      s.titleZh = filled[s.title] ?? s.title
+      s.summaryZh = filled[s.summary] ?? s.summary
+    }
+
+    await writeJson(TRANS_CACHE, filled)
+    console.log(`  translated: ${Object.keys(filled).length - before} new strings`)
+  }
 
   // --- publish guard ---
   //

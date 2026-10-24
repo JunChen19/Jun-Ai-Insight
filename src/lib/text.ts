@@ -24,5 +24,13 @@ export function scrubMarkup(input: string): string {
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
 
-  return strip(decode(strip(decode(input)))).replace(/\s+/g, ' ').trim()
+  // Collapse runs of spaces and excess blank lines but keep single newlines:
+  // release notes arrive as a bulleted list and flattening them turns a
+  // changelog into an unreadable run-on sentence.
+  return strip(decode(strip(decode(input))))
+    .split('\n')
+    .map((line) => line.replace(/[ \t]+/g, ' ').trim())
+    .filter((line, i, all) => line || (i > 0 && all[i - 1]))
+    .join('\n')
+    .trim()
 }

@@ -32,6 +32,9 @@ function condense(body) {
   if (!body) return ''
   const cleaned = body
     .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<\/(li|p|h[1-6]|tr|div)>/gi, '\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<li[^>]*>/gi, '• ')
     .replace(/<[^>]*>/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
@@ -41,9 +44,24 @@ function condense(body) {
     .replace(/&nbsp;/g, ' ')
     .replace(/\*\*Full Changelog\*\*[\s\S]*$/i, ' ')
     .replace(/^#+\s*/gm, '')
-    .replace(/\s+/g, ' ')
     .trim()
-  return cleaned.slice(0, 700).trim()
+
+  // GitHub's atom feed flattens the release body to a single line, so HTML list
+  // markers are gone by the time we see it. Recover the item boundaries from
+  // the conventional changelog shape instead: each entry starts with a
+  // conventional-commit prefix or an imperative lead-in.
+  const ENTRY_START =
+    /(?=\b(?:fix|feat|chore|docs|refactor|perf|test|build|ci|revert|style)\s*\([^)]{1,30}\)\s*:|\b(?:Added|Fixed|Improved|Changed|Removed|Updated|Introduced|Deprecated|Bumped|Support|Enable|Allow|Make|Avoid|Ensure|Prevent|Migrate|Upgrade|Downgrade|Release)\b)/g
+
+  const broken = cleaned.replace(ENTRY_START, '\n')
+  return broken
+    .split('\n')
+    .map((line) => line.replace(/[ \t]+/g, ' ').trim())
+    .filter(Boolean)
+    .slice(0, 14)
+    .join('\n')
+    .slice(0, 1200)
+    .trim()
 }
 
 /**

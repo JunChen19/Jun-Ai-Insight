@@ -90,8 +90,12 @@ export const UI = {
   degraded: { en: 'Degraded run', zh: '降级运行' },
   guardTripped: { en: 'Publish guard tripped — previous data kept', zh: '发布守卫触发——保留上一版数据' },
   untranslated: {
-    en: 'Not translated yet — original abstract below.',
-    zh: '尚未翻译，以下为原文摘要。',
+    en: 'Not translated yet — original below.',
+    zh: '尚未翻译，以下为英文原文。',
+  },
+  machineTranslated: {
+    en: 'Machine-translated from the source text',
+    zh: '机器翻译，原文为英文',
   },
   allIssues: { en: 'All issues', zh: '全部日报' },
   readIssue: { en: 'Open full issue', zh: '展开整期' },

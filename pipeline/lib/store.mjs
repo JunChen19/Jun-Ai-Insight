@@ -106,5 +106,14 @@ function plainerText(s) {
       .replace(/&#0?39;|&apos;/g, "'")
       .replace(/&nbsp;/g, ' ')
       .replace(/&amp;/g, '&')
-  return pass(decode(pass(decode(s)))).replace(/\s+/g, ' ').trim()
+
+  // Collapse runs of spaces but preserve newlines: release notes are line
+  // structured, and flattening them here would undo the splitting done at fetch
+  // time and turn every changelog back into one unreadable paragraph.
+  return pass(decode(pass(decode(s))))
+    .split('\n')
+    .map((line) => line.replace(/[ \t]+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n')
+    .trim()
 }

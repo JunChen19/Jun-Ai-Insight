@@ -67,6 +67,8 @@ export interface Story {
    * pass as edited copy.
    */
   machine?: boolean
+  /** True when the zh text is machine translation rather than written copy. */
+  translated?: boolean
 }
 
 export interface IssueSection {

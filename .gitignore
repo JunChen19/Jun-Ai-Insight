@@ -13,3 +13,4 @@ shot-*.png
 # committing data that will be stale by the time anyone clones.
 src/data/live.json
 src/data/health.json
+.cache/

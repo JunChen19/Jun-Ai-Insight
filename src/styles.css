@@ -424,7 +424,14 @@ button {
   margin-bottom: 7px;
 }
 
-.field p { margin: 0; font-size: 15.5px; line-height: 1.72; color: var(--ink); }
+.field p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--ink);
+  /* Release notes keep their bullet/newline structure through the pipeline. */
+  white-space: pre-line;
+}
 
 .source-list { display: flex; flex-direction: column; gap: 1px; margin-top: 4px; }
 
