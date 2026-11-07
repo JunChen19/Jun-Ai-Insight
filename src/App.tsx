@@ -22,7 +22,7 @@ export default function App() {
     beats: [],
     kinds: [],
     tiers: [],
-    scope: ['machine'] as ScopeFilter[],
+    scope: ['machine', 'assisted'] as ScopeFilter[],
   })
   const [sort, setSort] = useState<SortMode>('recent')
 

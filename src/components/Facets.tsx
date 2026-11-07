@@ -43,7 +43,7 @@ export default function Facets({ filters, counts, lang, sort, onSort, onChange }
           <span>{t('scope', lang)}</span>
         </div>
         <div className="facet-list">
-          {(['curated', 'machine'] as ScopeFilter[]).map((sc) => {
+          {(['curated', 'assisted', 'machine'] as ScopeFilter[]).map((sc) => {
             const n = counts.scope.get(sc) ?? 0
             return (
               <button
@@ -54,7 +54,7 @@ export default function Facets({ filters, counts, lang, sort, onSort, onChange }
                 onClick={() => onChange({ ...filters, scope: toggle(filters.scope, sc) })}
               >
                 <span className="facet-dot" />
-                {sc === 'curated' ? t('scopeCurated', lang) : t('scopeMachine', lang)}
+                {sc === 'curated' ? t('scopeCurated', lang) : sc === 'assisted' ? t('scopeAssisted', lang) : t('scopeMachine', lang)}
                 <span className="facet-count">{n}</span>
               </button>
             )

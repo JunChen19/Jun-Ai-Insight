@@ -67,6 +67,12 @@ export interface Story {
    * pass as edited copy.
    */
   machine?: boolean
+  /**
+   * True when the pipeline's LLM pass drafted `why`/`where`. The record is
+   * still machine-fetched — the chip exists so AI-assisted copy never passes
+   * as human-reviewed.
+   */
+  assisted?: boolean
   /** True when the zh text is machine translation rather than written copy. */
   translated?: boolean
 }

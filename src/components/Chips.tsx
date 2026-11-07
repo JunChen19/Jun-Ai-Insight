@@ -63,10 +63,20 @@ export function SeedChip({ story, lang }: { story: Story; lang: Lang }) {
 
 /** Marks a record whose four fields are placeholders rather than edited copy. */
 export function MachineChip({ story, lang }: { story: Story; lang: Lang }) {
-  if (!story.machine) return null
+  if (!story.machine || story.assisted) return null
   return (
     <span className="chip" data-tone="seed" title={t('machineNote', lang)}>
       {lang === 'en' ? 'UNREVIEWED' : '未复核'}
+    </span>
+  )
+}
+
+/** Marks why/where as LLM-drafted, so it never passes as reviewed copy. */
+export function AssistedChip({ story, lang }: { story: Story; lang: Lang }) {
+  if (!story.assisted) return null
+  return (
+    <span className="chip" data-tone="seed" title={t('assistedNote', lang)}>
+      {lang === 'en' ? 'AI-DRAFTED' : 'AI 补全'}
     </span>
   )
 }

@@ -1,7 +1,7 @@
 import type { Story } from '../lib/types'
 import type { Lang } from '../lib/i18n'
 import { primaryDate } from '../lib/search'
-import { BeatChips, KindChips, LagBadge, MachineChip, MergeChip, SeedChip, TranslatedChip } from './Chips'
+import { AssistedChip, BeatChips, KindChips, LagBadge, MachineChip, MergeChip, SeedChip, TranslatedChip } from './Chips'
 
 interface Props {
   story: Story
@@ -22,6 +22,7 @@ export default function StoryRow({ story, lang, onOpen }: Props) {
         <LagBadge story={story} lang={lang} />
         <TranslatedChip story={story} lang={lang} />
         <MachineChip story={story} lang={lang} />
+        <AssistedChip story={story} lang={lang} />
         <SeedChip story={story} lang={lang} />
       </div>
       <h3 className="story-title">{story.title[lang]}</h3>

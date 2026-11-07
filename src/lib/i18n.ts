@@ -34,6 +34,7 @@ export const UI = {
   filters: { en: 'Filters', zh: '筛选' },
   scope: { en: 'Record type', zh: '记录类型' },
   scopeCurated: { en: 'Curated & reviewed', zh: '精编已复核' },
+  scopeAssisted: { en: 'LLM-assisted', zh: 'LLM 辅助' },
   scopeMachine: { en: 'Auto-fetched', zh: '自动抓取' },
   beat: { en: 'Beat', zh: '领域' },
   kind: { en: 'Artifact', zh: '原始件类型' },
@@ -72,6 +73,10 @@ export const UI = {
   machineNote: {
     en: 'Machine-fetched · not yet edited or translated',
     zh: '自动抓取 · 未经编辑与翻译',
+  },
+  assistedNote: {
+    en: 'Why/where drafted by an LLM pass · not human-reviewed',
+    zh: '意义与适用范围由 LLM 补全 · 未经人工复核',
   },
   liveStrip: {
     en: 'live records from the last crawl',

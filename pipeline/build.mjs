@@ -25,6 +25,7 @@ import { resolveMany } from './lib/arxiv-lookup.mjs'
 import { readJson, writeJson, mergeStories, applyOverrides } from './lib/store.mjs'
 import { buildIssues } from './lib/issue.mjs'
 import { translateBatch } from './lib/translate.mjs'
+import { enrichStories, enrichEnabled } from './lib/enrich.mjs'
 import { hasProxy } from './lib/fetch.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -164,6 +165,21 @@ async function main() {
   ).length
 
   console.log(`  total stories: ${merged.length}  (new this run: ${newCount})`)
+
+  // --- LLM completion of why/where (off unless INSIGHT_LLM_ENRICH=1) ---
+  //
+  // Drafts the two editorial fields for top stories that lack them. Marked
+  // `enrichedBy: 'llm'` so the UI can label them AI-assisted; human overrides
+  // were applied upstream and are never overwritten. mergeStories carries
+  // enriched fields across runs, so a later run only pays for new stories.
+  if (!args.includes('--no-enrich') && enrichEnabled()) {
+    console.log(`  enriching why/where via LLM…`)
+    const filled = await enrichStories(merged, {
+      onProgress: (d, total) => process.stdout.write(`\r    ${d}/${total}`),
+    })
+    process.stdout.write('\r' + ' '.repeat(30) + '\r')
+    console.log(`  enriched ${filled} story field-pair(s)`)
+  }
 
   // --- translate ---
   //

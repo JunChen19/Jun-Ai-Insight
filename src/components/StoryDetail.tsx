@@ -3,7 +3,7 @@ import { TIER_LABEL } from '../lib/types'
 import type { Lang } from '../lib/i18n'
 import { t } from '../lib/i18n'
 import { canonicalSource, primaryDate, signalLagDays } from '../lib/search'
-import { BeatChips, KindChips, MachineChip, MergeChip, SeedChip } from './Chips'
+import { AssistedChip, BeatChips, KindChips, MachineChip, MergeChip, SeedChip } from './Chips'
 
 interface Props {
   story: Story
@@ -37,6 +37,7 @@ export default function StoryDetail({ story, lang, onBack }: Props) {
         <KindChips story={story} lang={lang} max={2} />
         <MergeChip story={story} lang={lang} />
         <MachineChip story={story} lang={lang} />
+        <AssistedChip story={story} lang={lang} />
         <SeedChip story={story} lang={lang} />
       </div>
 

@@ -41,6 +41,8 @@ interface LiveStory {
   score: number
   why?: { en: string; zh: string }
   where?: { en: string; zh: string }
+  /** Set when the pipeline's LLM pass drafted why/where. */
+  enrichedBy?: string
 }
 
 interface LiveFile {
@@ -87,6 +89,9 @@ function adaptLive(s: LiveStory): Story {
   return {
     id: `live-${slug(s.key)}`,
     machine: true,
+    // The record stays machine-fetched, but LLM-drafted editorial fields earn
+    // their own scope value instead of hiding among untouched fetches.
+    assisted: s.enrichedBy === 'llm',
     title: { en: s.title, zh: titleZh },
     // `translated` lets the UI say whose words these are, rather than passing a
     // machine translation off as editorial copy.

@@ -64,7 +64,10 @@ export interface Filters {
   beats: Beat[]
   kinds: ArtifactKind[]
   tiers: SourceTier[]
-  /** curated = hand-written and reviewed; machine = fetched, four fields pending. */
+  /**
+   * curated = hand-written and reviewed; assisted = fetched with LLM-drafted
+   * why/where; machine = fetched, four fields pending.
+   */
   scope: ScopeFilter[]
   /** Inclusive ISO date bounds. */
   from?: string
@@ -72,11 +75,17 @@ export interface Filters {
   issue?: string
 }
 
-export type ScopeFilter = 'curated' | 'machine'
+export type ScopeFilter = 'curated' | 'machine' | 'assisted'
 
 export const EMPTY_FILTERS: Filters = { query: '', beats: [], kinds: [], tiers: [], scope: [] }
 
 export type SortMode = 'recent' | 'sources' | 'lag'
+
+/** Where a record sits on the curated → assisted → machine ladder. */
+export function scopeOf(s: Story): ScopeFilter {
+  if (s.assisted) return 'assisted'
+  return s.machine ? 'machine' : 'curated'
+}
 
 /**
  * Apply filters. Facets within one axis are OR'd (beat rl OR agents), across
@@ -93,8 +102,7 @@ export function applyFilters(stories: Story[], f: Filters, sort: SortMode): Stor
     if (f.tiers.length && !f.tiers.some((t) => s.sources.some((src) => src.tier === t))) return false
     if (f.issue && s.issue !== f.issue) return false
     if (f.scope.length) {
-      const kind: ScopeFilter = s.machine ? 'machine' : 'curated'
-      if (!f.scope.includes(kind)) return false
+      if (!f.scope.includes(scopeOf(s))) return false
     }
 
     const d = primaryDate(s)
@@ -148,7 +156,7 @@ export function facetCounts(stories: Story[], f: Filters): FacetCounts {
   // moment you selected "curated".
   const scopeBase = { ...f, beats: [], kinds: [], tiers: [], scope: [] }
   for (const s of applyFilters(stories, scopeBase, 'recent')) {
-    const sc: ScopeFilter = s.machine ? 'machine' : 'curated'
+    const sc = scopeOf(s)
     scope.set(sc, (scope.get(sc) ?? 0) + 1)
   }
 

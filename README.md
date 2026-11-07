@@ -111,7 +111,7 @@ GitHub Releases                      ~51
 | 适用范围 `where` | **留空**，显示「尚未界定」 |
 | 来源 | 真实来源栈 |
 
-后两个字段是编辑判断，管线不臆造。需要 LLM 补全时可以接，但默认关闭。
+后两个字段默认留空显示占位。可选的 LLM 补全开关：本地运行时传 `INSIGHT_LLM_ENRICH=1`（凭证走 `ANTHROPIC_BASE_URL` / `ANTHROPIC_AUTH_TOKEN` / `ANTHROPIC_MODEL` 环境变量），管线会为得分最高、尚缺这两字段的至多 12 条记录生成草稿，并标记 `enrichedBy: 'llm'`——站点把它们单独归入「LLM 辅助」记录类型并打 AI 补全标签，不与人工精编混淆；人工 overrides 优先级永远更高。用 `--no-enrich` 可在开关开启时跳过。
 
 ## 每天「真实且最新」的保障
 
