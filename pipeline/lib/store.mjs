@@ -71,6 +71,9 @@ export function mergeStories(previous, fresh, { retainDays = 14 } = {}) {
         ...s,
         why: s.why ?? old.why,
         where: s.where ?? old.where,
+        // Keep the provenance flag with the content it describes — an
+        // LLM-drafted why/where must stay labelled as such across re-fetches.
+        enrichedBy: old.enrichedBy && (s.why ?? old.why) === old.why ? old.enrichedBy : s.enrichedBy,
         firstSeenAt: old.firstSeenAt ?? s.firstSeenAt,
       })
     } else {
