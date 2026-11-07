@@ -117,7 +117,7 @@ GitHub Releases                      ~51
 
 四层，每一层都可验证：
 
-1. **调度**——GitHub Actions 每天 00:00 与 12:00 UTC（北京时间 08:00 / 20:00）。本地 `scripts/daily.ps1` 作为兜底，可挂 Windows 任务计划程序。
+1. **调度**——本地 `scripts/daily.ps1`（建议挂 Windows 任务计划程序，每天两次）负责抓取、LLM 补全与推送，数据随仓库入库。GitHub Actions 只做构建与发布，不在 CI 里跑管线——抓取源与 LLM 网关都依赖公司网络。
 2. **幂等**——按实体键合并，重复运行只 upsert，不产生重复条目。
 3. **失败隔离**——每个源独立超时与重试，单源失败不阻断整体。
 4. **发布守卫**——所有源失败、或产出少于 20 条时，**不覆盖线上数据**，只写 `health.json` 并在站点顶部显示告警。
@@ -130,7 +130,7 @@ GitHub Releases                      ~51
 npm install
 npm run dev        # 开发服务器
 npm run build      # 产出 dist/
-npm run pipeline   # 抓取并写入 src/data/live.json
+npm run pipeline   # 抓取并写入 src/data/live.json（发布走 scripts/daily.ps1）
 ```
 
 管线在需要代理的环境下需显式传入：
@@ -164,7 +164,7 @@ node pipeline/build.mjs --sources=hf,arxiv     # 只跑指定源
 
 ## 部署
 
-GitHub Pages，push 即自动部署（`.github/workflows/daily.yml`）。构建产物用相对路径（`base: './'`）与 hash 路由，可直接部署到任意静态托管。
+GitHub Pages。本地 `scripts/daily.ps1` 抓取 + 补全 + 提交数据后经 contents API 推送（代理环境 `git push` 不通），push 触发 `.github/workflows/daily.yml` 构建发布。网页端只负责展示，不运行任何脚本。构建产物用相对路径（`base: './'`）与 hash 路由，可直接部署到任意静态托管。
 
 ## 关于精编示例
 

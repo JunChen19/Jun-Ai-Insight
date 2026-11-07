@@ -1,12 +1,10 @@
-name: Daily pipeline and deploy
+name: Build and deploy site
 
-# Runs the fetch pipeline twice a day, then rebuilds and publishes the site.
-#
-# Times are UTC. 00:00 and 12:00 UTC = 08:00 and 20:00 Beijing.
+# Build and publish the site only. Fetching, LLM enrichment and data
+# publishing happen on the author's machine (scripts/daily.ps1), because the
+# sources and the LLM gateway need the corporate network ¡ª so this workflow
+# must not run the pipeline or overwrite the pushed data.
 on:
-  schedule:
-    - cron: '0 0 * * *'
-    - cron: '0 12 * * *'
   workflow_dispatch: {}
   push:
     branches: [main, master]
@@ -36,20 +34,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run fetch pipeline
-        id: pipeline
-        # A failing source must not block publishing the last good build, so this
-        # step reports its outcome instead of failing the job. The pipeline's own
-        # publish guard already decides whether data is worth writing.
-        continue-on-error: true
-        run: npm run pipeline
-
-      - name: Report pipeline outcome
-        if: steps.pipeline.outcome != 'success'
-        run: |
-          echo "::warning::Pipeline step reported a problem; building with whatever data is present."
-          cat src/data/health.json || true
-
+      # Data files are committed by the local daily run; this guard only
+      # covers a hand-made push that forgot them.
       - name: Ensure data files exist
         run: node scripts/ensure-live.mjs
 

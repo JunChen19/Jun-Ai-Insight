@@ -11,7 +11,11 @@
  * Uses curl via spawnSync with an argument array (no shell), so request bodies
  * are never subject to shell quoting, and curl handles the proxy natively.
  *
- * Usage: node scripts/push-via-api.mjs <token> [branch]
+ * Usage: node scripts/push-via-api.mjs [token] [branch]
+ *
+ * The token defaults to the one embedded in the origin remote URL, so the
+ * scheduled daily run can call this without passing credentials on a
+ * command line.
  */
 
 import { spawnSync } from 'node:child_process'
@@ -21,7 +25,15 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const TOKEN = process.argv[2]
+function tokenFromRemote() {
+  try {
+    const url = execSync('git remote get-url origin', { cwd: ROOT }).toString()
+    return url.match(/:(?:[^:@/]+@)?([A-Za-z0-9_]{20,})@/)?.[1] ?? null
+  } catch {
+    return null
+  }
+}
+const TOKEN = process.argv[2] || process.env.GITHUB_TOKEN || tokenFromRemote()
 const BRANCH = process.argv[3] || 'main'
 const OWNER = 'JunChen19'
 const REPO = 'Jun-Ai-Insight'

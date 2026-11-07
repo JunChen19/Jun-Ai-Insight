@@ -2,8 +2,8 @@
 /**
  * Make sure src/data/live.json and health.json exist before a build.
  *
- * Both are pipeline output and are deliberately not committed — that keeps the
- * repo small and stops stale data from looking like source. But the site
+ * Both are published by the local daily run (scripts/daily.ps1); this guard
+ * only covers a push that forgot them. The site
  * imports them at build time, so a fresh clone (or a CI run where the pipeline
  * failed) would fail to resolve the imports. Writing empty stubs lets the app
  * render its "pipeline has not run" state instead of crashing.

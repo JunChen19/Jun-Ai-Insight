@@ -1,13 +1,14 @@
-# Local fallback for the daily fetch.
+# Local publisher — this is now the PRIMARY scheduler, not the fallback.
 #
-# GitHub Actions is the primary scheduler, but it runs from a datacenter IP and
-# can be blocked or rate-limited by some sources. This script is the local
-# backup: run it manually or wire it to Windows Task Scheduler.
+# GitHub Actions only builds and deploys the site; all fetching, LLM enrichment
+# and publishing happen here, because the sources (and the LLM gateway) need the
+# corporate network. `git push` is blocked by the proxy, so publication goes
+# through the contents API via scripts/push-via-api.mjs.
 #
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File scripts\daily.ps1
 #
-# Register a daily task (run once, as your own user):
+# Register a twice-daily task (run once, as your own user):
 #   schtasks /Create /TN "AI Tech Insight daily" /SC DAILY /ST 08:30 ^
 #     /TR "powershell -ExecutionPolicy Bypass -File D:\SpecialForce\CodeHub\Insight\scripts\daily.ps1"
 
@@ -33,7 +34,8 @@ if ($env:NODE_TLS_REJECT_UNAUTHORIZED -eq $null) {
     Write-Host "warning: TLS verification disabled for this run (internal CA)"
 }
 
-Write-Host "=== fetch ==="
+Write-Host "=== fetch + enrich ==="
+$env:INSIGHT_LLM_ENRICH = '1'
 node pipeline/build.mjs
 $fetchExit = $LASTEXITCODE
 
@@ -64,7 +66,8 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-git push
+# `git push` is dropped by the corporate proxy; publish through the REST API.
+node scripts/push-via-api.mjs
 if ($LASTEXITCODE -ne 0) {
     Write-Host "push failed - data is committed locally but not published"
     exit 1
