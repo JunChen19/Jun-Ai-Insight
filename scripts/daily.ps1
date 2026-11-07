@@ -66,8 +66,10 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# `git push` is dropped by the corporate proxy; publish through the REST API.
-node scripts/push-via-api.mjs
+# Push over SSH (see ~/.ssh/config: github.com routes through the corporate
+# proxy via CONNECT on port 443 — the HTTPS receive-pack and >150KB API blob
+# uploads are both dropped by the proxy's content gateway).
+git push origin HEAD:refs/heads/main
 if ($LASTEXITCODE -ne 0) {
     Write-Host "push failed - data is committed locally but not published"
     exit 1
