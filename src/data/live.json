@@ -1,6 +1,1247 @@
 {
-  "generatedAt": "2026-11-07T03:05:41.692Z",
+  "generatedAt": "2026-11-07T08:29:22.390Z",
   "stories": [
+    {
+      "key": "ghc:openai/codex@d4a341bd52",
+      "title": "codex: Reauthenticate runtime requests before reusing WebSocket access (#60055)",
+      "summary": "Reauthenticate runtime requests before reusing WebSocket access (#60055) ## Why An open WebSocket can remain usable after its runtime is paused. Runtime-authenticated requests need a fresh handshake to revalidate access before submitting more work. ## What changed - Reconnect before each runtime-authenticated Responses request and skip speculative preconnection. Preserve turn routing when the runtime identity is unchanged. - Open a fresh connection for each runtime-authenticated Guardian classification instead of prewarming or reusing pooled sockets. - Preserve HTTP fallback for unsupported upgrades and connection failures, while propagating authentication, authorization, rate-limit, and policy errors. ## Testing Add regression coverage for pause and unpause behavior, credential changes, f",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/d4a341bd52cc47ff635761334bde8a972d6de943",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "security",
+        "protocol",
+        "capability",
+        "post-training",
+        "evaluation",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 6,
+      "valueFlags": [
+        "security",
+        "protocol",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 21.197,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "d4a341bd52cc47ff635761334bde8a972d6de943",
+          "flags": [
+            "security",
+            "protocol",
+            "capability"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "A usable WebSocket can outlive a paused runtime, so stale authorizations could keep submitting work without revalidation. Forcing a fresh handshake per runtime-authenticated request closes an auth-liveness gap that socket pooling and prewarming had opened.",
+        "zh": "WebSocket 连接在 runtime 暂停后仍可用，旧凭证可能继续提交任务。改为每次 runtime-authenticated 请求前重新握手，堵住连接复用与预热带来的授权时效漏洞。"
+      },
+      "where": {
+        "en": "Applies to agent runtimes like codex where long-lived WebSocket connections survive pauses and credential changes, as with runtime-authenticated Responses and Guardian requests. Bounds: not plain HTTP request auth, general WebSocket pooling, or turn-routing behavior.",
+        "zh": "适用于 codex 这类经 WebSocket 复用 runtime 连接、存在暂停/恢复与凭证变更的 agent 会话，如 Responses 与 Guardian 请求。Bounds：不涉及普通 HTTP 认证或一般性 WebSocket 池化策略。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "codex：在重用 WebSocket 访问之前重新验证运行时请求 (#60055)",
+      "summaryZh": "在重用 WebSocket 访问之前重新验证运行时请求 (#60055) ## 为什么打开的 WebSocket 在运行时暂停后仍然可用。经过运行时验证的请求需要重新握手才能在提交更多工作之前重新验证访问权限。 ## 发生了什么变化 - 在每个运行时验证的响应请求之前重新连接并跳过推测性预连接。当运行时标识不变时保留转弯路由。 - 为每个运行时验证的 Guardian 分类打开一个新的连接，而不是预热或重用池化套接字。 - 为不支持的升级和连接失败保留 HTTP 回退，同时传播身份验证、授权、速率限制和策略错误。 ## 测试 添加暂停和取消暂停行为、凭据更改、f 的回归覆盖率"
+    },
+    {
+      "key": "ghc:openai/codex@4be90eb069",
+      "title": "codex: Fetch account security reminders through app-server (#60082)",
+      "summary": "Fetch account security reminders through app-server (#60082) ## Why Security reminder requests need to use app-server's active authentication and HTTP runtime, with results bound to the login that fetched them. ## What changed - Add `account/securitySetup/read`, returning an optional notice with account and user IDs, plus generated protocol schemas and bindings. - Fetch reminders in app-server only for a matching saved ChatGPT login. Return `notice: null` for ineligible, unavailable, or timed-out reads, and discard results when the login changes during the request. - Route TUI reminder reads through the new method while retaining notice validation and identity checks. Unsupported servers produce no reminder. ## Testing Add coverage for shared runtime use across restarts, ineligible authent",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/4be90eb069e6e027423c29eedeab5cab9da349dd",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "security",
+        "protocol",
+        "capability",
+        "post-training",
+        "agent-security",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 6,
+      "valueFlags": [
+        "security",
+        "protocol",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 21.187,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "4be90eb069e6e027423c29eedeab5cab9da349dd",
+          "flags": [
+            "security",
+            "protocol",
+            "capability"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "Moving reminder reads into app-server binds security notices to an authenticated login and discards results when the login changes — a pattern for making account-level prompts in agent clients identity-correct and race-safe instead of ambient UI noise.",
+        "zh": "把提醒读取移入 app-server，安全提示与当前认证登录绑定，登录切换时丢弃过期结果——这是 agent 客户端处理账号级提示时保证身份一致与竞态安全的做法，而非随意出现的 UI 信息。"
+      },
+      "where": {
+        "en": "It governs codex TUI/app-server delivery of account security setup notices for a matching saved ChatGPT login; Bounds: not a general notification framework, other agent products, or any claim about the notice content itself.",
+        "zh": "适用于 codex TUI 经 app-server 为匹配的已保存 ChatGPT 登录下发账号安全设置提醒的场景；Bounds: 不适用于通用通知系统或其他 agent 产品，也不涉及提醒内容本身。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "codex：通过应用程序服务器获取帐户安全提醒 (#60082)",
+      "summaryZh": "通过 app-server 获取账户安全提醒 (#60082) ## 为什么安全提醒请求需要使用 app-server 的主动身份验证和 HTTP 运行时，并将结果绑定到获取它们的登录名。 ## 更改内容 - 添加 `account/securitySetup/read`，返回包含帐户和用户 ID 的可选通知，以及生成的协议架构和绑定。 - 仅在应用程序服务器中获取匹配的已保存 ChatGPT 登录名的提醒。对于不合格、不可用或超时的读取返回“notice: null”，并在请求期间登录发生更改时丢弃结果。 - 路线 TUI 提醒通读新方法，同时保留通知验证和身份检查。不受支持的服务器不会产生提醒。 ## 测试添加重新启动时共享运行时使用的覆盖范围，不合格的身份验证"
+    },
+    {
+      "key": "ghc:openai/codex@b7d2321ef7",
+      "title": "codex: Derive MCP network policy and preserve saved denials (#60046)",
+      "summary": "Derive MCP network policy and preserve saved denials (#60046) ## Why Stale saved grants or malformed rules can cause valid network denials to be discarded. A failed rule write can also leave the in-memory policy inconsistent with native enforcement. ## What changed - Add a helper to derive MCP network policy from controller and environment policies, permission profiles, approval settings, and saved rules. Preserve managed restrictions and conservatively deny traffic that requires review, request hooks, or DNS checks the metadata cannot express. - Retain valid saved denials when grants violate managed constraints or a rule batch is malformed. - Serialize runtime updates and persistence, publishing denials before the write so they remain effective if saving fails. Publish saved grants after",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/b7d2321ef7b2405b72a4186447c810756866896b",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents",
+        "policy"
+      ],
+      "tags": [
+        "security",
+        "capability",
+        "post-training",
+        "mcp",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 4,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 18.212,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "b7d2321ef7b2405b72a4186447c810756866896b",
+          "flags": [
+            "security",
+            "capability"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "The deny path must be more durable than the grant path: stale saved grants, malformed rule batches, or a failed write could silently discard valid denials, leaving enforcement weaker than configured. The fix makes denial persistence fail-closed and keeps in-memory policy consistent with native enforcement.",
+        "zh": "拒绝路径的健壮性比授权路径更关键:过期 grants、畸形规则批次或写入失败都会静默丢弃有效拒绝,使实际执行弱于配置。此修复让拒绝持久化 fail-closed,并保持内存策略与 native enforcement 一致。"
+      },
+      "where": {
+        "en": "Applies to Codex's MCP network policy derivation, merging controller/environment policies, permission profiles, approval settings and saved rules. Bounds: this fail-closed persistence behavior, not other Codex policy domains or MCP implementations generally.",
+        "zh": "适用于 Codex 中 MCP 网络策略的派生:合并 controller/environment policy、权限 profile、审批设置与已保存规则。Bounds:仅限该 fail-closed 持久化语义,勿外推到其他策略域或通用 MCP 实现。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "codex：派生 MCP 网络策略并保留保存的拒绝 (#60046)",
+      "summaryZh": "派生 MCP 网络策略并保留已保存的拒绝 (#60046) ## 为什么陈旧的已保存授权或格式错误的规则会导致有效的网络拒绝被丢弃。规则写入失败还会导致内存中策略与本机执行不一致。 ## 更改内容 - 添加一个帮助程序，以从控制器和环境策略、权限配置文件、批准设置和保存的规则中派生 MCP 网络策略。保留托管限制并保守地拒绝需要元数据无法表达的审查、请求挂钩或 DNS 检查的流量。 - 当授权违反托管约束或规则批次格式错误时，保留有效的已保存拒绝。 - 序列化运行时更新和持久性，在写入之前发布拒绝，以便在保存失败时它们仍然有效。之后发布保存的赠款"
+    },
+    {
+      "key": "ghc:openai/codex@f4275a2a2e",
+      "title": "codex: Use runtime authentication for remote-control requests (#60073)",
+      "summary": "Use runtime authentication for remote-control requests (#60073) ## Why Remote-control enrollment, refresh, and client-management requests used ChatGPT bearer authentication without resolving the configured runtime authentication mode. ## What changed Pass the app server's runtime auth slot and mode into remote control, and resolve authentication and HTTP client policy for each request. Supported OpenAI destinations use fresh runtime assertions in `dual_header` or `assertion_only` mode, while custom destinations retain bearer authentication. Wait for runtime authentication to initialize and reject unsupported OpenAI origins or mismatched registered accounts. Pairing continues to use its server token. ## Testing Add transport and app-server integration coverage for both runtime auth modes, f",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/f4275a2a2e6a50d030280439ba161305b324c851",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "security",
+        "capability",
+        "post-training",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 4,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 18.19,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "f4275a2a2e6a50d030280439ba161305b324c851",
+          "flags": [
+            "security",
+            "capability"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "Remote-control traffic no longer rides on ChatGPT bearer tokens by default: requests now resolve the configured runtime auth mode, using fresh runtime assertions for OpenAI destinations and rejecting mismatched accounts or origins — per-request, mode-aware hardening of the agent remote-control channel.",
+        "zh": "远控请求不再默认用 ChatGPT bearer token,而是按运行时认证模式逐请求鉴权:OpenAI 目的地改用新的 runtime assertion,并校验来源与账号一致性,收紧了 agent 远控通道的安全边界。"
+      },
+      "where": {
+        "en": "Applies to codex app-server remote-control enrollment, refresh, and client-management requests; pairing keeps its server token and custom destinations stay on bearer auth. Bounds: not a general change to ChatGPT login or unrelated request paths.",
+        "zh": "适用于 codex app server 的远控 enrollment、refresh 与 client-management 请求;pairing 仍用 server token,自定义目的地仍用 bearer。Bounds: 不代表对所有 ChatGPT 登录或其他请求路径的改动。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "codex：对远程控制请求使用运行时身份验证 (#60073)",
+      "summaryZh": "对远程控制请求使用运行时身份验证 (#60073) ## 为什么远程控制注册、刷新和客户端管理请求使用 ChatGPT 承载身份验证而不解析配置的运行时身份验证模式。 ## 发生了什么变化将应用服务器的运行时身份验证槽和模式传递给远程控制，并解析每个请求的身份验证和 HTTP 客户端策略。支持的 OpenAI 目标在“dual_header”或“assertion_only”模式下使用新的运行时断言，而自定义目标则保留承载身份验证。等待运行时身份验证初始化并拒绝不支持的 OpenAI 来源或不匹配的注册帐户。配对继续使用其服务器令牌。 ## 测试为两种运行时身份验证模式添加传输和应用程序服务器集成覆盖范围，f"
+    },
+    {
+      "key": "ghc:openai/codex@1c414e0d65",
+      "title": "codex: Use thread runtime auth for Guardian Decisions and memory quota check…",
+      "summary": "Use thread runtime auth for Guardian Decisions and memory quota checks (#60064) ## Why Guardian Decisions requests used bearer keys directly, bypassing runtime authentication. Memory startup quota checks used the app-level auth manager instead of the thread's provider auth context. ## What changed - Bind Decisions credentials to runtime authentication and use route-aware HTTP clients with sensitive header protection. Preserve workload identity credentials, reuse the saved-login runtime binding, and isolate explicit API key bindings. - Select the staging Decisions endpoint when the ChatGPT environment is staging. - Use the thread's `ProviderAuthContext` for memory startup and quota checks, preserving account-bound network policy and applying runtime authentication. - Keep custom destination",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/1c414e0d6525ea385aeabad32fac252467a6b836",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "security",
+        "capability",
+        "post-training",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 4,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 18.164,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "1c414e0d6525ea385aeabad32fac252467a6b836",
+          "flags": [
+            "security",
+            "capability"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "Guardian Decisions and memory quota calls were bypassing thread-level auth via bearer keys and app-wide credentials — a real scoping and policy gap. Binding them to runtime auth gives per-thread credential isolation, correct routing, and account-bound network policy.",
+        "zh": "Guardian Decisions 与 memory quota 此前用 bearer key 和应用级凭证绕过线程级认证，是 agent 运行时的凭证隔离缺口；绑定 runtime auth 后，凭证作用域、路由与账号网络策略随线程一致。"
+      },
+      "where": {
+        "en": "Applies to coding-agent runtime design where per-session credential isolation, staging routing, or workload identity matter. Bounds: limited to Codex's Decisions and memory subsystems, not model training or other agent frameworks.",
+        "zh": "适用于需要每会话凭证隔离、staging 路由或 workload identity 的 coding-agent 运行时设计。Bounds: 仅限 Codex 的 Decisions 与 memory 子系统，勿外推至训练或其他 agent 框架。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "codex：使用线程运行时身份验证进行 Guardian Decisions 和内存配额检查......",
+      "summaryZh": "使用线程运行时身份验证进行 Guardian Decisions 和内存配额检查 (#60064) ## 为什么 Guardian Decisions 直接请求使用承载密钥，绕过运行时身份验证。内存启动配额检查使用应用程序级身份验证管理器而不是线程的提供程序身份验证上下文。 ## 更改内容 - 将决策凭据绑定到运行时身份验证，并使用具有敏感标头保护的路由感知 HTTP 客户端。保留工作负载身份凭证，重用已保存的登录运行时绑定，并隔离显式 API 密钥绑定。 - 当 ChatGPT 环境正在暂存时，选择暂存决策端点。 - 使用线程的“ProviderAuthContext”进行内存启动和配额检查，保留帐户绑定的网络策略并应用运行时身份验证。 - 保留自定义目的地"
+    },
+    {
+      "key": "ghc:openai/codex@a90c808408",
+      "title": "codex: Centralize Windows sandbox filesystem override resolution (#60042)",
+      "summary": "Centralize Windows sandbox filesystem override resolution (#60042) Add `WindowsSandboxFilesystemOverrides::resolve` to select the elevated or restricted-token resolver, and use it in core, exec-server, and direct-spawn sandbox preparation. Pass the child environment through to the elevated resolver. Replace the exported unsupported-sandbox reason helper with a test-local wrapper around the shared resolver. GitOrigin-RevId: f1d404356a4f680ce81123bc8284508f27d4d6ab",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/a90c80840869a8cfb313ef181d7721997b86c8e5",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "ai-coding"
+      ],
+      "tags": [
+        "security",
+        "post-training",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 16.706,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "a90c80840869a8cfb313ef181d7721997b86c8e5",
+          "flags": [
+            "security"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "Consolidating override selection into one shared resolver removes duplicated, drift-prone logic across the core, exec-server and direct-spawn sandbox paths; passing the child environment to the elevated resolver makes Windows filesystem override behavior consistent regardless of spawn path.",
+        "zh": "把 override 选择收敛到单一 resolver,消除 core、exec-server、direct-spawn 三条 sandbox 路径的重复逻辑与行为漂移风险;向 elevated resolver 传入 child environment,使 Windows 文件系统覆盖在不同启动路径下解析一致。"
+      },
+      "where": {
+        "en": "Applies to Codex sandbox preparation on Windows wherever filesystem overrides must be resolved for elevated or restricted-token execution. Bounds: Windows-only filesystem override resolution inside codex; not macOS/Linux sandboxing or broader sandbox policy.",
+        "zh": "适用于 Codex 在 Windows 上准备 sandbox 时解析文件系统覆盖的场景,涵盖 elevated 与 restricted-token 两种执行方式。Bounds: 仅限 codex 的 Windows 文件系统覆盖解析,不代表 macOS/Linux sandbox 或整体 sandbox 策略的变化。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "codex：集中 Windows 沙箱文件系统覆盖解析 (#60042)",
+      "summaryZh": "集中 Windows 沙箱文件系统覆盖解析 (#60042) 添加 `WindowsSandboxFilesystemOverrides::resolve` 以选择提升或限制令牌解析器，并在核心、执行服务器和直接生成沙箱准备中使用它。将子环境传递给提升的解析器。将导出的不受支持的沙箱原因助手替换为共享解析器周围的测试本地包装器。 GitOrigin-RevId：f1d404356a4f680ce81123bc8284508f27d4d6ab"
+    },
+    {
+      "key": "ghc:openai/codex@11ca3f7531",
+      "title": "codex: Require explicit project trust in non-interactive runs (#60041)",
+      "summary": "Require explicit project trust in non-interactive runs (#60041) ## What changed Keep untrusted project configuration and MCP servers disabled in exec runs, even with `--sandbox workspace-write`, and warn when project configuration is disabled. Add `--trust` to `codex exec` and `codex review` to save project trust for the current and future chats, including MCP commands outside the sandbox. The grant persists with `--ephemeral`, refuses explicitly untrusted projects, and cannot be combined with `--ignore-user-config`. Pass the working directory as a configuration default so embedded server startup does not implicitly grant trust. Preserve the selected `--oss` provider across configuration reloads. ## Testing Extend CLI parsing and MCP integration coverage for explicit trust, persistence acr",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/11ca3f7531866b22b07bd7ed181e814f087b7ee5",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "policy"
+      ],
+      "tags": [
+        "security",
+        "mcp",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 16.638,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "11ca3f7531866b22b07bd7ed181e814f087b7ee5",
+          "flags": [
+            "security"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "Repo-supplied config and MCP servers can run commands outside the sandbox, so silently loading them in automated runs turns any cloned repo into a takeover vector; forcing explicit --trust closes an agent supply-chain hole.",
+        "zh": "仓库自带的项目配置和 MCP server 可在沙箱外执行命令，非交互 exec 若隐式加载它们，等于让任意克隆的仓库劫持 agent 运行；强制显式 --trust 堵住了 agent 供应链上的这一攻击面。"
+      },
+      "where": {
+        "en": "Applies to non-interactive codex exec and codex review runs where a project's own config or MCP servers would auto-load, notably CI and automation. Bounds: not interactive sessions, other agent CLIs, or sandbox policy beyond config/MCP loading.",
+        "zh": "适用于 codex exec / codex review 的非交互运行，即项目内配置与 MCP server 会被自动加载的场景（如 CI 自动化）。Bounds: 不涉及交互式会话、其他 agent CLI，也不改变配置/MCP 加载之外的沙箱策略。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "codex：在非交互式运行中需要明确的项目信任 (#60041)",
+      "summaryZh": "在非交互式运行中需要显式项目信任 (#60041) ## 更改内容 在 exec 运行中保持不受信任的项目配置和 MCP 服务器禁用，即使使用“--sandboxworkspace-write”，并在禁用项目配置时发出警告。将“--trust”添加到“codex exec”和“codex review”中，以保存当前和未来聊天的项目信任，包括沙箱外的 MCP 命令。该授权持续存在“--ephemeral”，明确拒绝不受信任的项目，并且不能与“--ignore-user-config”结合使用。将工作目录作为配置默认值传递，以便嵌入式服务器启动不会隐式授予信任。在配置重新加载时保留所选的“--oss”提供程序。 ## 测试扩展 CLI 解析和 MCP 集成覆盖范围以实现显式信任、持久性 acr"
+    },
+    {
+      "key": "ghc:openai/codex@358e464528",
+      "title": "codex: Allow plugin starter prompts up to 512 characters (#60048)",
+      "summary": "Allow plugin starter prompts up to 512 characters (#60048) ## What changed Raise the per-entry limit for plugin `interface.defaultPrompt` from 128 to 512 characters, retaining the maximum of three prompts. Update the protocol documentation and generated schemas and bindings to reflect the new limit. ## Testing Update manifest coverage to accept a 512-character Unicode prompt and reject an over-limit prompt. Adjust the discovery warning test to use a 513-character prompt. GitOrigin-RevId: 0ba3ceb253edf22a583f774492934b7c9b5ac231",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/358e46452858242bf6463923e1fac0f14e5c0549",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "policy"
+      ],
+      "tags": [
+        "protocol",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 2,
+      "valueFlags": [
+        "protocol"
+      ],
+      "prerelease": false,
+      "score": 15.207,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "358e46452858242bf6463923e1fac0f14e5c0549",
+          "flags": [
+            "protocol"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "codex：允许插件启动提示最多 512 个字符 (#60048)",
+      "summaryZh": "允许插件启动提示符最多 512 个字符 (#60048) ## 更改内容 将插件 `interface.defaultPrompt` 的每个条目限制从 128 个字符提高到 512 个字符，最多保留 3 个提示符。更新协议文档以及生成的架构和绑定以反映新的限制。 ## 测试更新清单覆盖范围以接受 512 个字符的 Unicode 提示并拒绝超出限制的提示。调整发现警告测试以使用 513 个字符的提示。 GitOrigin-RevId：0ba3ceb253edf22a583f774492934b7c9b5ac231"
+    },
+    {
+      "key": "ghc:NVIDIA/TensorRT-LLM@bcb64e1459",
+      "title": "TensorRT-LLM: [#20969][fix] Qwen3.5/3.8: default dense NVFP4 checkpoints to Marlin …",
+      "summary": "[#20969][fix] Qwen3.5/3.8: default dense NVFP4 checkpoints to Marlin on Ada/Hopper (#21434) Signed-off-by: Han-Yin Chang",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "NVIDIA/TensorRT-LLM · GitHub",
+          "url": "https://github.com/NVIDIA/TensorRT-LLM/commit/bcb64e1459646102a03d1fa4f925ef8ad863c24b",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "model-support",
+        "TensorRT-LLM"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 2,
+      "valueFlags": [
+        "model-support"
+      ],
+      "prerelease": false,
+      "score": 13.195,
+      "meta": [
+        {
+          "repo": "NVIDIA/TensorRT-LLM",
+          "sha": "bcb64e1459646102a03d1fa4f925ef8ad863c24b",
+          "flags": [
+            "model-support"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "TensorRT-LLM：[#20969][修复] Qwen3.5/3.8：默认密集 NVFP4 检查点到 Marlin ...",
+      "summaryZh": "[#20969][修复] Qwen3.5/3.8：Ada/Hopper 上 Marlin 的默认密集 NVFP4 检查点 (#21434) 签署人：Han-Yin Chang"
+    },
+    {
+      "key": "ghc:openai/codex@e6bf88ae02",
+      "title": "codex: Support Cloud image messages and editable draft handoffs (#60061)",
+      "summary": "Support Cloud image messages and editable draft handoffs (#60061) ## Why Cloud messages previously accepted only plain text, and switching a draft to Cloud waited for session preparation without processing composer input. ## What changed - Support ordered text and image parts in Cloud submissions and user-message summaries, preserving attachment placeholders, image detail, and client message IDs. - Accept inline data URLs and uploaded file IDs, including image-only messages. Reject invalid references and text spans locally, and cap encoded image requests at 3.75 MiB while retaining the existing plain-text limit. - Keep the composer editable and redraw the TUI while Cloud prepares a conversation. Carry the latest draft, attachments, and Vim mode into the destination, retain drafts on failur",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "openai/codex · GitHub",
+          "url": "https://github.com/openai/codex/commit/e6bf88ae022cdab968e5a48d5cbeea4d2e304fc9",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "rl"
+      ],
+      "tags": [
+        "security",
+        "post-training",
+        "codex"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 12.438,
+      "meta": [
+        {
+          "repo": "openai/codex",
+          "sha": "e6bf88ae022cdab968e5a48d5cbeea4d2e304fc9",
+          "flags": [
+            "security"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "codex：支持云图像消息和可编辑的草稿交接 (#60061)",
+      "summaryZh": "支持云图像消息和可编辑草稿切换 (#60061) ## 为什么云消息以前只接受纯文本，并将草稿切换到云等待会话准备而不处理作曲家输入。 ## 更改内容 - 支持云提交和用户消息摘要中的有序文本和图像部分，保留附件占位符、图像详细信息和客户端消息 ID。 - 接受内联数据 URL 和上传的文件 ID，包括纯图像消息。拒绝本地无效引用和文本跨度，并将编码图像请求限制在 3.75 MiB，同时保留现有的纯文本限制。 - 保持作曲家可编辑并在 Cloud 准备对话时重新绘制 TUI。将最新的草稿、附件和 Vim 模式带入目的地，失败时保留草稿"
+    },
+    {
+      "key": "gh:ggml-org/llama.cpp@b12183",
+      "title": "llama.cpp b12183: opencl: add arange (#31829)",
+      "summary": "Assisted-by: Claude Opus 5.5 Co-authored-by: Li He lih@qti.qualcomm.com",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "ggml-org/llama.cpp · GitHub",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12183",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "llama.cpp"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 9.428,
+      "meta": [
+        {
+          "repo": "ggml-org/llama.cpp",
+          "tag": "b12183"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "llama.cpp b12183：opencl：添加范围（#31829）",
+      "summaryZh": "协助者：Claude Opus 5.5 共同作者：李鹤 lih@qti.qualcomm.com"
+    },
+    {
+      "key": "gh:ggml-org/llama.cpp@b12182",
+      "title": "llama.cpp b12182",
+      "summary": "meta : raise the compute view limit for buffers with few tensors ( #31447 ) ggml-backend-meta : minimum number of compute views per buffer Assisted-by: Claude Opus 5.5 tests : revert the deepseek41 test model to 6 layers Assisted-by: Claude Opus 5.5 Website: https://llama.app Attestations: https://github.com/ggml-org/llama.cpp/attestations/64758969 macOS/iOS: macOS Apple Silicon (arm64) macOS Apple Silicon (arm64, KleidiAI enabled) DISABLED macOS Intel (x64) iOS XCFramework Linux: Ubuntu x64 (CPU) Ubuntu arm64 (CPU) Ubuntu s390x (CPU) Ubuntu 26.04 s390x (CPU) Ubuntu 26.04 s390x (zDNN) Ubuntu x64 (Vulkan) Ubuntu arm64 (Vulkan) Ubuntu x64 (CUDA 12) - CUDA 12.8 libraries Ubuntu x64 (CUDA 13) - CUDA 13.5 libraries Ubuntu arm64 (CUDA 13) - CUDA 13.5 libraries Ubuntu x64 (ROCm 10.0) Ubuntu x64 (OpenVINO) Ubuntu x64 (SYCL FP32) Ubuntu x64 (SYCL FP16) Linux arm64 (Snapdragon: CPU, Adreno GPU, Hexagon NPU) - setup guide Android: Android arm64 (CPU) Android arm64 (Snapdragon: CPU, Adreno GPU, Hexagon NPU) - setup guide Windows: Windows x64 (CPU) Windows arm64 (CPU) Windows arm64 (OpenCL Adreno) Windows x64 (CUDA 12) - CUDA 12.4 DLLs Windows x64 (CUDA 13) - CUDA 13.5 DLLs Windows arm64 (CUDA",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "ggml-org/llama.cpp · GitHub",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12182",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "llama.cpp"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 9.427,
+      "meta": [
+        {
+          "repo": "ggml-org/llama.cpp",
+          "tag": "b12182"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "llama.cpp b12182",
+      "summaryZh": "meta ：提高具有少量张量的缓冲区的计算视图限制 (#31447 ) ggml-backend-meta ：每个缓冲区的最小计算视图数 协助者：Claude Opus 5.5 测试：将 deepseek41 测试模型恢复为 6 层 协助者：Claude Opus 5.5 网站：https://llama.app 证明： https://github.com/ggml-org/llama.cpp/attestations/64758969 macOS/iOS：macOS Apple Silicon (arm64) macOS Apple Silicon（arm64，启用 KleidiAI）已禁用 macOS Intel (x64) iOS XCFramework Linux：Ubuntu x64 (CPU) Ubuntu arm64 (CPU) Ubuntu s390x (CPU) Ubuntu 26.04 s390x (CPU) Ubuntu 26.04 s390x (zDNN) Ubuntu x64 (Vulkan) Ubuntu arm64 (Vulkan) Ubuntu x64 (CUDA 12) - CUDA 12.8 库 Ubuntu x64 (CUDA 13) - CUDA 13.5 库 Ubuntu arm64 (CUDA 13) - CUDA 13.5 库 Ubuntu x64 (ROCm 10.0) Ubuntu x64 (OpenVINO) Ubuntu x64 (SYCL FP32) Ubuntu x64 (SYCL FP16) Linux arm64 (Snapdragon: CPU、Adreno GPU、Hexagon NPU) - 设置指南 Android: Android arm64 (CPU) Android arm64 (Snapdragon: CPU、Adreno GPU、Hexagon NPU) - 设置指南 Windows: Windows x64 (CPU) Windows arm64 (CPU) Windows arm64 (OpenCL Adreno) Windows x64 (CUDA) 12) - CUDA 12.4 DLL Windows x64 (CUDA 13) - CUDA 13.5 DLL Windows arm64 (CUDA"
+    },
+    {
+      "key": "gh:ggml-org/llama.cpp@b12181",
+      "title": "llama.cpp b12181: hexagon: fuse post-norm residual add into RMS_NORM_MUL (#31822)",
+      "summary": "hexagon: fuse post-norm residual add into RMS_NORM_MUL hex-fusion: refactor RMS_NORM fusion and add dedicated RMS_NORM_MUL_ADD opcode Improves performance by keeping things in HVX registers. Also simplifies overall fusion logic and logging. Co-authored-by: Max Krasnyansky maxk@qti.qualcomm.com",
+      "primaryDate": "2026-11-07",
+      "sources": [
+        {
+          "name": "ggml-org/llama.cpp · GitHub",
+          "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12181",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "llama.cpp"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 9.426,
+      "meta": [
+        {
+          "repo": "ggml-org/llama.cpp",
+          "tag": "b12181"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "llama.cpp b12181：六边形：将后范数残差融合到 RMS_NORM_MUL 中 (#31822)",
+      "summaryZh": "六边形：融合后范数残差添加到 RMS_NORM_MUL 十六进制融合：重构 RMS_NORM 融合并添加专用 RMS_NORM_MUL_ADD 操作码 通过将内容保留在 HVX 寄存器中来提高性能。还简化了整体融合逻辑和日志记录。合著者：Max Krasnyansky maxk@qti.qualcomm.com"
+    },
+    {
+      "key": "gh:anthropics/claude-code@v2.1.319",
+      "title": "claude-code v2.1.319",
+      "summary": "What's changed\nChanged auto mode with telemetry or feature flags off, including behind LLM gateways: calls the server can't check are asked about or denied, with no fallback to the built-in classifier; set CLAUDE_CODE_AUTO_MODE_SERVER=0 to keep using it (Bedrock, Vertex and Foundry are unchanged)\nChanged auto mode behind an LLM gateway: CLAUDE_CODE_AUTO_MODE_SERVER=1 turns on the server-side check even with CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS set; if managed settings set the latter, they must set the 1 too\nAdded support for MCP tasks in the terminal: when an MCP server runs a tool call as a task, Claude Code moves it to the background right away and tells Claude the result when it finishes\nAdded the CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND environment variable to make Claude Code wait for an MCP task inside its tool call instead of moving it to the background right away\nAdded permissions.denyInsteadOfPrompting setting: a tool call that would wait on a permission prompt is denied and the turn continues, in terminal sessions, subagents and teammates\nAdded /claude-api latency-optimize to find where your Claude API code makes people wait and try faster settings against your eval\nAdde",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "anthropics/claude-code · GitHub",
+          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.319",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents",
+        "ai-coding"
+      ],
+      "tags": [
+        "post-training",
+        "orchestration",
+        "evaluation",
+        "mcp",
+        "scheduling",
+        "claude-code"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 6,
+      "valueFlags": [
+        "security",
+        "model-support",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 20.714,
+      "meta": [
+        {
+          "repo": "anthropics/claude-code",
+          "tag": "v2.1.319"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "Auto mode now fails closed: calls the server can't verify (e.g., behind an LLM gateway with telemetry/flags off) are asked about or denied, not passed to the built-in classifier — a tighter permission model for gateway deployments. Background MCP tasks and denyInsteadOfPrompting unblock long tool calls and unattended automation.",
+        "zh": "auto mode 改为 fail-closed：server 无法校验的调用会询问或拒绝，不再回退内置分类器，gateway 部署下权限更严；MCP 后台任务与 denyInsteadOfPrompting 让长工具调用、无人值守运行不再阻塞。"
+      },
+      "where": {
+        "en": "Applies to this version's Claude Code terminal sessions, MCP tool runs and LLM-gateway deployments; managed settings disabling betas must also set CLAUDE_CODE_AUTO_MODE_SERVER=1. Bounds: Bedrock, Vertex and Foundry auto-mode behavior is unchanged, and this says nothing about non-MCP tools.",
+        "zh": "适用于该版本 Claude Code 的终端会话、MCP 工具调用与 LLM gateway 部署；托管设置禁用 betas 时需同时设 CLAUDE_CODE_AUTO_MODE_SERVER=1。Bounds：Bedrock/Vertex/Foundry 行为不变，不覆盖非 MCP 工具。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "claude-code v2.1.319",
+      "summaryZh": "What's changed\n更改了遥测或功能标记关闭的自动模式，包括在 LLM 网关后面：服务器无法检查的呼叫会被询问或拒绝，不会回退到内置分类器；设置 CLAUDE_CODE_AUTO_MODE_SERVER=0 继续使用（Bedrock、Vertex 和 Foundry 不变）\n更改了 LLM 网关后面的自动模式：CLAUDE_CODE_AUTO_MODE_SERVER=1 即使设置了 CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS，也会打开服务器端检查；如果托管设置设置了后者，则也必须设置 1\n添加了对终端中 MCP 任务的支持：当 MCP 服务器将工具调用作为任务运行时，Claude Code 会立即将其移动到后台，并在完成时告诉 Claude 结果\n添加了 CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND 环境变量，使 Claude Code 在其工具调用中等待 MCP 任务，而不是立即将其移动到后台\n添加了 requests.denyInsteadOfPrompting 设置：在终端会话、子代理和队友中，将等待权限提示的工具调用被拒绝，并且轮流继续\n添加了 /Claude-api latency-optimize 来查找您的 Claude API 代码让人们等待的地方，并针对您的评估尝试更快的设置\nAdde"
+    },
+    {
+      "key": "ghc:modelcontextprotocol/specification@c9b51b3a02",
+      "title": "specification: fix(schema): restore optional _meta on input requests and responses (…",
+      "summary": "fix(schema): restore optional _meta on input requests and responses (#3469) SEP-2322 stopped these types from being standalone JSON-RPC messages: the request params no longer extend TaskAugmentedRequestParams (3443ffac) and the results no longer extend Result (2d37d9de). Both base types carried `_meta`, so it was dropped as a side effect from CreateMessageRequestParams, ElicitRequestFormParams, ElicitRequestURLParams, ElicitResult and ListRootsResult. ListRootsRequest was later given `params?: { _meta?: MetaObject }` \"matching other server-initiated input requests\" (d4854bce), but the others never had it. Add the same optional `_meta?: MetaObject` to each. RequestParams/Result are not reused because their `_meta` types carry required client-request and result-level fields that don't apply",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "modelcontextprotocol/specification · GitHub",
+          "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/commit/c9b51b3a02f3851f9821d5191718652bab97adac",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "breaking",
+        "protocol",
+        "specification"
+      ],
+      "signalLeadDays": null,
+      "weight": 8,
+      "value": 4,
+      "valueFlags": [
+        "breaking",
+        "protocol"
+      ],
+      "prerelease": false,
+      "score": 16.669,
+      "meta": [
+        {
+          "repo": "modelcontextprotocol/specification",
+          "sha": "c9b51b3a02f3851f9821d5191718652bab97adac",
+          "flags": [
+            "breaking",
+            "protocol"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "A spec refactor (SEP-2322) silently dropped the extensibility field `_meta` from several MCP message types; this fix shows how type-inheritance cleanups can quietly break protocol extensibility and any clients or tooling that pass extensions via `_meta`.",
+        "zh": "SEP-2322 重构类型继承时，顺带删掉了多个 MCP 消息类型的 `_meta` 扩展字段；这次修复说明 schema 继承清理容易静默破坏向后兼容，依赖 `_meta` 传扩展信息的实现会受影响。"
+      },
+      "where": {
+        "en": "Applies to the MCP specification JSON schema for server-initiated input requests and their results (sampling, elicitation, roots listing). Bounds: only the named params/result types, not a wire-protocol behavior change.",
+        "zh": "适用于 MCP 规范 schema 中 server 发起的 input request 及其 result 类型（sampling、elicitation、roots 列表）。Bounds: 仅限被点名的 params/result 类型，不涉及协议行为变更。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "规范：修复（模式）：恢复输入请求和响应上的可选_meta（...",
+      "summaryZh": "修复（架构）：恢复输入请求和响应上的可选 _meta (#3469) SEP-2322 阻止这些类型成为独立的 JSON-RPC 消息：请求参数不再扩展 TaskAugmentedRequestParams (3443ffac)，结果不再扩展 Result (2d37d9de)。两种基本类型都带有 `_meta`，因此它作为 CreateMessageRequestParams、ElicitRequestFormParams、ElicitRequestURLParams、ElicitResult 和 ListRootsResult 的副作用而被删除。 ListRootsRequest 后来被赋予“params?: { _meta?: MetaObject }”“匹配其他服务器发起的输入请求”(d4854bce)，但其他人从未拥有过它。为每个添加相同的可选 `_meta?: MetaObject`。 RequestParams/Result 不会被重用，因为它们的 `_meta` 类型带有不适用的必需的客户端请求和结果级字段"
+    },
+    {
+      "key": "ghc:anthropics/claude-code@90380efca7",
+      "title": "claude-code: mods: add the privacy mod (#107768)",
+      "summary": "mods: add the privacy mod (#107768) * mods: add the privacy mod The source of the built-in that refuses a shell call holding the signed-in account's email address and naming a User-Agent. Also declares $.session.identity in mods/types, which the mod reads. Co-Authored-By: Claude Claude-Session: https://claude.ai/code/session_0197nZyFK7N4yLSvF25Vz7wC Co-authored-by: atp * mods/privacy: say what else turns it off Co-Authored-By: Claude Claude-Session: https://claude.ai/code/session_0197nZyFK7N4yLSvF25Vz7wC Co-authored-by: atp --------- Co-authored-by: Claude",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "anthropics/claude-code · GitHub",
+          "url": "https://github.com/anthropics/claude-code/commit/90380efca7f9d73e206fac453f841b6acd664f4d",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "security",
+        "claude-code"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 16.133,
+      "meta": [
+        {
+          "repo": "anthropics/claude-code",
+          "sha": "90380efca7f9d73e206fac453f841b6acd664f4d",
+          "flags": [
+            "security"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "claude-code: mods: 添加隐私 mod (#107768)",
+      "summaryZh": "mods：添加隐私 mod (#107768) * mods：添加隐私 mod 拒绝持有登录帐户的电子邮件地址并命名用户代理的 shell 调用的内置源。还在 mods/types 中声明了 mod 读取的 $.session.identity。共同创作者：Claude Claude-Session：https://Claude.ai/code/session_0197nZyFK7N4yLSvF25Vz7wC 共同创作者：atp * mods/privacy：说一下还有什么可以关闭它共同创作者：Claude Claude-Session： https://Claude.ai/code/session_0197nZyFK7N4yLSvF25Vz7wC 共同作者：atp --------- 共同作者：Claude"
+    },
+    {
+      "key": "ghc:modelcontextprotocol/specification@38353251fa",
+      "title": "specification: fix(schema): close oneOf type-check bypass and render SEP-2106 Tool e…",
+      "summary": "fix(schema): close oneOf type-check bypass and render SEP-2106 Tool examples (#3185) * fix(schema): close type-check bypass in composition inputSchema example The `find_resource` example distinguished its `oneOf` branches with branch-local `properties`. Failing a branch on a type error is exactly what makes `oneOf` succeed, so a wrongly-typed value in the inactive branch was accepted: {\"id\": \"r1\", \"name\": 123} validated {\"id\": 123, \"name\": \"alpha\"} validated The mutual exclusivity the example demonstrates was therefore bypassable by supplying both fields and malforming one, and neither field was type-checked while it was the non-selected branch. Hoist `properties` to the schema root and reduce `oneOf` to the exclusivity assertion. Validation is otherwise unchanged: `{}` and `{id, name}` ar",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "modelcontextprotocol/specification · GitHub",
+          "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/commit/38353251fab3bdeead03dd8283b9e66076ce1a7f",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "security",
+        "breaking",
+        "protocol",
+        "specification"
+      ],
+      "signalLeadDays": null,
+      "weight": 8,
+      "value": 2,
+      "valueFlags": [
+        "protocol"
+      ],
+      "prerelease": false,
+      "score": 13.64,
+      "meta": [
+        {
+          "repo": "modelcontextprotocol/specification",
+          "sha": "38353251fab3bdeead03dd8283b9e66076ce1a7f",
+          "flags": [
+            "security",
+            "breaking",
+            "protocol"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "规范：修复（架构）：关闭 oneOf 类型检查旁路并渲染 SEP-2106 工具 e...",
+      "summaryZh": "fix(schema): 关闭 oneOf 类型检查绕过并渲染 SEP-2106 工具示例 (#3185) * fix(schema): 关闭组合中的类型检查绕过 inputSchema 示例 `find_resource` 示例将其 `oneOf` 分支与分支本地 `properties` 区分开来。类型错误导致分支失败正是导致 `oneOf` 成功的原因，因此非活动分支中错误输入的值被接受： {\"id\": \"r1\", \"name\": 123} valid {\"id\": 123, \"name\": \"alpha\"} valid 因此，示例演示的互斥性可以通过提供两个字段和错误的字段来绕过，并且当它是非选定分支时，这两个字段都不会进行类型检查。将“properties”提升到模式根并将“oneOf”减少为排他性断言。验证在其他方面保持不变：`{}` 和 `{id, name}` ar"
+    },
+    {
+      "key": "gh:unslothai/unsloth@v0.1.916-beta",
+      "title": "unsloth Large Performance Fixes",
+      "summary": "This release brings large performance fixes across Unsloth: faster typing and search in long chats, faster image/video loads, two-GPU image/video gen. It also adds separate browsers for each chat, floating browser window. Highlights Large performance fixes with more Glass theme optimizations coming next week Glass theme fixes no more blur, better rendering, more options Unified memory offloading now properly works for big models Separate browsers for each chat - Multiple chats can now run their own browser individually Floating browser you can move and resize over the chat & let the model do it's thing Dynamic V3.1 Qwen3.8-Flash - 50% less token use, 15% more accurate Two-GPU image and video up to 2x faster on matching NVIDIA cards Faster chat search and deleting - search and delete chats much faster Stable diffusion image/video models loads up to 40% faster LTX-2.5 video much faster for new prompts on 16 to 24 GB GPUs Chat performance Typing in a long chat no longer lags when a Glass theme or chat background is on. Chat search stays fast on very long histories instead of failing to load. Clearing and deleting chats is much faster on large histories. The first use of voice or audio",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "unslothai/unsloth · GitHub",
+          "url": "https://github.com/unslothai/unsloth/releases/tag/v0.1.916-beta",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "rl"
+      ],
+      "tags": [
+        "post-training",
+        "unsloth"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 2,
+      "valueFlags": [
+        "breaking",
+        "measured",
+        "capability"
+      ],
+      "prerelease": true,
+      "score": 12.983,
+      "meta": [
+        {
+          "repo": "unslothai/unsloth",
+          "tag": "v0.1.916-beta"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "unsloth 大型性能修复",
+      "summaryZh": "此版本为 Unsloth 带来了巨大的性能修复：在长时间聊天中更快的打字和搜索、更快的图像/视频加载、双 GPU 图像/视频生成。它还为每个聊天添加了单独的浏览器、浮动浏览器窗口。亮点 下周将进行更多 Glass 主题优化，大幅性能修复 Glass 主题修复不再模糊，渲染效果更好，选项更多 统一内存卸载现在可以正确地适用于大型模型 每个聊天的独立浏览器 - 多个聊天现在可以单独运行自己的浏览器 浮动浏览器，您可以在聊天上移动和调整大小，让模型做它的事情 动态 V3.1 Qwen3.8-Flash - 令牌使用减少 50%，准确度提高 15% 双 GPU 图像和视频匹配速度提高 2 倍NVIDIA 卡 更快的聊天搜索和删除 - 搜索和删除聊天速度更快 稳定的扩散图像/视频模型加载速度提高了 40% LTX-2.5 视频的加载速度更快，可在 16 至 24 GB GPU 上实现新提示 聊天性能 当 Glass 主题或聊天背景打开时，长时间聊天中的打字不再滞后。聊天搜索在很长的历史记录中保持快速，而不是加载失败。在大型历史记录中，清除和删除聊天记录要快得多。首次使用语音或音频"
+    },
+    {
+      "key": "gh:langchain-ai/langgraph@cli%3D%3D0.4.42",
+      "title": "langgraph langgraph-cli==0.4.42",
+      "summary": "Changes since cli==0.4.41 release(cli): 0.4.42 ( #9611 )\nfeat(cli): add deploy metrics command ( #9479 )\nchore(deps): bump filelock and langgraph-api for security fixes ( #9606 )",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "langchain-ai/langgraph · GitHub",
+          "url": "https://github.com/langchain-ai/langgraph/releases/tag/cli%3D%3D0.4.42",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "agent-security",
+        "langgraph"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 2,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 11.635,
+      "meta": [
+        {
+          "repo": "langchain-ai/langgraph",
+          "tag": "cli%3D%3D0.4.42"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "langgraph langgraph-cli==0.4.42",
+      "summaryZh": "自 cli==0.4.41 发布（cli）以来的变化：0.4.42（#9611）\nfeat(cli)：添加部署指标命令（#9479）\nChore(deps)：碰撞文件锁和 langgraph-api 以进行安全修复 (#9606)"
+    },
+    {
+      "key": "gh:NVIDIA/TensorRT-LLM@v1.4.0rc3",
+      "title": "TensorRT-LLM v1.4.0rc3",
+      "summary": "Highlights Known Issues DSA models, including GLM-5.2, may produce incorrect output when using an NVFP4 KV cache. Kimi K3 DSpark with MegaMoE CuTe DSL TEP and CUDA graphs may hang during GB300 warmup. DeepSeek-V4-Pro initialization may run out of GPU memory when MPI workers are reused after large MoE workloads. Tensor-parallel serving with RPC orchestration may hang during model initialization when reusing an MPI worker pool across threads. Model\nSupport Add Muse Spark Open model and configuration support #21042 , #20643 Add LTX-2.3 text-to-video and retake pipelines #18111 Add GLM-5.2 NVFP4 Modeling V2 targets for GB300 and SM103 #20524 , #20662 Add MiniMax-M3 NVFP4 low-latency decode for Blackwell and MiniMax-M3.1-Flash DSpark serving #20306 , #20922 Consolidate Kimi K3 native modeling and support NVFP4 KV caching #20893 , #20888 Add MiniMax-H3 CPU offloading and tensor parallelism for its text encoder and DiT #21301 , #19807 , #20176 Qualify the Qwen3.5 dense vision-language model for ModelExpress #20764\nEnable DeepSeek-V4.1-Flash on SM120 #20769 API Remove unused LlmRequest fields (BREAKING) #21036 Remove obsolete TensorRT-backend compatibility surfaces (BREAKING) #21041 Defaul",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "NVIDIA/TensorRT-LLM · GitHub",
+          "url": "https://github.com/NVIDIA/TensorRT-LLM/releases/tag/v1.4.0rc3",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "kv-cache",
+        "post-training",
+        "orchestration",
+        "scheduling",
+        "TensorRT-LLM"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 11.524,
+      "meta": [
+        {
+          "repo": "NVIDIA/TensorRT-LLM",
+          "tag": "v1.4.0rc3"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "TensorRT-LLM v1.4.0rc3",
+      "summaryZh": "亮点已知问题 DSA 模型（包括 GLM-5.2）在使用 NVFP4 KV cache 时可能会产生不正确的输出。带有 MegaMoE CuTe DSL TEP 和 CUDA 图形的 Kimi K3 DSpark 在 GB300 预热期间可能会挂起。当在大型 MoE 工作负载后重用 MPI 工作线程时，DeepSeek-V4-Pro 初始化可能会耗尽 GPU 内存。当跨线程重用 MPI 工作池时，使用 RPC 编排的张量并行服务可能会在模型初始化期间挂起。模型\n支持 添加 Muse Spark Open 模型和配置支持 #21042、#20643 添加 LTX-2.3 文本到视频和重拍管道 #18111 添加适用于 GB300 和 SM103 的 GLM-5.2 NVFP4 建模 V2 目标 #20524、#20662 添加适用于 Blackwell 和的 MiniMax-M3 NVFP4 low-latency 解码MiniMax-M3.1-Flash DSpark 服务 #20306、#20922 整合 Kimi K3 本机建模并支持 NVFP4 KV 缓存 #20893、#20888 为其文本编码器和 DiT 添加 MiniMax-H3 CPU 卸载和张量并行性 #21301、#19807、#20176 验证 Qwen3.5 密集视觉语言模型适用于 ModelExpress #20764\n在 SM120 上启用 DeepSeek-V4.1-Flash #20769 API 删除未使用的 LlmRequest 字段（破坏）#21036 删除过时的 TensorRT 后端兼容性表面（破坏）#21041 默认"
+    },
+    {
+      "key": "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/taxbit-assist-a-grounded-role-aware-ai-agent-on-amazon-bedrock-agentcore/",
+      "title": "Taxbit Assist: A grounded, role-aware AI agent on Amazon Bedrock AgentCore",
+      "summary": "Taxbit built Taxbit Assist, a cited, permission-aware AI assistant embedded in its enterprise dashboard, on Amazon Bedrock AgentCore. This post shows how they grounded answers in a curated knowledge base, enforced role-aware and region-compliant safety, and continuously measured answer quality on live production traffic.",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/taxbit-assist-a-grounded-role-aware-ai-agent-on-amazon-bedrock-agentcore/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [],
+      "signalLeadDays": null,
+      "weight": 4,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 11.219,
+      "meta": [
+        {
+          "feedId": "aws-ml"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "Taxbit Assist：Amazon Bedrock AgentCore 上的基础、角色感知 AI 代理",
+      "summaryZh": "Taxbit 在 Amazon Bedrock AgentCore 上构建了 Taxbit Assist，这是一种嵌入其企业仪表板中的、具有权限感知功能的 AI 助手。这篇文章展示了他们如何将答案建立在精心策划的知识库中，强制执行角色感知和区域合规安全性，并持续测量实时生产流量的答案质量。"
+    },
+    {
+      "key": "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/how-greenlight-financial-built-an-autonomous-soc-solution-on-amazon-bedrock-agentcore/",
+      "title": "How Greenlight Financial built an autonomous SOC solution on Amazon Bedrock AgentCore",
+      "summary": "Greenlight Financial resolves more than 90% of up to 4,000 monthly security and risk cases without human intervention using Luna, a tiered multi-agent system on Amazon Bedrock AgentCore. This post covers the architecture, episodic memory for continuous learning, and the expansion from SOC operations into financial risk triage.",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/how-greenlight-financial-built-an-autonomous-soc-solution-on-amazon-bedrock-agentcore/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "agent-security",
+        "orchestration"
+      ],
+      "signalLeadDays": null,
+      "weight": 4,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 11.199,
+      "meta": [
+        {
+          "feedId": "aws-ml"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "Greenlight Financial 如何在 Amazon Bedrock AgentCore 上构建自主 SOC 解决方案",
+      "summaryZh": "Greenlight Financial 使用 Amazon Bedrock AgentCore 上的分层多代理系统 Luna 解决了每月多达 4,000 个安全和风险案例中的 90% 以上，无需人工干预。这篇文章涵盖了架构、用于持续学习的情景记忆，以及从 SOC 操作扩展到财务风险分类的扩展。"
+    },
+    {
+      "key": "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/govern-ai-agent-access-with-okta-cross-app-access-and-amazon-bedrock-agentcore-part-2/",
+      "title": "Govern AI agent access with Okta Cross App Access and Amazon Bedrock AgentCore – Part 1",
+      "summary": "An AI agent that acts for a user raises an identity question that per-app OAuth and service accounts leave open: which agent may act for which user, and how you stop it. In this first post of two, you build a task agent on Amazon Bedrock AgentCore that governs access through Okta Cross App Access and AgentCore Identity, and enforces each user's authority.",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/govern-ai-agent-access-with-okta-cross-app-access-and-amazon-bedrock-agentcore-part-2/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        },
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/govern-ai-agent-access-with-okta-cross-app-access-and-amazon-bedrock-agentcore-part-1/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [],
+      "signalLeadDays": null,
+      "weight": 4,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 11.17,
+      "meta": [
+        {
+          "feedId": "aws-ml"
+        },
+        {
+          "feedId": "aws-ml"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "使用 Okta Cross App Access 和 Amazon Bedrock AgentCore 管理 AI 代理访问 – 第 1 部分",
+      "summaryZh": "代表用户的 AI 代理会提出一个身份问题，每个应用程序 OAuth 和服务帐户都保持开放状态：哪个代理可以代表哪个用户，以及如何阻止它。在这两篇文章中的第一篇中，您将在 Amazon Bedrock AgentCore 上构建一个任务代理，该代理通过 Okta 跨应用程序访问和 AgentCore 身份来管理访问，并强制执行每个用户的权限。"
+    },
+    {
+      "key": "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/extend-claude-code-to-remote-sessions-on-amazon-bedrock-agentcore-with-security-controls/",
+      "title": "Extend Claude Code to remote sessions on Amazon Bedrock AgentCore with security controls",
+      "summary": "Run Claude Code as a remote agent on Amazon Bedrock AgentCore. Each coding task runs in its own isolated session in your AWS account, every model call goes through Amazon Bedrock, and the result comes back as a GitHub pull request you review and merge.",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/extend-claude-code-to-remote-sessions-on-amazon-bedrock-agentcore-with-security-controls/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "agent-security"
+      ],
+      "signalLeadDays": null,
+      "weight": 4,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 11.14,
+      "meta": [
+        {
+          "feedId": "aws-ml"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "通过安全控制将 Claude Code 扩展到 Amazon Bedrock AgentCore 上的远程会话",
+      "summaryZh": "在 Amazon Bedrock AgentCore 上将 Claude Code 作为远程代理运行。每个编码任务都在您的 AWS 账户中自己的隔离会话中运行，每个模型调用都经过 Amazon Bedrock，结果作为您查看和合并的 GitHub 拉取请求返回。"
+    },
+    {
+      "key": "gh:langchain-ai/langgraph@sdk%3D%3D0.4.14",
+      "title": "langgraph langgraph-sdk==0.4.14",
+      "summary": "Changes since sdk==0.4.13 release(sdk-py): 0.4.14 ( #9610 )\nfeat(sdk-py): add strict_resume to runs.create, stream and wait ( #9599 )\nfeat(sdk-py): add tools and lifecycle to StreamMode ( #9601 )",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "langchain-ai/langgraph · GitHub",
+          "url": "https://github.com/langchain-ai/langgraph/releases/tag/sdk%3D%3D0.4.14",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "langgraph"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 10.172,
+      "meta": [
+        {
+          "repo": "langchain-ai/langgraph",
+          "tag": "sdk%3D%3D0.4.14"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "langgraph langgraph-sdk==0.4.14",
+      "summaryZh": "自 sdk==0.4.13 发布（sdk-py）以来的更改：0.4.14（#9610）\nfeat(sdk-py)：将 strict_resume 添加到 running.create、stream 和 wait (#9599)\nfeat(sdk-py)：向 StreamMode 添加工具和生命周期（#9601）"
+    },
+    {
+      "key": "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/sagemaker-inference-now-supports-multi-instance-gpu-to-maximize-gpu-utilization-for-model-endpoints/",
+      "title": "SageMaker Inference now supports Multi-Instance GPU to maximize GPU utilization for model endpoints",
+      "summary": "Amazon SageMaker Inference now supports GPU partitioning with NVIDIA Multi-Instance GPU (MIG), which divides one GPU into hardware-isolated partitions so you can run a different model in each or take a right-sized fraction of a newer accelerator. This post shows how two optional API fields place one model per partition, and what we measured against a whole older GPU.",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/sagemaker-inference-now-supports-multi-instance-gpu-to-maximize-gpu-utilization-for-model-endpoints/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        }
+      ],
+      "beats": [
+        "rl",
+        "ai-infra"
+      ],
+      "tags": [
+        "post-training"
+      ],
+      "signalLeadDays": null,
+      "weight": 4,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 7.009,
+      "meta": [
+        {
+          "feedId": "aws-ml"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "SageMaker Inference 现在支持多实例 GPU，以最大限度地提高模型端点的 GPU 利用率",
+      "summaryZh": "Amazon SageMaker Inference 现在支持使用 NVIDIA 多实例 GPU (MIG) 进行 GPU 分区，该分区将一个 GPU 划分为硬件隔离的分区，以便您可以在每个分区中运行不同的模型，或者采用适当大小的较新加速器部分。这篇文章展示了两个可选 API 字段如何为每个分区放置一个模型，以及我们针对整个旧 GPU 进行的测量。"
+    },
+    {
+      "key": "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/serverless-mcp-server-for-ai-agent-data-lake-access-on-amazon-ecs-fargate/",
+      "title": "Serverless MCP server for AI agent data lake access on Amazon ECS Fargate",
+      "summary": "Learn how to build a serverless Model Context Protocol (MCP) server on Amazon ECS with AWS Fargate that gives AI agents secure, metadata-driven access to an enterprise data lake. Exposing a new dataset requires only a JSON file, with no per-dataset integration code.",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/serverless-mcp-server-for-ai-agent-data-lake-access-on-amazon-ecs-fargate/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        }
+      ],
+      "beats": [
+        "agents",
+        "rl"
+      ],
+      "tags": [
+        "mcp",
+        "post-training"
+      ],
+      "signalLeadDays": null,
+      "weight": 4,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.964,
+      "meta": [
+        {
+          "feedId": "aws-ml"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "用于 Amazon ECS Fargate 上的 AI 代理数据湖访问的无服务器 MCP 服务器",
+      "summaryZh": "了解如何使用 AWS Fargate 在 Amazon ECS 上构建无服务器模型上下文协议 (MCP) 服务器，让 AI 代理能够以元数据驱动的方式安全地访问企业数据湖。公开新数据集仅需要一个 JSON 文件，无需每个数据集的集成代码。"
+    },
+    {
+      "key": "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/taxonomy-of-agentic-primitives-in-amazon-quick/",
+      "title": "Taxonomy of agentic primitives in Amazon Quick",
+      "summary": "As we built Amazon Quick, its agents grew from answering questions to taking actions, and the same primitives kept getting rebuilt under different names. This post shares the taxonomy we converged on — triggers, agents, capabilities, and learned context — found by decomposing agentic work into four plain questions: When, What, Who, and How.",
+      "primaryDate": "2026-11-06",
+      "sources": [
+        {
+          "name": "AWS Machine Learning Blog",
+          "url": "https://aws.amazon.com/blogs/machine-learning/taxonomy-of-agentic-primitives-in-amazon-quick/",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "blog"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [],
+      "signalLeadDays": null,
+      "weight": 4,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.657,
+      "meta": [
+        {
+          "feedId": "aws-ml"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "Amazon Quick 中 agentic 基元的分类",
+      "summaryZh": "当我们构建 Amazon Quick 时，它的代理从回答问题发展到采取行动，并且相同的原语不断以不同的名称重建。这篇文章分享了我们通过将 agentic 工作分解为四个简单问题得出的分类法——触发器、代理、能力和学习背景：何时、什么、谁和如何。"
+    },
     {
       "key": "arxiv:2611.08449",
       "title": "VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding",
@@ -33,7 +1274,12 @@
       ],
       "signalLeadDays": null,
       "weight": 7.919895410624553,
-      "score": 12.524,
+      "value": 2,
+      "valueFlags": [
+        "measured"
+      ],
+      "prerelease": false,
+      "score": 15.412,
       "meta": [
         {
           "upvotes": 96,
@@ -56,8 +1302,8 @@
         "en": "Applies to vision-language models emitting structured visual plans (points, boxes, trajectories) for robotics and autonomous driving. Bounds: evidence covers 2D/3D trajectory tasks and four MolmoSpaces suites; the ~25x figure is preliminary single-rollout 3D point motion forecasting, not a language-decoding claim.",
         "zh": "适用于输出视觉 plan（点、bounding box、trajectory）的 vision-language 模型，面向 robotics 与自动驾驶。Bounds：证据仅覆盖 2D/3D trajectory 任务与 MolmoSpaces 四个套件；25x 为 3D 点位预测的单次 rollout 初步测量，勿外推至语言 decoding。"
       },
-      "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "enrichedBy": "llm",
+      "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "VFlash：通过 Flash 基元解码快速、准确的视觉规划",
       "summaryZh": "机器人和自动驾驶等物理人工智能任务的模型不需要仅用语言进行推理。他们可以使用视觉计划——点、边界框和轨迹——来表示空间目标并预测运动。然而，自回归视觉语言模型一次生成一个坐标标记，从而使更丰富的预测成本越来越高。我们介绍 VFlash，这是一种通过 Flash 基元解码进行快速、准确的视觉规划的方法。 VFlash 利用视觉图元的已知结构来联合预测它们的坐标，使用轻量级绘图器在一次前向传递中生成整个图元。布局适应图元的类型、维度和长度，支持紧凑的盒子和长的、可变长度的轨迹。至关重要的是，空间准确性不需要再现自回归模型的精确标记序列。因此，VFlash 在带注释的基元上进行训练，并直接接受结构上有效的预测，而无需目标令牌协议。在评估的 2D 和 3D 机器人轨迹任务中，VFlash 始终减少了相对于自回归解码的预测误差。初步的单 rollout 测量表明 3D 点运动预测的生成速度提高了大约 25 倍。以 VFlash 计划为条件的世界行动模型在四个 MolmoSpaces 任务套件中取得了 70.2% 的平均成功率，而基线的成功率为 62.6%。"
     },
@@ -87,11 +1333,16 @@
       ],
       "tags": [],
       "signalLeadDays": null,
-      "weight": 7.901955000865387,
-      "score": 12.18,
+      "weight": 8,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 13.666,
       "meta": [
         {
-          "upvotes": 95,
+          "upvotes": 150,
           "aiKeywords": [
             "vision-language-action (VLA) foundations",
             "2D vision-language pre-training",
@@ -130,8 +1381,8 @@
         "en": "Applies to VLA-based robot policies trained across diverse robot data where spatial understanding limits performance. Bounds: claims cover spatial alignment in robot VLA settings only, not general language reasoning or non-VLA perception stacks.",
         "zh": "适用于在多样机器人数据上训练、受空间理解能力制约的 VLA 机器人策略。Bounds：仅限机器人 VLA 的空间对齐收益，不代表通用语言能力或非 VLA 感知架构的提升。"
       },
-      "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "enrichedBy": "llm",
+      "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "SLA：通过持续预训练扩展空间语言动作模型",
       "summaryZh": "SLA 是一种空间语言动作模型，它不断地对预训练的 VLA 策略进行预训练和后训练，并与冻结的 3D 感知模型进行空间对齐，使用特征相关门和概率状态丢失来提高对不同机器人数据的空间理解，同时保留推理架构。"
     },
@@ -166,7 +1417,12 @@
       ],
       "signalLeadDays": null,
       "weight": 6.386313713864835,
-      "score": 10.994,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 12.382,
       "meta": [
         {
           "upvotes": 39,
@@ -189,8 +1445,8 @@
         "en": "Applies to single-GPU serving of text-to-image generation, instruction editing, and multi-reference synthesis in consumer products, and to post-training pipelines merging separately optimised policies. Bounds: rankings cover the three named benchmarks among evaluated open-source image models only — not video, video generation, or closed-model comparisons.",
         "zh": "适用于消费级产品中单卡部署的文生图、指令编辑与多参考合成,以及需要合并分别优化策略的后训练流程。Bounds:排名结论仅限图像模型在所列三项 benchmark 上的开源对比,不外推到视频生成或闭源模型。"
       },
-      "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "enrichedBy": "llm",
+      "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "WeLM-Image：面向视觉智能的统一图像生成模型",
       "summaryZh": "我们提出了 WeLM-Image，这是一种统一的图像基础模型，它将多模态理解集成到文本到图像生成、指令引导编辑和多参考合成中。该模型专为微信大规模消费应用程序中的单 GPU 部署而设计，将文本、参考图像和目标潜在信息作为一个交错序列进行处理。混合变压器 (MoT) 主干将共享注意力与独立理解和生成参数结合起来，以限制优化干扰。为每条路径配备专家混合 (MoE) 模块可提供稀疏容量，每个目标潜在令牌激活 31.7B 存储参数和大约 5.4B 生成参数。面向生成的数据引擎将基于知识的视觉词汇与大规模视觉聚类相结合，以平衡语义覆盖和编辑任务，而训练时评估则指导迭代数据细化。双语注释和经过验证的编辑监督支持渐进式训练，最高可达原生 1.5K 分辨率。我们通过基于标题和清单的奖励分别优化生成和编辑，然后通过噪声感知的策略蒸馏来巩固专门的策略。在报告的总体比较中，1536分辨率模型在 PRISM-Bench、Qwen-Image-Bench 和 UnicBench 评估的开源模型中排名第一。基于 MeanFlow 的几步蒸馏产生了 WeLM-Image-Turbo，它使用八个无引导步骤在单个 NVIDIA H20 GPU 上在 4.98 秒内生成 1024×1024 图像。"
     },
@@ -220,11 +1476,17 @@
       ],
       "tags": [],
       "signalLeadDays": null,
-      "weight": 4.151317942364757,
-      "score": 8.465,
+      "weight": 4.301955000865387,
+      "value": 4,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 14.504,
       "meta": [
         {
-          "upvotes": 10,
+          "upvotes": 11,
           "aiKeywords": [
             "Gaussian splatting",
             "head avatar reconstruction",
@@ -290,7 +1552,10 @@
       ],
       "signalLeadDays": null,
       "weight": 6,
-      "score": 8.275,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 8.163,
       "meta": [
         {
           "feedId": "hf-blog"
@@ -320,7 +1585,10 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 6,
-      "score": 8.255,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 8.143,
       "meta": [
         {
           "feedId": "hf-blog"
@@ -359,7 +1627,10 @@
       ],
       "signalLeadDays": null,
       "weight": 3.5999999999999996,
-      "score": 7.859,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 7.747,
       "meta": [
         {
           "upvotes": 7,
@@ -402,7 +1673,12 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 5,
-      "score": 7.326,
+      "value": 2,
+      "valueFlags": [
+        "protocol"
+      ],
+      "prerelease": false,
+      "score": 10.214,
       "meta": [
         {
           "feedId": "msr"
@@ -441,7 +1717,13 @@
       ],
       "signalLeadDays": null,
       "weight": 2.4,
-      "score": 6.686,
+      "value": 2,
+      "valueFlags": [
+        "measured",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 9.574,
       "meta": [
         {
           "upvotes": 3,
@@ -486,7 +1768,10 @@
       ],
       "signalLeadDays": null,
       "weight": 2.4,
-      "score": 6.672,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.56,
       "meta": [
         {
           "upvotes": 3,
@@ -550,7 +1835,10 @@
       ],
       "signalLeadDays": null,
       "weight": 1.9019550008653872,
-      "score": 6.205,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.093,
       "meta": [
         {
           "upvotes": 2,
@@ -575,6 +1863,218 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "NPCBench：鼻咽癌多模式护理路径推理的临床学徒基准",
       "summaryZh": "NPCBench 评估医学 AI 模型是否可以将亚专业知识与多模式证据相结合，并在纵向鼻咽癌患者路径中保持时间上一致的诊断和护理决策。"
+    },
+    {
+      "key": "ghc:modelcontextprotocol/specification@bfe9502547",
+      "title": "specification: fix(release): retain existing PR authentication",
+      "summary": "fix(release): retain existing PR authentication",
+      "primaryDate": "2026-11-05",
+      "sources": [
+        {
+          "name": "modelcontextprotocol/specification · GitHub",
+          "url": "https://github.com/modelcontextprotocol/modelcontextprotocol/commit/bfe9502547784cca14cdeb3ab3c3899468e58a77",
+          "date": "2026-11-05",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "security",
+        "specification"
+      ],
+      "signalLeadDays": null,
+      "weight": 8,
+      "value": 5,
+      "valueFlags": [
+        "security",
+        "protocol"
+      ],
+      "prerelease": false,
+      "score": 17.72,
+      "meta": [
+        {
+          "repo": "modelcontextprotocol/specification",
+          "sha": "bfe9502547784cca14cdeb3ab3c3899468e58a77",
+          "flags": [
+            "security"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "A release-pipeline fix that preserves existing PR authentication suggests automation can silently alter PR provenance or permissions; retaining auth protects auditability and contributor access when publishing the spec.",
+        "zh": "修复 release 流程以保留既有 PR 认证,说明规范发布的自动化可能悄悄改变 PR 权限或来源;保留认证可保障发布时的可审计性与贡献者权限。"
+      },
+      "where": {
+        "en": "Applies to release tooling in the modelcontextprotocol/specification repo on GitHub. Bounds: not a change to the MCP protocol itself, agent runtime authentication, or GitHub PR behaviour generally.",
+        "zh": "仅适用于 modelcontextprotocol/specification 仓库的 release 工具链。Bounds:不代表 MCP 协议本身、agent 运行时认证或 GitHub PR 通用行为的变化。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "规范：修复（发布）：保留现有的PR认证",
+      "summaryZh": "修复（发布）：保留现有的PR认证"
+    },
+    {
+      "key": "ghc:volcengine/verl@592cba1353",
+      "title": "verl: [hardware, recipe] feat: Qwen3.5-397B-A17B full-parameter GRPO recipe…",
+      "summary": "[hardware, recipe] feat: Qwen3.5-397B-A17B full-parameter GRPO recipe on TPU v7x (8K context, multi-replica rollout) (#8469) ### What does this PR do? Runs full-parameter **Qwen3.5-397B-A17B** MoE GRPO (8K thinking context, 512 + 7,680) on TPU v7x with `examples/tpu/grpo/run_qwen3_5_torchtitan.sh`, on top of [verl-hardware-plugin `main`](https://github.com/verl-project/verl-hardware-plugin/commit/0bc8bbac944e753686f89718c0c5eac61e84b912) (`0bc8bbac`). This PR **enables** 397B RL on TPU; performance still needs further optimization. - **`examples/tpu/grpo/run_qwen3_5_torchtitan.sh`:** large-MoE knobs (`USE_KL_LOSS`, `EXPERT_PARALLEL_SIZE`, `PARAM_DTYPE`, `FP32_MASTER`, `OPTIMIZER_HOST_OFFLOAD`, `ROLLOUT_EXPERT_PARALLEL_SIZE`, `ROLLOUT_LOAD_FORMAT=dummy`, `USE_DYNAMIC_BSZ`); torchtitan#142 f",
+      "primaryDate": "2026-11-05",
+      "sources": [
+        {
+          "name": "volcengine/verl · GitHub",
+          "url": "https://github.com/verl-project/verl/commit/592cba13531a32b69eccd490a04b795a89587854",
+          "date": "2026-11-05",
+          "tier": "primary",
+          "kind": "commit"
+        }
+      ],
+      "beats": [
+        "rl",
+        "ai-infra"
+      ],
+      "tags": [
+        "model-support",
+        "measured",
+        "capability",
+        "post-training",
+        "scheduling",
+        "verl"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 0,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 9.515,
+      "meta": [
+        {
+          "repo": "volcengine/verl",
+          "sha": "592cba13531a32b69eccd490a04b795a89587854",
+          "flags": [
+            "model-support",
+            "measured",
+            "capability"
+          ]
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "verl：[硬件、配方] feat：Qwen3.5-397B-A17B全参数GRPO配方…",
+      "summaryZh": "[硬件，配方] feat：TPU v7x 上的 Qwen3.5-397B-A17B 全参数 grpo 配方（8K 上下文，多副本 rollout）(#8469) ### 这个 PR 有什么作用？在 TPU v7x 上使用“examples/tpu/grpo/run_qwen3_5_torchtitan.sh”在 [verl-hardware-plugin 之上运行全参数 **Qwen3.5-397B-A17B** MoE grpo（8K 思维上下文，512 + 7,680） `main`](https://github.com/verl-project/verl-hardware-plugin/commit/0bc8bbac944e753686f89718c0c5eac61e84b912) (`0bc8bbac`)。此 PR **在 TPU 上启用** 397B RL；性能还需要进一步优化。 - **`examples/tpu/grpo/run_qwen3_5_torchtitan.sh`:** 大 MoE 旋钮（`USE_KL_LOSS`、`EXPERT_PARALLEL_SIZE`、`PARAM_DTYPE`、`FP32_MASTER`、`OPTIMIZER_HOST_OFFLOAD`、`ROLLOUT_EXPERT_PARALLEL_SIZE`、 `ROLLOUT_LOAD_FORMAT=虚拟`, `USE_DYNAMIC_BSZ`);火炬泰坦#142 f"
+    },
+    {
+      "key": "gh:All-Hands-AI/OpenHands@pr19394-evidence",
+      "title": "OpenHands PR #19394 evidence (temporary)",
+      "summary": "Temporary evidence assets for #19394 . Browser click-through of automation setup dead ends and decoded PostHog automation_setup_blocked payloads. This release is evidence storage only and can be deleted after PR review. macOS install note The app isn't signed with an Apple Developer ID yet, so macOS may call a downloaded build \"damaged\" — it's Gatekeeper quarantine, not a bad file. After moving the app to Applications, clear the flag once, then open normally: xattr -dr com.apple.quarantine \" /Applications/OpenHands Agent Canvas.app \" Signing + notarization is tracked in #16774 .",
+      "primaryDate": "2026-11-05",
+      "sources": [
+        {
+          "name": "All-Hands-AI/OpenHands · GitHub",
+          "url": "https://github.com/OpenHands/OpenHands/releases/tag/pr19394-evidence",
+          "date": "2026-11-05",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-coding",
+        "agents"
+      ],
+      "tags": [
+        "OpenHands"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 9.172,
+      "meta": [
+        {
+          "repo": "All-Hands-AI/OpenHands",
+          "tag": "pr19394-evidence"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "OpenHands PR #19394 证据（临时）",
+      "summaryZh": "#19394 的临时证据资产。浏览器点击自动化设置死胡同和解码的 PostHogautomation_setup_blocked 有效负载。本次发布仅作为证据存储，PR审核后可删除。 macOS 安装说明 该应用程序尚未使用 Apple 开发者 ID 进行签名，因此 macOS 可能会称下载的版本“已损坏”——这是 Gatekeeper 隔离区，而不是坏文件。将应用程序移至应用程序后，清除标志一次，然后正常打开： xattr -dr com.apple.quarantine \" /Applications/OpenHands Agent Canvas.app \" 签名 + 公证在 #16774 中跟踪。"
+    },
+    {
+      "key": "gh:langchain-ai/langchain@langchain-core%3D%3D1.7.6",
+      "title": "langchain langchain-core==1.7.6",
+      "summary": "Changes since langchain-core==1.7.5 release(core): 1.7.6 ( #41698 )\nperf(core): merge streamed AIMessageChunk s once when accumulating runnable streams ( #41697 )\nperf(core): stop parse_partial_json from retrying one character at a time ( #41467 )",
+      "primaryDate": "2026-11-05",
+      "sources": [
+        {
+          "name": "langchain-ai/langchain · GitHub",
+          "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-core%3D%3D1.7.6",
+          "date": "2026-11-05",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "langchain"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 8.141,
+      "meta": [
+        {
+          "repo": "langchain-ai/langchain",
+          "tag": "langchain-core%3D%3D1.7.6"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "langchain langchain-core==1.7.6",
+      "summaryZh": "自 langchain-core==1.7.5 发布（核心）以来的变化：1.7.6 (#41698)\nperf(core)：累积可运行流时合并流式 AIMessageChunk 一次 (#41697)\nperf(core)：阻止 parse_partial_json 一次重试一个字符 (#41467)"
+    },
+    {
+      "key": "gh:langchain-ai/langgraph@1.2.20",
+      "title": "langgraph langgraph==1.2.20",
+      "summary": "Changes since 1.2.19 release(langgraph): 1.2.20 ( #9595 )\nfeat(langgraph): give each interrupt() in a task its own id ( #9589 )\nfix(langgraph): point the multiple-interrupts error at the current docs ( #9590 )\nfeat(langgraph): add a strict resume mode that refuses stale interrupt answers ( #9574 )\nchore(deps-dev): bump types-requests from 2.33.0.20260906 to 2.33.0.20261006 in /libs/langgraph ( #9535 )\nchore(deps-dev): bump pycryptodome from 3.23.0 to 4.2.0 in /libs/langgraph in the major group ( #9534 )",
+      "primaryDate": "2026-11-05",
+      "sources": [
+        {
+          "name": "langchain-ai/langgraph · GitHub",
+          "url": "https://github.com/langchain-ai/langgraph/releases/tag/1.2.20",
+          "date": "2026-11-05",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "langgraph"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": -1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 6.718,
+      "meta": [
+        {
+          "repo": "langchain-ai/langgraph",
+          "tag": "1.2.20"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "langgraph langgraph==1.2.20",
+      "summaryZh": "自 1.2.19 版本（langgraph）以来的变化：1.2.20 (#9595)\nfeat(langgraph)：为任务中的每个中断（）提供自己的 id (#9589)\n修复（langgraph）：将多重中断错误指向当前文档（＃9590）\nfeat(langgraph)：添加严格的恢复模式，拒绝陈旧的中断答案（#9574）\nChore(deps-dev)：将 /libs/langgraph 中的类型请求从 2.33.0.20260906 提升到 2.33.0.20261006 (#9535)\nChore(deps-dev)：将主要组中 /libs/langgraph 中的 pycryptodome 从 3.23.0 提升到 4.2.0 (#9534)"
     },
     {
       "key": "arxiv:2611.06741",
@@ -605,7 +2105,10 @@
       ],
       "signalLeadDays": null,
       "weight": 6.297513016132302,
-      "score": 10.409,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 10.297,
       "meta": [
         {
           "upvotes": 37,
@@ -674,7 +2177,13 @@
       ],
       "signalLeadDays": null,
       "weight": 4.8,
-      "score": 8.837,
+      "value": 3,
+      "valueFlags": [
+        "model-support",
+        "measured"
+      ],
+      "prerelease": false,
+      "score": 13.225,
       "meta": [
         {
           "upvotes": 15,
@@ -724,7 +2233,13 @@
       ],
       "signalLeadDays": null,
       "weight": 4.440527661769311,
-      "score": 8.532,
+      "value": 3,
+      "valueFlags": [
+        "model-support",
+        "measured"
+      ],
+      "prerelease": false,
+      "score": 12.92,
       "meta": [
         {
           "upvotes": 12,
@@ -763,7 +2278,10 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 6,
-      "score": 7.831,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 7.719,
       "meta": [
         {
           "feedId": "hf-blog"
@@ -800,7 +2318,12 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 3.8039100017307743,
-      "score": 7.575,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 8.963,
       "meta": [
         {
           "upvotes": 8,
@@ -868,7 +2391,10 @@
       ],
       "signalLeadDays": null,
       "weight": 3.101955000865387,
-      "score": 6.866,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.754,
       "meta": [
         {
           "upvotes": 5,
@@ -929,7 +2455,12 @@
       ],
       "signalLeadDays": null,
       "weight": 1.2,
-      "score": 4.958,
+      "value": 0,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 4.846,
       "meta": [
         {
           "upvotes": 1,
@@ -947,6 +2478,179 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "工具不需要用文本说话：代理的潜在上下文压缩",
       "summaryZh": "大型语言模型 (LLM) 代理通常将原始工具输出附加到其上下文中。在多步交互中，长时间且嘈杂的观察会产生大量的上下文开销，并削弱代理对任务相关信息的注意力。现有的标记修剪和摘要方法仍然受到离散文本表示的限制，限制了可实现的压缩比。\n在这项工作中，我们挑战了普遍的假设，即代理必须将工具观察结果作为显式文本标记来使用。为此，我们提出了 Coca-Cola，一种用于 LLM 代理的连续潜在上下文压缩模型。可口可乐将工具观察结果压缩为潜在标记，并将它们嵌入到代理的输入嵌入空间中。我们进一步引入了动作保留训练，它在完整和压缩的观察下调整代理的下一步动作分布。这训练压缩模型来学习保留决策关键信息的足够动作的潜在令牌。在四个 QA 基准和两个模型系列上对网络搜索代理进行的实验表明，可口可乐将代理的令牌消耗减少了 70.01%-89.24%，将端到端运行时间减少了 24.45%-55.97%，同时持续提高了任务性能。这些结果表明，可口可乐为代理中的上下文压缩提供了一种有前途的方法。我们的代码可在 https://github.com/THU-Agent/Coca-cola 获取。"
+    },
+    {
+      "key": "gh:OpenPipe/ART@v0.5.24",
+      "title": "ART v0.5.24",
+      "summary": "Release Highlights Weave 0.54.0 or later is now required. Weave 0.53.9 and earlier fail in weave.init() with AttributeError: 'OTLPSpanExporter' object has no attribute '_session' once opentelemetry-exporter-otlp-proto-http 1.45 is installed. Installing ART now upgrades an older Weave instead of keeping it. KL reference adapters no longer leak into saved checkpoints. With a KL penalty, the Unsloth backend left the reference LoRA loaded, so later checkpoints saved in the same process, including other models' checkpoints, contained it. Saving and loading now drop unused adapters, and load_lora_adapter raises if the file is missing any LoRA weight. Megatron trainer attention runs on SM120 (RTX PRO 6000 Blackwell) through a Triton fallback. Native GDN context parallelism (CP>1) keeps rank transitions in FP32. What's\nChanged\nfix(unsloth): keep KL reference adapters out of saved checkpoints ( #1161 )\nfix(deps): require weave>=0.54.0 for OpenTelemetry 1.45 exporters ( #1159 ), with the release smoke test updated in #1162\nfeat(megatron): support SM120 trainer attention fallback ( #1156 ) fix: preserve FP32 precision in native GDN context-parallel rank transitions ( #1155 ) Full Changelog :",
+      "primaryDate": "2026-11-04",
+      "sources": [
+        {
+          "name": "OpenPipe/ART · GitHub",
+          "url": "https://github.com/OpenPipe/ART/releases/tag/v0.5.24",
+          "date": "2026-11-04",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "rl"
+      ],
+      "tags": [
+        "post-training",
+        "ART"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 5,
+      "valueFlags": [
+        "breaking",
+        "model-support",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 15.465,
+      "meta": [
+        {
+          "repo": "OpenPipe/ART",
+          "tag": "v0.5.24"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "ART v0.5.24",
+      "summaryZh": "发行亮点 现在需要 Weave 0.54.0 或更高版本。安装 opentelemetry-exporter-otlp-proto-http 1.45 后，Weave 0.53.9 及更早版本在 weave.init() 中失败，并出现 AttributeError: 'OTLPSpanExporter' object has no attribute '_session'。现在安装 ART 会升级旧版 Weave，而不是保留它。 KL 参考适配器不再泄漏到已保存的检查点中。通过 KL 惩罚，Unsloth 后端留下了加载的参考 LoRA，因此在同一进程中保存的后续检查点（包括其他模型的检查点）包含了它。现在保存和加载会删除未使用的适配器，并且如果文件缺少任何 LoRA 权重，则 load_lora_adapter 会引发。威震天训练师注意力通过 Triton 后备运行在 SM120 (RTX PRO 6000 Blackwell) 上。本机 GDN 上下文并行性 (CP>1) 保持 FP32 中的排名转换。什么是\nChanged\n修复（unsloth）：将 KL 参考适配器保留在保存的检查点之外（#1161）\n修复（deps）：OpenTelemetry 1.45 导出器要求 weave>=0.54.0（#1159），并在#1162 中更新了发布冒烟测试\nfeat(megatron)：支持 SM120 训练器注意力回退 (#1156) 修复：在本机 GDN 上下文并行排名转换中保留 FP32 精度 (#1155) 完整变更日志："
+    },
+    {
+      "key": "gh:anthropics/claude-code@v2.1.318",
+      "title": "claude-code v2.1.318",
+      "summary": "What's changed\nAdded a record of your answer when Claude Code asks to turn on the mods it writes in a session\nAdded assume_role on mantle upstreams of the Claude apps gateway, for a role in another AWS account and for per-developer AWS cost attribution\nAdded an effort option to a mod's $.model.fork , so a quick side job can run at low whatever effort the session uses; the result reports the effort sent\nAdded the date a stored claude.ai sign-in ends to claude auth status ( loginExpiresAt ) and to claude -p JSON results ( credential_expires_at )\nAdded a one-line stderr warning to claude -p text output, starting 10 days before a stored claude.ai sign-in ends\nFixed --continue sometimes losing the earlier conversation after a malformed tool call's retries ran out (regression in 2.1.314)\nFixed macOS sessions with many running Bash commands stalling while memory grew\nFixed permission prompts being answered by keys typed just after sending a message, or before a slow prompt appeared\nFixed /logout , claude auth logout and claude mcp remove reporting success, and changes to trust, consent or MCP settings being dropped with no word, when the config file could not be updated on a shared networ",
+      "primaryDate": "2026-11-04",
+      "sources": [
+        {
+          "name": "anthropics/claude-code · GitHub",
+          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.318",
+          "date": "2026-11-04",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents",
+        "ai-coding"
+      ],
+      "tags": [
+        "mcp",
+        "claude-code"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 15.215,
+      "meta": [
+        {
+          "repo": "anthropics/claude-code",
+          "tag": "v2.1.318"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "claude-code v2.1.318",
+      "summaryZh": "What's changed\n添加了当 Claude Code 要求打开它在会话中写入的 mod 时您的回答记录\n在 Claude 应用程序网关上游添加了assume_role，用于另一个 AWS 账户中的角色以及每个开发人员的 AWS 成本归因\n在 mod 的 $.model.fork 中添加了 effort 选项，因此无论会话使用什么 effort，快速的副业都可以以较低的速度运行； effort 发送的结果报告\n将存储的 claude.ai 登录结束日期添加到 claude 身份验证状态 ( loginExpiresAt ) 和 claude -p JSON 结果 ( credential_expires_at )\n在 claude -p 文本输出中添加了一行 stderr 警告，从存储的 claude.ai 登录结束前 10 天开始\n已修复 --Continue 有时会在格式错误的工具调用重试结束后丢失先前的对话（2.1.314 中的回归）\n修复了 macOS 会话中许多正在运行的 Bash 命令在内存增长时停止的问题\n修复了在发送消息后或出现缓慢提示之前键入按键来回答权限提示的问题\n修复了 /logout 、 claude auth 注销和 claude MCP 删除报告成功的问题，并且当配置文件无法在共享网络上更新时，信任、同意或 MCP 设置的更改会被无言地删除"
+    },
+    {
+      "key": "gh:google-gemini/gemini-cli@v0.68.0-preview.0",
+      "title": "gemini-cli Release v0.68.0-preview.0",
+      "summary": "What's\nChanged Changelog for v0.67.0-preview.0 by @gemini-cli-robot in #29990 Changelog for v0.66.0 by @gemini-cli-robot in #29992\ndocs(readme): clarify Gemini CLI scope, limitations, and tool landscape by @LyalinDotCom in #29995\nfix(cli): bound inline history re-render after terminal width changes by @jvargassanchez-dot in #29904\nfix(ui): handle surrogate pairs when truncating in sanitizeForDisplay by @diegogodinezr in #29993\nfix(core): make isWithinRoot case-insensitive on Windows by @duvanka-prasad in #29999\nfix(core): recognize dotted Gemini 3 models in supportsMultimodalFunctionResponse by @jesussamuel-byte in #29982\nfeat(cli): add extension validation command and evaluation tests by @tadipavan in #29980\nfix(core): normalize leading slashes in file search query for @ autocomplete by @urielefrenvirtusa in #29987\nfix(vscode-ide-companion): register all extension disposables in context.subscriptions by @jvargassanchez-dot in #29994\nfix(core): list Auto in /model when dynamicModelConfiguration is enabled and preview access is disabled by @villahernandez-coder in #29998\nfix(core,cli): fix instances of incorrect \\n escape behavior by @ugorla-dev in #29989\nfix(core): use PowerShell C",
+      "primaryDate": "2026-11-04",
+      "sources": [
+        {
+          "name": "google-gemini/gemini-cli · GitHub",
+          "url": "https://github.com/google-gemini/gemini-cli/releases/tag/v0.68.0-preview.0",
+          "date": "2026-11-04",
+          "tier": "primary",
+          "kind": "release"
+        },
+        {
+          "name": "google-gemini/gemini-cli · GitHub",
+          "url": "https://github.com/google-gemini/gemini-cli/releases/tag/v0.67.0",
+          "date": "2026-11-04",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-coding",
+        "agents"
+      ],
+      "tags": [
+        "post-training",
+        "evaluation",
+        "gemini-cli"
+      ],
+      "signalLeadDays": null,
+      "weight": 8,
+      "value": 1,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 11.197,
+      "meta": [
+        {
+          "repo": "google-gemini/gemini-cli",
+          "tag": "v0.68.0-preview.0"
+        },
+        {
+          "repo": "google-gemini/gemini-cli",
+          "tag": "v0.67.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "gemini-cli 发布 v0.68.0-preview.0",
+      "summaryZh": "What's\n由 @gemini-cli-robot 在 #29990 中更改了 v0.67.0-preview.0 的变更日志 @gemini-cli-robot 在 #29992 中更改了 v0.66.0 的变更日志\n文档（自述文件）：@LyalinDotCom 在 #29995 中澄清 Gemini CLI 范围、限制和工具格局\n修复（cli）：在 #29904 中 @jvargassanchez-dot 更改终端宽度后绑定内联历史记录重新渲染\n修复（ui）：在 #29993 中 @diegogodinezr 在 sanitizeForDisplay 中截断时处理代理对\n修复（核心）：使 isWithinRoot 在 Windows 上不区分大小写，由 @duvanka-prasad 在 #29999 中完成\n修复（核心）：在 #29982 中识别 @jesussamuel-byte 支持的MultimodalFunctionResponse 中的点状 Gemini 3 模型\nfeat(cli)：在 #29980 中添加 @tadipavan 的扩展验证命令和评估测试\n修复（核心）：在 #29987 中规范 @urielefrenvirtusa 的 @ autocomplete 文件搜索查询中的前导斜杠\n修复（vscode-ide-companion）：在 #29994 中通过 @jvargassanchez-dot 在 context.subscriptions 中注册所有扩展一次性项\n修复（核心）：当启用dynamicModelConfiguration并且@villahernandez-coder在#29998中禁用预览访问时，在/model中列出Auto\n修复（核心，cli）：修复@ugorla-dev在#29989中错误\\n转义行为的实例\n修复（核心）：使用 PowerShell C"
+    },
+    {
+      "key": "gh:vllm-project/vllm-omni@v0.33.0rc1",
+      "title": "vllm-omni vLLM-Omni v0.33.0rc1",
+      "summary": "First release candidate for vLLM-Omni 0.33.0. Aligns vLLM-Omni with final upstream vLLM 0.33.0, including runtime integration, dependency updates, installation instructions, and upgrade-validation fixes. Alignment PR: #9648\nRelease commit: 4b63581cf6527dc5c964558650e996c0a36e027a Package and image publication: https://buildkite.com/vllm/omni-release/builds/4234 Installation The release candidate wheel is available on PyPI : pip install vllm-omni==0.33.0rc1 Docker images are still building; follow the publication build above for their status.",
+      "primaryDate": "2026-11-04",
+      "sources": [
+        {
+          "name": "vllm-project/vllm-omni · GitHub",
+          "url": "https://github.com/vllm-project/vllm-omni/releases/tag/v0.33.0rc1",
+          "date": "2026-11-04",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "multimodal",
+        "ai-infra"
+      ],
+      "tags": [
+        "vllm-omni"
+      ],
+      "signalLeadDays": null,
+      "weight": 5,
+      "value": 0,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 6.987,
+      "meta": [
+        {
+          "repo": "vllm-project/vllm-omni",
+          "tag": "v0.33.0rc1"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "vLLM-omni vLLM-Omni v0.33.0rc1",
+      "summaryZh": "vLLM-Omni 0.33.0 的第一个候选版本。将 vLLM-Omni 与最终上游 vLLM 0.33.0 保持一致，包括运行时集成、依赖项更新、安装说明和升级验证修复。对齐公关：#9648\n发布提交：4b63581cf6527dc5c964558650e996c0a36e027a 软件包和映像发布：https://buildkite.com/vllm/omni-release/builds/4234 安装 候选版本轮可在 PyPI 上使用： pip install vllm-omni==0.33.0rc1 Docker 映像仍在构建；请按照上面的出版物构建了解其状态。"
     },
     {
       "key": "arxiv:2611.04277",
@@ -977,11 +2681,14 @@
         "post-training"
       ],
       "signalLeadDays": null,
-      "weight": 6.9688259064691245,
-      "score": 10.568,
+      "weight": 7.029577194153086,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 10.517,
       "meta": [
         {
-          "upvotes": 55,
+          "upvotes": 57,
           "aiKeywords": [
             "reinforcement learning",
             "policy training",
@@ -1045,7 +2752,10 @@
       ],
       "signalLeadDays": null,
       "weight": 5.003910001730774,
-      "score": 8.278,
+      "value": -1,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.666,
       "meta": [
         {
           "upvotes": 17,
@@ -1097,7 +2807,10 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 6,
-      "score": 7.239,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 7.127,
       "meta": [
         {
           "feedId": "hf-blog"
@@ -1134,7 +2847,10 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 3.101955000865387,
-      "score": 6.35,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.238,
       "meta": [
         {
           "upvotes": 5,
@@ -1187,7 +2903,13 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 2.4,
-      "score": 5.708,
+      "value": 3,
+      "valueFlags": [
+        "measured",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 10.096,
       "meta": [
         {
           "upvotes": 3,
@@ -1216,6 +2938,106 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "StepX-OPD：重新思考扩散模型中的多教师同政策蒸馏",
       "summaryZh": "StepX-OPD 联合训练文本到图像扩散模型，以同时获取功能和少步采样，优于顺序方法，同时降低训练成本。"
+    },
+    {
+      "key": "gh:anthropics/claude-code@v2.1.317",
+      "title": "claude-code v2.1.317",
+      "summary": "What's changed\nAdded a warning to /schedule when a new cloud scheduled task gets connectors you did not ask for, with how to remove them\nAdded a check that asks before a web or shell tool call sends your account email address to the network\nAdded onFailure: \"block\" for Agent SDK hook callbacks, so a callback that fails blocks the action instead of letting it run\nAdded a notice in Claude Desktop's Code tab when your organization's remote managed settings haven't loaded for the session, and another once they do\nAdded a notice when auto mode's check has no answer for a subagent's tool call, which used to leave nothing in the main view\nAdded anthropic.plan , anthropic.seat_type , anthropic.provider and anthropic.custom_base_url to OTel metrics, events and spans\nAdded a cost report to the Claude apps gateway admin API, GET /v1/organizations/analytics/cost , for reading past spend over a date range in total, per developer, per day or per IdP group\nAdded a daily record of each developer's IdP groups on Claude apps gateways with admin: set, kept for admin.identity_retention_days , which the cost report groups by\nAdded CLAUDE_CODE_DISABLE_NESTED_SESSION_ID : set it to 1 on a self-hosted run",
+      "primaryDate": "2026-11-03",
+      "sources": [
+        {
+          "name": "anthropics/claude-code · GitHub",
+          "url": "https://github.com/anthropics/claude-code/releases/tag/v2.1.317",
+          "date": "2026-11-03",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-coding",
+        "agents"
+      ],
+      "tags": [
+        "orchestration",
+        "claude-code"
+      ],
+      "signalLeadDays": null,
+      "weight": 9,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 14.716,
+      "meta": [
+        {
+          "repo": "anthropics/claude-code",
+          "tag": "v2.1.317"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "claude-code v2.1.317",
+      "summaryZh": "What's changed\n当新的云计划任务获取您未请求的连接器时，向 /schedule 添加了警告，以及如何删除它们\n添加了一项检查，在 Web 或 shell 工具调用将您的帐户电子邮件地址发送到网络之前进行询问\n为 Agent SDK 挂钩回调添加了 onFailure:“block”，因此失败的回调会阻止操作而不是让它运行\n当您的组织的远程管理设置尚未为会话加载时，在 Claude Desktop 的“代码”选项卡中添加了一条通知，一旦加载则添加了另一个通知\n添加了当自动模式的检查对子代理的工具调用没有答案时的通知，该工具调用过去不会在主视图中留下任何内容\n添加了 anthropic.plan 、 anthropic.seat_type 、 anthropic.provider 和 anthropic.custom_base_url 到 OTel 指标、事件和跨度\nAdded a cost report to the Claude apps gateway admin API, GET /v1/organizations/analytics/cost , for reading past spend over a date range in total, per developer, per day or per IdP group\n添加了 Claude 应用程序网关上每个开发人员 IdP 组的每日记录，其中 admin: set，保留为 admin.identity_retention_days ，成本报告按其分组\n添加了 CLAUDE_CODE_DISABLE_NESTED_SESSION_ID ：在自托管运行中将其设置为 1"
+    },
+    {
+      "key": "gh:crewAIInc/crewAI@1.15.37",
+      "title": "crewAI 1.15.36",
+      "summary": "What's\nChanged Features Add experimental conversational Agent sessions. Ask for a missing API key when crewai run starts. Record the error class when crewai run cannot load a project. Name the apps CrewAI AMP cannot resolve for an agent. Bug Fixes Fix async call execution in the caller's context for sync tools. Resolve issue with empty value precedence in the run's key check. Stop a JSON crew run cleanly when its API key is missing. Call GPT-6 Astra and GPT-6.1 Sol tools through the Responses API. Handle the sourcedAnswer output shape correctly. Drop None metadata values before writing to ChromaDB. Add the chosen provider's crewai extra to new projects. Pin crewai-files in the file-processing extra like its siblings. Documentation Update snapshot and changelog for v1.15.35. Contributors Kiko0301 , Stoyan Dimitrov (@StoyanD) , João Moura (@joaomdmoura) , Lorenze Jay (@lorenzejay)",
+      "primaryDate": "2026-11-03",
+      "sources": [
+        {
+          "name": "crewAIInc/crewAI · GitHub",
+          "url": "https://github.com/crewAIInc/crewAI/releases/tag/1.15.35",
+          "date": "2026-11-03",
+          "tier": "primary",
+          "kind": "release"
+        },
+        {
+          "name": "crewAIInc/crewAI · GitHub",
+          "url": "https://github.com/crewAIInc/crewAI/releases/tag/1.15.36",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "release"
+        },
+        {
+          "name": "crewAIInc/crewAI · GitHub",
+          "url": "https://github.com/crewAIInc/crewAI/releases/tag/1.15.37",
+          "date": "2026-11-07",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "crewAI"
+      ],
+      "signalLeadDays": null,
+      "weight": 5,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 7.656,
+      "meta": [
+        {
+          "repo": "crewAIInc/crewAI",
+          "tag": "1.15.37"
+        },
+        {
+          "repo": "crewAIInc/crewAI",
+          "tag": "1.15.36"
+        },
+        {
+          "repo": "crewAIInc/crewAI",
+          "tag": "1.15.35"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "crewAI 1.15.36",
+      "summaryZh": "What's\n更改的功能添加实验性会话代理会话。当crewai run启动时询问缺少的API密钥。记录crewai run无法加载项目时的错误类。命名 CrewAI AMP 无法为代理解析的应用程序。错误修复 修复同步工具的调用者上下文中的异步调用执行。解决运行的键检查中空值优先级的问题。当 JSON Crew 的 API 密钥丢失时，停止其干净运行。通过响应 API 调用 GPT-6 Astra 和 GPT-6.1 Sol 工具。正确处理 sourcedAnswer 输出形状。在写入 ChromaDB 之前删除 None 元数据值。将所选提供商的crewai extra 添加到新项目中。将crewai 文件固定在文件处理中，就像它的兄弟文件一样。 v1.15.35 的文档更新快照和变更日志。贡献者 Kiko0301、Stoyan Dimitrov (@StoyanD)、João Moura (@joaomdmoura)、Lorenze Jay (@lorenzejay)"
     },
     {
       "key": "arxiv:2611.03743",
@@ -1247,11 +3069,16 @@
         "evaluation"
       ],
       "signalLeadDays": null,
-      "weight": 5.270780907334513,
-      "score": 8.353,
+      "weight": 5.351317942364757,
+      "value": 0,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 8.321,
       "meta": [
         {
-          "upvotes": 20,
+          "upvotes": 21,
           "aiKeywords": [],
           "arxivId": "2611.03743",
           "authors": [
@@ -1294,7 +3121,10 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 3.5999999999999996,
-      "score": 6.375,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 6.263,
       "meta": [
         {
           "upvotes": 7,
@@ -1319,6 +3149,96 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "HeLM：用于非马尔可夫操作的分层显式语言记忆",
       "summaryZh": "提出了分层 VLA 框架，通过显式语言记忆和事件触发更新来维护任务历史记录，以解决马尔可夫模型的局限性。"
+    },
+    {
+      "key": "gh:sgl-project/sglang@v0.5.23",
+      "title": "sglang v0.5.23",
+      "summary": "Highlights 1007 PRs from 257 contributors. New models Model Type Cookbook Muse Spark Open LLM / VLM link Beam-1.0 LLM / VLM link MiniMax-M3.1-Flash LLM / VLM link MiniCPM-V 4.7 LLM / VLM link Kev LLM / VLM link Cosmos3-Nano-Sim (Bimanual, Transfer, Auto) Diffusion link FastH3 Omni Diffusion link FLUX.3 Image Klein Diffusion link HY-Nomas Diffusion link MOSS-Image Diffusion link What's new DeepSeek-V4.1 on GB300 gets up to 1.5x more prefill throughput under load and about 28% lower first-token latency on 32K to 64K prompts ( #44403 , #45059 , #45107 ). SGLang low-latency mode: the opt-in NVIDIA megakernel and AMD monokernel plugins run DeepSeek-V4.1-Flash decode as fused persistent kernels, for up to 44% faster single-user decode on GB300 and 75% on MI350X ( #44945 , #45450 , #44353 , #44621 ). MoE models such as DeepSeek-V4.1-Flash, GLM-5.3-Flash and gpt-oss reach the first token 30% to 58% sooner on 8K prompts on H200 ( #43363 ). Paged Experts (opt-in) runs MoE models larger than GPU memory on a single consumer GPU, up to 30x faster than CPU offload ( #42557 , #45787 ). SGLang now runs on Google TPU7x through SGLang-TorchTPU , a PyTorch-native plugin for TPU. You can now serve LoR",
+      "primaryDate": "2026-11-02",
+      "sources": [
+        {
+          "name": "sgl-project/sglang · GitHub",
+          "url": "https://github.com/sgl-project/sglang/releases/tag/v0.5.23",
+          "date": "2026-11-02",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "scheduling",
+        "sglang"
+      ],
+      "signalLeadDays": null,
+      "weight": 10,
+      "value": 5,
+      "valueFlags": [
+        "model-support",
+        "measured",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 18.493,
+      "meta": [
+        {
+          "repo": "sgl-project/sglang",
+          "tag": "v0.5.23"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "sglang v0.5.23",
+      "summaryZh": "重点介绍来自 257 个贡献者的 1007 个 PR。新型号 型号 类型 Cookbook Muse Spark Open LLM / VLM 链接 Beam-1.0 LLM / VLM 链接 MiniMax-M3.1-Flash LLM / VLM 链接 MiniCPM-V 4.7 LLM / VLM 链接 Kev LLM / VLM 链接 Cosmos3-Nano-Sim（双手动、传输、自动） 扩散链接 FastH3 Omni 扩散链接 FLUX.3 Image Klein 扩散链接 HY-Nomas Diffusion 链接 MOSS-Image Diffusion 链接 新功能 GB300 上的 DeepSeek-V4.1 在负载下的 prefill throughput 提高了 1.5 倍，并且在 32K 到 64K 提示上的第一个令牌 latency 降低了约 28%（#44403、#45059、#45107）。 SGLang low-latency 模式：选择加入的 NVIDIA megakernel 和 AMD monokernel 插件将 DeepSeek-V4.1-Flash 解码作为融合持久内核运行，在 GB300 上单用户解码速度提高高达 44%，在 MI350X 上提高 75%（#44945、#45450、#44353、#44621）。 MoE 型号（例如 DeepSeek-V4.1-Flash、GLM-5.3-Flash 和 gpt-oss）在 H200 上的 8K 提示下达到第一个令牌的时间缩短了 30% 到 58% (#43363)。分页专家（选择加入）在单个消费者 GPU 上运行大于 GPU 内存的 MoE 模型，比 CPU 卸载快 30 倍（#42557、#45787）。 SGLang 现在通过 SGLang-TorchTPU（TPU 的 PyTorch 原生插件）在 Google TPU7x 上运行。您现在可以为 LoR 提供服务"
+    },
+    {
+      "key": "gh:vllm-project/vllm@v0.33.0rc3",
+      "title": "vllm v0.33.0",
+      "summary": "v0.33.0 Highlights This release features 927 commits from 389 contributors (122 new)! New models : Reflection Beam-1.0 (501B MoE, 23B active) with its DFlash2 drafter ( #62074 ), Yandex AliceAI-Foundation-80B-A3B ( #57963 ), Recursive Flint (40B MoE, 2.5B active) ( #62938 ), Muse Spark Open ( #61879 ), Step-5 Preview ( #61727 , #63147 ), NVIDIA Alpamayo 2 Super ( #62957 ), Nemotron-Labs Dory1.0-4B ( #60149 ), Nemotron Parse 3.5 ( #61651 ), MiniCPM-OCR 1.0 ( #63095 ), Domyn Edge ( #62544 ) and the ColUltraVBERT visual document retriever ( #62237 ). PyTorch 2.14 : vLLM is upgraded to PyTorch 2.14.0, with torchvision 0.29.0 and Triton 3.8.0 ( #52183 ). CUDA 12.9 dropped : release wheels and images are CUDA 13.0 only. The CUDA 12.9 wheels and the -cu129 / -cu129-ubuntu2404 images are no longer published ( #62575 ); use the default CUDA 13.0 artifacts instead. libtorch ABI stable CUDA wheel : the CUDA wheel is now ABI stable with libtorch. AWS EFA image : a new vllm/vllm-openai:v0.33.0-efa image (x86_64 and aarch64) bundles the AWS EFA libraries and the EFA build of the Mooncake transfer engine, for KV transfer and multi-node serving on EFA-enabled EC2 instances ( #58768 ). vllm/vllm im",
+      "primaryDate": "2026-11-02",
+      "sources": [
+        {
+          "name": "vllm-project/vllm · GitHub",
+          "url": "https://github.com/vllm-project/vllm/releases/tag/v0.33.0rc3",
+          "date": "2026-11-02",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "vllm"
+      ],
+      "signalLeadDays": null,
+      "weight": 10,
+      "value": 4,
+      "valueFlags": [
+        "breaking",
+        "model-support",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 16.935,
+      "meta": [
+        {
+          "repo": "vllm-project/vllm",
+          "tag": "v0.33.0rc3"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "why": {
+        "en": "The CUDA-13.0-only cutoff forces pipelines off the dropped cu129 wheels and images, while the EFA/Mooncake image and libtorch-ABI-stable wheel push vLLM toward multi-node KV-transfer serving with smoother compatibility; the MoE-heavy model list keeps it the default landing spot for new models.",
+        "zh": "CUDA 13.0-only 意味着依赖 cu129 wheel/镜像的部署链必须迁移；EFA/Mooncake 镜像与 libtorch ABI 稳定 wheel 指向多节点 KV transfer 服务与更好的二进制兼容性；大批新 MoE 模型（含 501B 及 DFlash2 drafter）显示 vLLM 仍是新模型的首选接入点。"
+      },
+      "where": {
+        "en": "Applies to serving deployments built on official vLLM release wheels or container images, especially multi-node serving on EFA-enabled EC2. Bounds: this release's wheels, images and listed model support only — not training stacks or other inference engines.",
+        "zh": "适用于基于官方 release wheel/镜像构建的 vLLM 服务部署，尤其是 EFA EC2 上的多节点 KV transfer 场景。Bounds: 仅限本版 wheel、镜像与所列模型支持，不涉及训练栈或其他推理引擎。"
+      },
+      "enrichedBy": "llm",
+      "titleZh": "vllm v0.33.0",
+      "summaryZh": "v0.33.0 亮点 此版本包含来自 389 名贡献者的 927 项提交（122 名新贡献者）！新模型：Reflection Beam-1.0（501B MoE，23B 活动）及其 DFlash2 起草器（#62074）、Yandex AliceAI-Foundation-80B-A3B（#57963）、Recursive Flint（40B MoE、2.5B 活动）（#62938）、Muse Spark Open（ #61879）、Step-5 预览版（#61727、#63147）、NVIDIA Alpamayo 2 Super（#62957）、Nemotron-Labs Dory1.0-4B（#60149）、Nemotron Parse 3.5（#61651）、MiniCPM-OCR 1.0（#63095）、Domyn Edge（ #62544 ）和 ColUltraVBERT 视觉文档检索器（#62237 ）。 PyTorch 2.14 ：vllm 升级到 PyTorch 2.14.0，带有 torchvision 0.29.0 和 Triton 3.8.0 (#52183)。 CUDA 12.9 已删除：发布轮和图像仅适用于 CUDA 13.0。 CUDA 12.9 轮子和 -cu129 / -cu129-ubuntu2404 图像不再发布（#62575）；请改用默认的 CUDA 13.0 工件。 libtorch ABI 稳定的 CUDA 轮：CUDA 轮现在与 libtorch 一起实现 ABI 稳定。 AWS EFA 映像：新的 vllm/vllm-openai:v0.33.0-efa 映像（x86_64 和 aarch64）捆绑了 AWS EFA 库和 Mooncake 传输引擎的 EFA 版本，用于在支持 EFA 的 EC2 实例上进行 KV 传输和多节点服务 (#58768)。 vllm/vllm 即时通讯"
     },
     {
       "key": "arxiv:2611.02075",
@@ -1349,6 +3269,9 @@
       ],
       "signalLeadDays": null,
       "weight": 1.9019550008653872,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
       "score": 4.27,
       "meta": [
         {
@@ -1409,7 +3332,13 @@
       ],
       "signalLeadDays": null,
       "weight": 6.806910410365794,
-      "score": 9.14,
+      "value": 3,
+      "valueFlags": [
+        "measured",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 13.64,
       "meta": [
         {
           "upvotes": 50,
@@ -1427,6 +3356,45 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "随机就足够了吗？通过 BestRand 实现稳定且低成本的基准压缩",
       "summaryZh": "基准压缩通过在与全基准结果紧密匹配的小型基准子集上评估模型，减少了模型评估通常令人望而却步的时间和成本。为了量化估计误差，我们在估计子集的全基准分数时得出了误差分布的准确分析近似值，表明大多数子集产生较小的误差，而少数子集产生更大的误差，从而形成长尾分布。这意味着仅随机采样就可以以高概率实现令人惊讶的强大性能，但由于罕见的大错误而保持不稳定。我们进一步表明，这种不稳定性是现代基础模型所固有的，并且即使评估更多模型也仍然存在。基于这些发现，我们引入了 BestRand，这是一种稳定且低成本的基准压缩方法，可以保留随机采样的效率，同时大幅减少其高误差尾部。我们在 70 多个文本、多模式和代理基准上验证 BestRand，并将其进一步扩展到 VLA 评估。与竞争方法相比，BestRand 平均降低了 50.2% 的高错误风险和 16.4% 的估算误差，而仅需要 51.3% 的建设成本。它进一步将分数范围、模型系列和时间变化的 OOD 估计误差平均降低了 21.8%。总之，我们的理论为理解和预测基准压缩的准确性和可靠性提供了实用指导，而 BestRand 能够以低成本实现稳定和准确的压缩。代码和数据可在 https://github.com/George-Ling3/BestRand 上公开获取。"
+    },
+    {
+      "key": "gh:vllm-project/vllm-ascend@v0.30.0",
+      "title": "vllm-ascend v0.30.0",
+      "summary": "v0.30.0 - 2026.10.29 This is the stable release of vLLM Ascend v0.30.0, built on the v0.29 release line and aligned with upstream vLLM v0.30.0 via the main2main pipeline. Building on v0.30.0rc1, this release integrates FlashMLA decode with DCP and DSpark, extends KV Pool layerwise pooling and PCP speculative decoding, hardens EPLB for the new quantization formats, and fixes the stability issues across attention, MoE, KV transfer, and Model Runner V2 execution reported during the RC cycle. It still focuses on the flagship models: DeepSeek V4.1 , GLM-5.3 , GLM-5.3-Flash , Qwen3.8-27B , DeepSeek V4-Flash/Pro , Kimi K3 . Model or hardware combinations outside the scope declared in v0.30.0 are not part of the release claims. Please follow the official documentation to get started. PR references marked with † were merged into the v0.30.0 release branch before v0.30.0rc1. Notice: In this version, modelrunner still defaults to v1, but some models require v2 to be enabled for support. For specific information, please refer to the model tutorial . We plan to fully switch to Model Runner V2 in the next version. Highlights DeepSeek V4.1 :\nAdded DeepSeek V4.1 support on Model Runner V2, enabled",
+      "primaryDate": "2026-10-31",
+      "sources": [
+        {
+          "name": "vllm-project/vllm-ascend · GitHub",
+          "url": "https://github.com/vllm-project/vllm-ascend/releases/tag/v0.30.0",
+          "date": "2026-10-31",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "speculative-decoding",
+        "quantization",
+        "post-training",
+        "vllm-ascend"
+      ],
+      "signalLeadDays": null,
+      "weight": 5,
+      "value": -1,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 4.112,
+      "meta": [
+        {
+          "repo": "vllm-project/vllm-ascend",
+          "tag": "v0.30.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "vllm-ascend v0.30.0",
+      "summaryZh": "v0.30.0 - 2026.10.29 这是 vLLM Ascend v0.30.0 的稳定版本，构建在 v0.29 发布线上，并通过 main2main 管道与上游 vLLM v0.30.0 保持一致。该版本以 v0.30.0rc1 为基础，将 FlashMLA 解码与 DCP 和 DSpark 集成，扩展了 KV Pool 分层池化和 PCP speculative decoding，针对新的 quantization 格式强化了 EPLB，并修复了 RC 周期期间报告的注意力、MoE、KV 传输和 Model Runner V2 执行方面的稳定性问题。依然专注于旗舰机型：DeepSeek V4.1、GLM-5.3、GLM-5.3-Flash、Qwen3.8-27B、DeepSeek V4-Flash/Pro、Kimi K3。 v0.30.0 中声明的范围之外的型号或硬件组合不属于发布声明的一部分。请按照官方文档开始操作。标有 † 的 PR 引用已在 v0.30.0rc1 之前合并到 v0.30.0 发行分支中。注意：该版本中modelrunner仍然默认为v1，但部分模型需要启用v2才能支持。具体信息请参考模型教程。我们计划在下一个版本中完全切换到 Model Runner V2。 DeepSeek V4.1 亮点：\n在 Model Runner V2 上添加了 DeepSeek V4.1 支持，已启用"
     },
     {
       "key": "blog:msr:https://www.microsoft.com/en-us/research/blog/from-synthetic-enterprise-data-evaluations-to-real-microsoft-copilot-ai-confidence/",
@@ -1450,7 +3418,10 @@
       ],
       "signalLeadDays": null,
       "weight": 5,
-      "score": 5.313,
+      "value": -1,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 3.813,
       "meta": [
         {
           "feedId": "msr"
@@ -1459,6 +3430,144 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "从综合企业数据评估到真正的 Microsoft Copilot AI 信心",
       "summaryZh": "在企业规模评估 Microsoft Copilot 需要测试数据来捕获真实组织的全部复杂性，但真实的企业数据包含敏感信息，在任何情况下都无法用于评估。文章《从综合企业数据评估到真正的 Microsoft Copilot AI 信心》首先出现在 Microsoft Research 上。"
+    },
+    {
+      "key": "gh:huggingface/trl@v1.17.1",
+      "title": "trl v1.17.0",
+      "summary": "Features 🔥 Mistral Large 4: fine-tune a 1T-parameter model on one node TRL now supports mistralai/Mistral-Large-4-1T-A52B : 1T parameters, 52B active. The new LoRA example fine-tunes it with SFTTrainer on a single 8×B300 node, on top of its FP8 weights : the experts are split 8 ways with token dispatch, everything else is sharded across the 8 GPUs at load time by transformers' DistributedConfig , and LoRA trains attention and the dense and shared-expert MLPs. Measured: 32.7k tokens per step in ~8 s, 142 GiB per GPU , with packing and assistant-only loss on reasoning conversations. mistral-large4-trl_v7_hq.mp4 training_args = SFTConfig ( model_init_kwargs = { \"dtype\" : \"auto\" , # keep the FP8 weights \"distributed_config\" : DistributedConfig ( fsdp_size = 8 , ep_size = 8 ), }, packing = True , assistant_only_loss = True , ... ) trainer = SFTTrainer ( model = \"mistralai/Mistral-Large-4-1T-A52B\" , args = training_args , peft_config = LoraConfig (...), ...) assistant_only_loss=True works out of the box: TRL ships a training chat template that matches the released checkpoint's, including its reasoning_effort levels ( low , medium , high ). Needs transformers>=5.22.0 , peft>=0.21.0 and a",
+      "primaryDate": "2026-10-30",
+      "sources": [
+        {
+          "name": "huggingface/trl · GitHub",
+          "url": "https://github.com/huggingface/trl/releases/tag/v1.17.1",
+          "date": "2026-10-30",
+          "tier": "primary",
+          "kind": "release"
+        },
+        {
+          "name": "huggingface/trl · GitHub",
+          "url": "https://github.com/huggingface/trl/releases/tag/v1.17.0",
+          "date": "2026-10-30",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "rl"
+      ],
+      "tags": [
+        "post-training",
+        "trl",
+        "quantization"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 3,
+      "valueFlags": [
+        "model-support",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 12.132,
+      "meta": [
+        {
+          "repo": "huggingface/trl",
+          "tag": "v1.17.1"
+        },
+        {
+          "repo": "huggingface/trl",
+          "tag": "v1.17.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "trl v1.17.0",
+      "summaryZh": "功能 🔥 Mistral Large 4：在一个节点上微调 1T 参数模型 TRL 现在支持 Mistralai/Mistral-Large-4-1T-A52B：1T 参数，52B 活动。新的 LoRA 示例在单个 8×B300 节点上使用 SFTTrainer 对其 FP8 权重进行微调：专家通过令牌调度分为 8 种方式，其他所有内容在加载时通​​过 Transformer 的 DistributedConfig 在 8 个 GPU 上分片，LoRA 训练注意力以及密集和共享专家 MLP。测量结果：约 8 秒内每步 32.7k 个令牌，每个 GPU 142 GiB，推理对话中仅存在打包和助手损失。 mistra-large4-trl_v7_hq.mp4 Training_args = SFTConfig ( model_init_kwargs = { \"dtype\" : \"auto\" , # 保留 FP8 权重 \"distributed_config\" : DistributedConfig ( fsdp_size = 8 , ep_size = 8 ), }, Packing = True , Assistant_only_loss = True , ... ) trainer = SFTTrainer ( model = \"mistralai/Mistral-Large-4-1T-A52B\" , args = Training_args , peft_config = LoraConfig (...), ...) Assistant_only_loss=True 开箱即用：TRL 提供了一个与已发布的 checkpoint 相匹配的训练聊天模板，包括其 Reasoning_effort 级别（ low 、medium 、 high ）。需要 Transformer>=5.22.0 、 peft>=0.21.0 和"
+    },
+    {
+      "key": "gh:huggingface/transformers@v5.22.2",
+      "title": "transformers Patch release v5.22.2",
+      "summary": "Patch release v5.22.2 Some in between patch for security and distributed fixes. See the included commits 🤗 [Distributed] Set device_id only for NCCL ( #50281 ) by @michaelbenayoun and @3outeille Harden our Jinja sandboxing ( #50431 ) by @Rocketknight1 Full Changelog : v5.22.1...v5.22.2",
+      "primaryDate": "2026-10-30",
+      "sources": [
+        {
+          "name": "huggingface/transformers · GitHub",
+          "url": "https://github.com/huggingface/transformers/releases/tag/v5.22.1",
+          "date": "2026-10-30",
+          "tier": "primary",
+          "kind": "release"
+        },
+        {
+          "name": "huggingface/transformers · GitHub",
+          "url": "https://github.com/huggingface/transformers/releases/tag/v5.22.2",
+          "date": "2026-11-06",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "multimodal"
+      ],
+      "tags": [
+        "agent-security",
+        "transformers"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 10.881,
+      "meta": [
+        {
+          "repo": "huggingface/transformers",
+          "tag": "v5.22.2"
+        },
+        {
+          "repo": "huggingface/transformers",
+          "tag": "v5.22.1"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "变形金刚补丁发布 v5.22.2",
+      "summaryZh": "补丁版本 v5.22.2 一些介于安全补丁和分布式修复之间的补丁。请参阅包含的提交 🤗 [分布式] 仅针对 NCCL (#50281) 设置 device_id，作者为 @michaelbenayoun 和 @3outeille 强化我们的 Jinja 沙箱 (#50431)，作者为 @Rocketknight1 完整变更日志：v5.22.1...v5.22.2"
+    },
+    {
+      "key": "gh:vllm-project/vllm@v0.33.0rc2",
+      "title": "vllm v0.33.0rc2: [ROCm][Bugfix] Skip AITER tuned GEMM when M*N >= 2^31 on gfx950 (#64567)",
+      "summary": "Signed-off-by: Micah Williamson micah.williamson@amd.com (cherry picked from commit 6d01893 )",
+      "primaryDate": "2026-10-30",
+      "sources": [
+        {
+          "name": "vllm-project/vllm · GitHub",
+          "url": "https://github.com/vllm-project/vllm/releases/tag/v0.33.0rc2",
+          "date": "2026-10-30",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "vllm"
+      ],
+      "signalLeadDays": null,
+      "weight": 10,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 10.609,
+      "meta": [
+        {
+          "repo": "vllm-project/vllm",
+          "tag": "v0.33.0rc2"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "vllm v0.33.0rc2：[ROCm][Bugfix] 当 gfx950 上 M*N >= 2^31 时跳过 AITER 调整的 GEMM (#64567)",
+      "summaryZh": "签署人：Micah Williamson micah.williamson@amd.com（从提交 6d01893 中挑选的樱桃）"
     },
     {
       "key": "blog:hf-blog:https://huggingface.co/blog/anydecisionmodel",
@@ -1480,6 +3589,9 @@
       "tags": [],
       "signalLeadDays": null,
       "weight": 6,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
       "score": 6.345,
       "meta": [
         {
@@ -1489,6 +3601,299 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "AnySpeechRecognizer 和 AnyDecisionModel 简介：Apple 平台上的语音和决策开放模型",
       "summaryZh": ""
+    },
+    {
+      "key": "gh:huggingface/transformers@v5.22.0",
+      "title": "transformers v5.22.0: Mistral Large 4 (Le Chonk)",
+      "summary": "New Models Mistral Large 4 (Le Chonk) Mistral Large 4 is Mistral's largest and most capable model to date: a 1 trillion-parameter natively multimodal Mixture-of-Experts model with 49 billion active parameters per token (52 billion including embeddings and output layers), trained from scratch on 3,800 NVIDIA Grace Blackwell GPUs in Mistral's own datacenters in Europe. Mistral Large 4 unifies instruction following, reasoning, coding, and agentic workflows in a single set of weights. While a generalist model, it shows especially good performance on workloads such as cybersecurity, finance, and law, and it surpasses frontier closed models on visual grounding. It is natively fluent in 160+ languages, including every official language of the European Union. Key Features Mistral Large 4 includes the following architectural choices: ~1T total / ~52B active parameters : granular Mixture-of-Experts with 128 routed experts (4 active per token) and 1 shared expert. 1M context length , for long-context workloads. Multimodal input : accepts text and image input, with text output. Pixtral-style vision encoder trained to handle variable image sizes and aspect ratios. Instruct and Reasoning functio",
+      "primaryDate": "2026-10-29",
+      "sources": [
+        {
+          "name": "huggingface/transformers · GitHub",
+          "url": "https://github.com/huggingface/transformers/releases/tag/v5.22.0",
+          "date": "2026-10-29",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "multimodal",
+        "agents"
+      ],
+      "tags": [
+        "agent-security",
+        "orchestration",
+        "long-context",
+        "transformers"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 6,
+      "valueFlags": [
+        "security",
+        "model-support",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 15.383,
+      "meta": [
+        {
+          "repo": "huggingface/transformers",
+          "tag": "v5.22.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "变形金刚 v5.22.0：Mistral Large 4 (Le Chonk)",
+      "summaryZh": "新模型 Mistral Large 4 (Le Chonk) Mistral Large 4 是 Mistral 迄今为止最大、功能最强大的模型：一个 1 万亿参数的本机多模态混合专家模型，每个令牌有 490 亿个活动参数（520 亿个，包括 embeddings 和输出层），在 Mistral 位于欧洲的自有数据中心的 3,800 个 NVIDIA Grace Blackwell GPU 上从头开始训练。 Mistral Large 4 将指令跟踪、推理、编码和 agentic 工作流程统一在一组权重中。虽然是一个多面手模型，但它在网络安全、金融和法律等工作负载上表现出特别好的性能，并且在视觉基础上超越了前沿封闭模型。它精通 160 多种语言，包括欧盟的每种官方语言。主要功能 Mistral Large 4 包括以下架构选择：~1T 总计 /~52B 活跃参数：具有 128 个路由专家（每个代币 4 个活跃）和 1 个共享专家的细粒度专家混合。 1M 上下文长度，适用于长上下文工作负载。多模态输入：接受文本和图像输入，并输出文本。 Pixtral 风格的视觉编码器经过训练可以处理可变的图像尺寸和纵横比。指导和推理功能"
+    },
+    {
+      "key": "gh:modelcontextprotocol/servers@v2.3.0",
+      "title": "servers v2.3.0",
+      "summary": "Packages Package Version Registry In this release @modelcontextprotocol/server-everything 2.2.1 npm published @modelcontextprotocol/server-filesystem 2.2.0 npm published @modelcontextprotocol/server-memory 2.1.0 npm published @modelcontextprotocol/server-sequential-thinking 2.1.1 npm published mcp-server-fetch 2026.11.4 PyPI published mcp-server-git 2026.11.4 PyPI published mcp-server-time 2026.11.4 PyPI published\nRelease ledger: v2/chore/5425-release-v2.3.0 @modelcontextprotocol/server-everything 2.2.1 What's\nChanged\ntest(everything): check every registered tool carries all four annotation hints by @cliffhall in #5347\nfix(everything): name resource-prompt's allowed argument values by @cliffhall in #5350 everything: build the Docker image from the workspace lockfile, with a Streamable HTTP mode by @cliffhall in #5382\nfeat(everything): add a resource collection example by @cliffhall in #5365\nfix(everything): stop a cancelled long-running operation by @cliffhall in #5396\nfeat(everything): light and dark themed icons on every primitive by @cliffhall in #5389 chore: version packages by @github-actions[bot] in #5401\nfix(everything): give gzip-file-as-resource's resource the resource ico",
+      "primaryDate": "2026-10-28",
+      "sources": [
+        {
+          "name": "modelcontextprotocol/servers · GitHub",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/v2.2.0",
+          "date": "2026-10-28",
+          "tier": "primary",
+          "kind": "release"
+        },
+        {
+          "name": "modelcontextprotocol/servers · GitHub",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/v2.3.0",
+          "date": "2026-11-04",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "mcp",
+        "servers",
+        "agent-security"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 3,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 11.871,
+      "meta": [
+        {
+          "repo": "modelcontextprotocol/servers",
+          "tag": "v2.3.0"
+        },
+        {
+          "repo": "modelcontextprotocol/servers",
+          "tag": "v2.2.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "servers v2.3.0",
+      "summaryZh": "软件包 软件包版本注册表 在此版本中 @modelcontextprotocol/server-everything 2.2.1 npm 发布 @modelcontextprotocol/server-filesystem 2.2.0 npm 发布 @modelcontextprotocol/server-memory 2.1.0 npm 发布 @modelcontextprotocol/server-sequential-thinking 2.1.1 npm 发布 mcp-server-fetch 2026.11.4 PyPI 发布 mcp-server-git 2026.11.4 PyPI 发布 mcp-server-time 2026.11.4 PyPI 发布\n发布分类帐：v2/chore/5425-release-v2.3.0 @modelcontextprotocol/server-everything 2.2.1 什么是\nChanged\n测试（一切）：检查每个注册的工具都带有 @cliffhall 在 #5347 中的所有四个注释提示\n修复（一切）：通过 @cliffhall 在 #5350 中命名资源提示允许的参数值 everything：从工作区锁定文件构建 Docker 映像，使用可流式 HTTP 模式由 @cliffhall 在 #5382 中\nfeat(everything)：在 #5365 中添加 @cliffhall 的资源集合示例\n修复（一切）：停止 @cliffhall 在 #5396 中取消的长时间运行的操作\n壮举（一切）：@cliffhall 在 #5389 中每个基元上的浅色和深色主题图标 杂务：@github-actions[bot] 在#5401 中的版本包\n修复（所有内容）：为 gzip-file-as-resource 的资源提供资源 ico"
+    },
+    {
+      "key": "gh:vllm-project/vllm@v0.33.0rc1",
+      "title": "vllm v0.33.0rc1: [CI] Fix stale NVFP4 decode test selector on DGX Spark (#64107)",
+      "summary": "Signed-off-by: grYe99 guorongye99@gmail.com Co-authored-by: grYe99 guorongye99@gmail.com (cherry picked from commit bfa2a43 )",
+      "primaryDate": "2026-10-28",
+      "sources": [
+        {
+          "name": "vllm-project/vllm · GitHub",
+          "url": "https://github.com/vllm-project/vllm/releases/tag/v0.33.0rc1",
+          "date": "2026-10-28",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "vllm"
+      ],
+      "signalLeadDays": null,
+      "weight": 10,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 10.608,
+      "meta": [
+        {
+          "repo": "vllm-project/vllm",
+          "tag": "v0.33.0rc1"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "vllm v0.33.0rc1：[CI] 修复 DGX Spark 上过时的 NVFP4 解码测试选择器 (#64107)",
+      "summaryZh": "签字人：grYe99 guorongye99@gmail.com 共同作者：grYe99 guorongye99@gmail.com （从提交 bfa2a43 中挑选的樱桃）"
+    },
+    {
+      "key": "gh:NVIDIA/TensorRT-LLM@v1.4.0rc2",
+      "title": "TensorRT-LLM v1.4.0rc2",
+      "summary": "Python package version The Python wheels for this release are published as 1.4.0rc2.post1 . Container images and documentation remain at 1.4.0rc2 . Use 1.4.0rc2.post1 when installing the Python package. The wheel-only patch removes a direct Git dependency that prevented PyPI publication ( #21128 ) and updates the Boost download mirror used during builds ( #21133 ). Patched wheel source: v1.4.0rc2.post1 , commit 43f8f70da6415a3b06f91f9ebaa4fb7611ab62cc . Highlights Known Issues Tensor-parallel serving with RPC orchestration may hang during model initialization when reusing an MPI worker pool across threads. Model\nSupport Add Cosmos3-Edge Reasoner support for visual generation workloads #20307 Add GLM-5.2 NVFP4 low-latency decode on Rubin through Modeling V2 #20517\nEnable MiniMax-M3 on Rubin with NVFP4 KV exemptions and paged FMHA #20167 Expand Qwen3.8-Flash-Next Modeling V2 support for MTP, video, and quantized KV caches #20276 Add SM103 Modeling V2 defaults for GPT-OSS-120B and DeepSeek-R1-0528 NVFP4 #20267 Qualify dense Phi3 models for ModelExpress integration #19997\nSupport static FP8 Cosmos3 parallelism and four-step distilled checkpoints #20007\nSupport FLUX.1-dev static NVFP4 w",
+      "primaryDate": "2026-10-28",
+      "sources": [
+        {
+          "name": "NVIDIA/TensorRT-LLM · GitHub",
+          "url": "https://github.com/NVIDIA/TensorRT-LLM/releases/tag/v1.4.0rc2",
+          "date": "2026-10-28",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "kv-cache",
+        "quantization",
+        "post-training",
+        "orchestration",
+        "scheduling",
+        "TensorRT-LLM"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 2,
+      "valueFlags": [
+        "model-support",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 10.6,
+      "meta": [
+        {
+          "repo": "NVIDIA/TensorRT-LLM",
+          "tag": "v1.4.0rc2"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "TensorRT-LLM v1.4.0rc2",
+      "summaryZh": "Python 包版本 此版本的 Python 轮发布为 1.4.0rc2.post1 。容器镜像和文档保留在 1.4.0rc2 。安装Python包时使用1.4.0rc2.post1。仅轮子补丁删除了阻止 PyPI 发布的直接 Git 依赖项 (#21128)，并更新了构建期间使用的 Boost 下载镜像 (#21133)。修补轮源： v1.4.0rc2.post1 ，提交 43f8f70da6415a3b06f91f9ebaa4fb7611ab62cc 。重点已知问题跨线程重用 MPI 工作池时，使用 RPC 编排的张量并行服务可能会在模型初始化期间挂起。模型\n支持 添加对视觉生成工作负载的 Cosmos3-Edge Reasoner 支持 #20307 通过 Modeling V2 在 Rubin 上添加 GLM-5.2 NVFP4 low-latency 解码 #20517\n在 Rubin 上启用 MiniMax-M3，并具有 NVFP4 KV 豁免和分页 FMHA #20167 扩展 Qwen3.8-Flash-Next Modeling V2 对 MTP、视频和量化 KV 缓存的支持 #20276 为 GPT-OSS-120B 和 DeepSeek-R1-0528 NVFP4 添加 SM103 Modeling V2 默认值 #20267 验证密集用于 ModelExpress 集成的 Phi3 模型 #19997\n支持静态 FP8 Cosmos3 并行性和四步蒸馏检查点 #20007\nSupport FLUX.1-dev static NVFP4 w"
+    },
+    {
+      "key": "gh:NVIDIA/TensorRT-LLM@v1.4.0rc2.post1",
+      "title": "TensorRT-LLM v1.4.0rc2.post1: [TRTLLM-17383][infra] Download Boost from AWS Artifactory (#21133)",
+      "summary": "Signed-off-by: Sharabesh Jayaraman 338298191+sharabeshj-nvda@users.noreply.github.com (cherry picked from commit eb6fc51 ) Signed-off-by: Yanchao Lu yanchaol@nvidia.com",
+      "primaryDate": "2026-10-28",
+      "sources": [
+        {
+          "name": "NVIDIA/TensorRT-LLM · GitHub",
+          "url": "https://github.com/NVIDIA/TensorRT-LLM/releases/tag/v1.4.0rc2.post1",
+          "date": "2026-10-28",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra",
+        "policy"
+      ],
+      "tags": [
+        "TensorRT-LLM"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 0,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 7.693,
+      "meta": [
+        {
+          "repo": "NVIDIA/TensorRT-LLM",
+          "tag": "v1.4.0rc2.post1"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "TensorRT-LLM v1.4.0rc2.post1：[TRTLLM-17383][infra]从 AWS Artifactory 下载 Boost (#21133)",
+      "summaryZh": "签署人：Sharabesh Jayaraman 338298191+sharabeshj-nvda@users.noreply.github.com（从提交 eb6fc51 中挑选）签署人：Yanchao Lu yanchaol@nvidia.com"
+    },
+    {
+      "key": "gh:vllm-project/vllm-omni@v0.32.0",
+      "title": "vllm-omni v0.32.0",
+      "summary": "Highlights vLLM-Omni v0.32.0 aligns with vLLM 0.32.0 and brings multi-node execution, expanded realtime serving, new image and audio models, and release-branch stability fixes since v0.30.0. Runtime and realtime serving Add optional Ray-based multi-node inference , session-aware replica placement, and multi-frontend full-duplex serving. ( #7938 , #8913 ) Add server VAD for turn-based /v1/realtime and RL weight-transfer support. ( #8600 , #7686 ) Improve request failure isolation, repeated-stage-failure handling, and FlashInfer compatibility with torch.compile(fullgraph=True) . ( #9470 , #9275 , #9397 ) Models and generation Add YuE2-3B text-to-music, Qwen-Image-2.1 / 2.1-Turbo , Kandinsky6 , and MOSS-Image . ( #7886 , #8099 , #8699 , #8537 , #8926 ) Add TaoMate-H3 realtime AR-diffusion streaming and an LTX 2.5 single-stage text-to-audio pipeline. ( #8268 , #6489 ) Add optional single-stage Qwen3-TTS with in-Talker streaming codec decoding; improve PersonaPlex batched execution and CUDA graphs. ( #8259 , #8441 ) Add CUDA FA3 FP8 diffusion attention and online FP8 quantization for MammothModa2 DiT. ( #8965 , #7221 ) Compatibility Requires Python >=3.11,<3.14 and the matching vLLM 0.3",
+      "primaryDate": "2026-10-28",
+      "sources": [
+        {
+          "name": "vllm-project/vllm-omni · GitHub",
+          "url": "https://github.com/vllm-project/vllm-omni/releases/tag/v0.32.0",
+          "date": "2026-10-28",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "multimodal",
+        "ai-infra"
+      ],
+      "tags": [
+        "quantization",
+        "post-training",
+        "vllm-omni"
+      ],
+      "signalLeadDays": null,
+      "weight": 5,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 7.165,
+      "meta": [
+        {
+          "repo": "vllm-project/vllm-omni",
+          "tag": "v0.32.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "vllm-omni v0.32.0",
+      "summaryZh": "亮点 vLLM-Omni v0.32.0 与 vLLM 0.32.0 保持一致，自 v0.30.0 以来带来了多节点执行、扩展的实时服务、新的图像和音频模型以及发布分支稳定性修复。运行时和实时服务添加可选的基于 Ray 的多节点推理、会话感知副本放置和多前端全双工服务。 （#7938，#8913）添加服务器 VAD 以实现回合制/v1/实时和 RL 权重转移支持。 （#8600、#7686）改进请求失败隔离、重复阶段失败处理以及 FlashInfer 与 torch.compile(fullgraph=True) 的兼容性。 （#9470、#9275、#9397）模型和生成添加 YuE2-3B 文本转音乐、Qwen-Image-2.1 / 2.1-Turbo、Kandinsky6 和 MOSS-Image。 (#7886、#8099、#8699、#8537、#8926)添加TaoMate-H3实时AR扩散流和LTX 2.5单级文本到音频管道。 （#8268，#6489）添加可选的单级 Qwen3-TTS，具有 Talker 内流编解码器解码功能；改进 PersonaPlex 批量执行和 CUDA 图表。 （#8259，#8441）为 MammothModa2 DiT 添加 CUDA FA3 FP8 扩散注意力和在线 FP8 quantization。 ( #8965 , #7221 ) 兼容性需要 Python >=3.11,<3.14 以及匹配的 vLLM 0.3"
+    },
+    {
+      "key": "gh:block/goose@v1.57.0",
+      "title": "goose v1.57.0",
+      "summary": "✨ Features Allowlist: require HTTPS and validate redirects, block on policy failure #12619\nAllow callers to supply Goose session IDs #13098 🐛 Bug Fixes Linux window icons restored in desktop app #13120 OpenRouter: resolve variant suffixes like :free and :nitro to the base model #12979 Use catalog_provider_id for vision lookup on custom providers #12993 Desktop: start the agent only once after a fork #13139 Scheduler: use recipe settings in scheduled runs #13138 Voice: use system trust for WebSockets #13075 Prompt: surface MiniJinja render errors in custom system prompts #12794 Providers: request summarized thinking from Claude models #13029 Code-mode: keep recipe final_output tool for the model #13102 CLI: configure unavailable default provider #13024 Windows build error #13081 Developer: terminate owned shell process trees on cancellation #12958 ACP: fail session/prompt when a turn ends on an error #13043 Databricks: send the system prompt as system on the MLflow chat route #13057 🔧 Improvements Bump zstd to 0.14.3 for RUSTSEC advisories #13162 Remove jsonwebtoken to avoid ignoring its cargo-deny advisories #13141 Address cargo-deny failures on main #13076 Bump @modelcontextprot",
+      "primaryDate": "2026-10-28",
+      "sources": [
+        {
+          "name": "block/goose · GitHub",
+          "url": "https://github.com/aaif-goose/goose/releases/tag/v1.57.0",
+          "date": "2026-10-28",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-coding",
+        "agents"
+      ],
+      "tags": [
+        "goose"
+      ],
+      "signalLeadDays": null,
+      "weight": 5,
+      "value": 0,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 5.357,
+      "meta": [
+        {
+          "repo": "block/goose",
+          "tag": "v1.57.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "goose v1.57.0",
+      "summaryZh": "✨ 功能白名单：需要 HTTPS 并验证重定向，阻止策略失败 #12619\n允许调用者提供 Goose 会话 ID #13098 🐛 错误修复 在桌面应用程序中恢复 Linux 窗口图标 #13120 OpenRouter：将 :free 和 :nitro 等变体后缀解析为基本模型 #12979 使用 Catalog_provider_id 在自定义提供程序上进行视觉查找 #12993 桌面：在分叉后仅启动代理一次 #13139 调度程序：在计划运行中使用配方设置#13138 语音：使用 WebSocket 的系统信任 #13075 提示：在自定义系统提示中显示 MiniJinja 渲染错误 #12794 提供程序：请求 Claude 模型的总结思维 #13029 代码模式：为模型保留配方 Final_output 工具 #13102 CLI：配置不可用的默认提供程序 #13024 Windows 构建错误 #13081 开发人员：取消时终止拥有的 shell 进程树#12958 ACP：回合因错误而结束时会话/提示失败 #13043 Databricks：在 MLflow 聊天路由上作为系统发送系统提示 #13057 🔧 改进 将 RUSTSEC 建议的 zstd 更改为 0.14.3 #13162 删除 jsonwebtoken 以避免忽略其货物拒绝建议 #13141 解决 main 上的货物拒绝故障#13076 凹凸@modelcontextprot"
     },
     {
       "key": "arxiv:2610.37739",
@@ -1519,7 +3924,10 @@
       ],
       "signalLeadDays": null,
       "weight": 1.9019550008653872,
-      "score": 4.226,
+      "value": -1,
+      "valueFlags": [],
+      "prerelease": false,
+      "score": 2.726,
       "meta": [
         {
           "upvotes": 2,
@@ -1541,6 +3949,136 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "OpenFrontiers：开放研究问题的集合和科学重新发现的基准",
       "summaryZh": "OpenFrontiers 将广泛的开放研究问题与最近解决的数学问题的正式评分基准联系起来，以评估 LLM 代理人在不同信息访问条件下重新发现解决方案的能力。"
+    },
+    {
+      "key": "gh:cline/cline@v4.1.26",
+      "title": "cline v4.1.26",
+      "summary": "Added Cloud tasks: Settings > API Configuration has a Local | Cloud toggle when cloud sessions are on. Cloud picks the Cline model new cloud tasks run on, saved separately from your local models. Clicking the model label in a cloud session's composer opens it there. Starting or resuming a cloud sandbox shows a progress card with the repo, branch and steps (start sandbox, clone repository, start agent). It collapses once the agent starts.\nChanged Cloud sessions hide the Plan/Act toggle and the auto-approve bar instead of showing them disabled. With no model chosen, the Cline provider uses Claude Sonnet 5.5 again, which is back at the top of Cline's recommended list. Model requests retry at most 3 times instead of 5. Kimi K3 now gets max reasoning for Extra High and Max, instead of an xhigh setting it rejects. Refreshed the model catalog. Adds the CommandCode, Reflection, Liquid Inference and Munito AI providers and drops CrofAI, iFlow and Llama. The Cline free list adds Reflection Beam, Nemotron 3.5 Lightning and Laguna S 2.1 and drops Mimo V2.6 Flash and Muse Spark 1.3 Contributor. ClinePass now defaults to Kimi K3.1 Pro and adds MiniMax M3.1 Flash and DeepSeek V4.1 Flash 1017. Def",
+      "primaryDate": "2026-10-26",
+      "sources": [
+        {
+          "name": "cline/cline · GitHub",
+          "url": "https://github.com/cline/cline/releases/tag/v4.1.26",
+          "date": "2026-10-26",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-coding",
+        "agents"
+      ],
+      "tags": [
+        "cline"
+      ],
+      "signalLeadDays": null,
+      "weight": 5,
+      "value": 4,
+      "valueFlags": [
+        "security",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 11.385,
+      "meta": [
+        {
+          "repo": "cline/cline",
+          "tag": "v4.1.26"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "cline v4.1.26",
+      "summaryZh": "添加了云任务：设置 > API 配置有一个本地 |云会话开启时云切换。云选择新云任务运行的 Cline 模型，与本地模型分开保存。单击云会话的编辑器中的模型标签可将其打开。启动或恢复云沙箱会显示进度卡，其中包含存储库、分支和步骤（启动沙箱、克隆存储库、启动代理）。一旦代理启动，它就会崩溃。\n更改的云会话隐藏计划/行动切换和自动批准栏，而不是显示它们已禁用。由于没有选择任何型号，Cline 提供商再次使用 Claude Sonnet 5.5，它又回到了 Cline 推荐列表的首位。模型请求最多重试 3 次，而不是 5 次。Kimi K3 现在获得 Extra High 和 Max 的最大推理，而不是它拒绝的 xhigh 设置。刷新了模型目录。添加了 CommandCode、Reflection、Liquid Inference 和 Munito AI 提供程序，并删除了 CrofAI、iFlow 和 Llama。 Cline 免费列表添加了 Reflection Beam、Nemotron 3.5 Lightning 和 Laguna S 2.1，并删除了 Mimo V2.6 Flash 和 Muse Spark 1.3 Contributor。 ClinePass 现在默认为 Kimi K3.1 Pro 并添加 MiniMax M3.1 Flash 和 DeepSeek V4.1 Flash 1017。 Def"
+    },
+    {
+      "key": "gh:OpenPipe/ART@v0.5.23",
+      "title": "ART v0.5.22",
+      "summary": "Release Highlights Model metrics now log to the model's W&B entity. In 0.5.21, a model created with an explicit entity that differed from the API key's default entity logged model.log() metrics to a run under the default entity instead ( #1134 ). What's\nChanged feat: support opt-in multi-adapter MoE LoRA waves ( #1139 ) fix: bound context-parallel admission and memory accounting ( #1138 ) fix: support vLLM 0.31 inference history hooks ( #1136 ) feat: support dense canonical multi-adapter LoRA ( #1135 ) fix: open W&B runs under the model's entity ( #1134 ) feat: add art.megatron support for Stark's Tinker-compatible trainer ( #1133 ) Full Changelog : v0.5.21...v0.5.22",
+      "primaryDate": "2026-10-26",
+      "sources": [
+        {
+          "name": "OpenPipe/ART · GitHub",
+          "url": "https://github.com/OpenPipe/ART/releases/tag/v0.5.23",
+          "date": "2026-10-26",
+          "tier": "primary",
+          "kind": "release"
+        },
+        {
+          "name": "OpenPipe/ART · GitHub",
+          "url": "https://github.com/OpenPipe/ART/releases/tag/v0.5.22",
+          "date": "2026-10-26",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "rl"
+      ],
+      "tags": [
+        "post-training",
+        "ART"
+      ],
+      "signalLeadDays": null,
+      "weight": 6,
+      "value": 3,
+      "valueFlags": [
+        "model-support",
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 11.139,
+      "meta": [
+        {
+          "repo": "OpenPipe/ART",
+          "tag": "v0.5.23"
+        },
+        {
+          "repo": "OpenPipe/ART",
+          "tag": "v0.5.22"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "ART v0.5.22",
+      "summaryZh": "版本亮点 模型指标现在记录到模型的 W&B 实体。在 0.5.21 中，使用与 API 密钥的默认实体不同的显式实体创建的模型将 model.log() 指标记录到默认实体下运行（#1134）。什么是\n更改的功能：支持选择加入多适配器 MoE LoRA 波 (#1139) 修复：绑定上下文并行准入和内存核算 (#1138) 修复：支持 vLLM 0.31 推理历史挂钩 (#1136) 功能：支持密集规范多适配器 LoRA (#1135) 修复：开放 W&B 运行在模型的实体 (#1134) 壮举下：为 Stark 的 Tinker 兼容训练器添加 art.megatron 支持 (#1133) 完整变更日志：v0.5.21...v0.5.22"
+    },
+    {
+      "key": "gh:vllm-project/vllm-ascend@v0.31.0rc1",
+      "title": "vllm-ascend v0.31.0rc1",
+      "summary": "[v0.31.0rc][BugFix][MRV2] Skip non-Tensor KV cache components in bloc…",
+      "primaryDate": "2026-10-26",
+      "sources": [
+        {
+          "name": "vllm-project/vllm-ascend · GitHub",
+          "url": "https://github.com/vllm-project/vllm-ascend/releases/tag/v0.31.0rc1",
+          "date": "2026-10-26",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "ai-infra"
+      ],
+      "tags": [
+        "kv-cache",
+        "vllm-ascend"
+      ],
+      "signalLeadDays": null,
+      "weight": 5,
+      "value": 1,
+      "valueFlags": [
+        "capability"
+      ],
+      "prerelease": false,
+      "score": 7.109,
+      "meta": [
+        {
+          "repo": "vllm-project/vllm-ascend",
+          "tag": "v0.31.0rc1"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "vllm-ascend v0.31.0rc1",
+      "summaryZh": "[v0.31.0rc][BugFix][MRV2] 跳过块中的非 Tensor KV cache 组件..."
     },
     {
       "key": "arxiv:2610.34074",
@@ -1571,7 +4109,12 @@
       ],
       "signalLeadDays": null,
       "weight": 1.2,
-      "score": 3.505,
+      "value": 3,
+      "valueFlags": [
+        "security"
+      ],
+      "prerelease": false,
+      "score": 8.005,
       "meta": [
         {
           "upvotes": 1,
@@ -1595,6 +4138,47 @@
       "firstSeenAt": "2026-11-07T02:53:04.602Z",
       "titleZh": "相同训练的语言模型在不同的越狱中会崩溃",
       "summaryZh": "越狱漏洞主要是由预训练随机性而不是数据配方决定的，预训练种子在提示中留下可识别的指纹。"
+    },
+    {
+      "key": "gh:modelcontextprotocol/servers@v2.1.0",
+      "title": "servers v2.1.0",
+      "summary": "Security fixes v2.1.0 fixes eight vulnerabilities in three servers.\nUpgrade @modelcontextprotocol/server-filesystem and @modelcontextprotocol/server-everything to 2.0.1, and mcp-server-fetch to 2026.10.24. Package Affected\nFixed in @modelcontextprotocol/server-filesystem 1.0.0 through 2.0.0, and date versions through 2026.8.31 2.0.1 @modelcontextprotocol/server-everything 1.0.0 through 2.0.0, and date versions 2025.9.24 through 2026.8.31 2.0.1 mcp-server-fetch through 2026.10.19 2026.10.24 @modelcontextprotocol/server-filesystem 2.0.1 Writes stay inside the directory that was checked (Linux and macOS). A parent directory swapped for a symlink between the access check and the write can no longer redirect write_file , edit_file , create_directory or the move_file destination outside the allowed directories. On Windows this is only partly fixed ; the advisory says what is still exposed and how to configure around it ( GHSA-53mr-w429-c597 ) Paths are checked exactly as they are used. The access check no longer strips a trailing quote or whitespace that the file operation keeps, so a sibling directory named after an allowed one with that suffix is no longer reachable ( GHSA-7rgq-gccq-qp",
+      "primaryDate": "2026-10-25",
+      "sources": [
+        {
+          "name": "modelcontextprotocol/servers · GitHub",
+          "url": "https://github.com/modelcontextprotocol/servers/releases/tag/v2.1.0",
+          "date": "2026-10-25",
+          "tier": "primary",
+          "kind": "release"
+        }
+      ],
+      "beats": [
+        "agents"
+      ],
+      "tags": [
+        "agent-security",
+        "mcp",
+        "servers"
+      ],
+      "signalLeadDays": null,
+      "weight": 7,
+      "value": 5,
+      "valueFlags": [
+        "security",
+        "breaking"
+      ],
+      "prerelease": false,
+      "score": 14.849,
+      "meta": [
+        {
+          "repo": "modelcontextprotocol/servers",
+          "tag": "v2.1.0"
+        }
+      ],
+      "firstSeenAt": "2026-11-07T08:23:58.645Z",
+      "titleZh": "servers v2.1.0",
+      "summaryZh": "安全修复 v2.1.0 修复了三台服务器中的八个漏洞。\n将 @modelcontextprotocol/server-filesystem 和 @modelcontextprotocol/server-everything 升级到 2.0.1，将 mcp-server-fetch 升级到 2026.10.24。受影响的套餐\n已在 @modelcontextprotocol/server-filesystem 1.0.0 到 2.0.0 以及日期版本到 2026.8.31 2.0.1 中修复 @modelcontextprotocol/server-everything 1.0.0 到 2.0.0，日期版本从 2025.9.24 到 2026.8.31 2.0.1 mcp-server-fetch 到2026.10.19 2026.10.24 @modelcontextprotocol/server-filesystem 2.0.1 写入保留在已检查的目录中（Linux 和 macOS）。访问检查和写入之间交换为符号链接的父目录无法再将 write_file 、 edit_file 、 create_directory 或 move_file 目标重定向到允许的目录之外。在 Windows 上，这只是部分修复；该通报说明了仍然暴露的内容以及如何围绕它进行配置（GHSA-53mr-w429-c597）路径按照使用情况进行严格检查。访问检查不再删除文件操作保留的尾随引号或空格，因此无法再访问以允许的具有该后缀的目录命名的同级目录 ( GHSA-7rgq-gccq-qp"
     },
     {
       "key": "gh:modelcontextprotocol/typescript-sdk@1.32.2",
@@ -7264,23 +9848,233 @@
   ],
   "issues": [
     {
-      "id": "2026-11-05-daily",
-      "date": "2026-11-05",
+      "id": "2026-11-07-daily",
+      "date": "2026-11-07",
       "headline": {
-        "en": "11 featured of 11 collected",
-        "zh": "精选 11 条，今日共收录 11 条"
+        "en": "13 featured of 13 collected",
+        "zh": "精选 13 条，今日共收录 13 条"
       },
       "dek": {
-        "en": "Collected from 4 primary outlets. 8 stories drew on more than one source; each entry links to the artifact it is anchored to.",
-        "zh": "来自 4 个原始渠道。8 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
+        "en": "Collected from 3 primary outlets. 0 stories drew on more than one source; each entry links to the artifact it is anchored to.",
+        "zh": "来自 3 个原始渠道。0 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
       },
       "deskTake": [],
       "signals": [
+        {
+          "storyId": "ghc:openai/codex@d4a341bd52",
+          "text": {
+            "en": "codex: Reauthenticate runtime requests before reusing WebSocket access (#60055)",
+            "zh": "codex: Reauthenticate runtime requests before reusing WebSocket access (#60055)"
+          }
+        },
+        {
+          "storyId": "ghc:openai/codex@4be90eb069",
+          "text": {
+            "en": "codex: Fetch account security reminders through app-server (#60082)",
+            "zh": "codex: Fetch account security reminders through app-server (#60082)"
+          }
+        },
+        {
+          "storyId": "ghc:openai/codex@b7d2321ef7",
+          "text": {
+            "en": "codex: Derive MCP network policy and preserve saved denials (#60046)",
+            "zh": "codex: Derive MCP network policy and preserve saved denials (#60046)"
+          }
+        },
+        {
+          "storyId": "ghc:openai/codex@f4275a2a2e",
+          "text": {
+            "en": "codex: Use runtime authentication for remote-control requests (#60073)",
+            "zh": "codex: Use runtime authentication for remote-control requests (#60073)"
+          }
+        },
+        {
+          "storyId": "ghc:openai/codex@1c414e0d65",
+          "text": {
+            "en": "codex: Use thread runtime auth for Guardian Decisions and memory quota check…",
+            "zh": "codex: Use thread runtime auth for Guardian Decisions and memory quota check…"
+          }
+        }
+      ],
+      "sections": [
+        {
+          "beat": "ai-coding",
+          "storyIds": [
+            "ghc:openai/codex@a90c808408"
+          ]
+        },
+        {
+          "beat": "agents",
+          "storyIds": [
+            "ghc:openai/codex@d4a341bd52",
+            "ghc:openai/codex@4be90eb069",
+            "ghc:openai/codex@b7d2321ef7",
+            "ghc:openai/codex@f4275a2a2e",
+            "ghc:openai/codex@1c414e0d65",
+            "ghc:NVIDIA/TensorRT-LLM@bcb64e1459"
+          ]
+        },
+        {
+          "beat": "rl",
+          "storyIds": [
+            "ghc:openai/codex@e6bf88ae02"
+          ]
+        },
+        {
+          "beat": "ai-infra",
+          "storyIds": [
+            "gh:ggml-org/llama.cpp@b12183",
+            "gh:ggml-org/llama.cpp@b12182",
+            "gh:ggml-org/llama.cpp@b12181"
+          ]
+        },
+        {
+          "beat": "policy",
+          "storyIds": [
+            "ghc:openai/codex@b7d2321ef7",
+            "ghc:openai/codex@11ca3f7531",
+            "ghc:openai/codex@358e464528"
+          ]
+        }
+      ],
+      "tags": [
+        "security",
+        "protocol",
+        "capability",
+        "post-training",
+        "evaluation",
+        "codex"
+      ]
+    },
+    {
+      "id": "2026-11-06-daily",
+      "date": "2026-11-06",
+      "headline": {
+        "en": "14 featured of 15 collected",
+        "zh": "精选 14 条，今日共收录 15 条"
+      },
+      "dek": {
+        "en": "Collected from 6 primary outlets. 0 stories drew on more than one source; each entry links to the artifact it is anchored to.",
+        "zh": "来自 6 个原始渠道。0 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
+      },
+      "deskTake": [],
+      "signals": [
+        {
+          "storyId": "gh:anthropics/claude-code@v2.1.319",
+          "text": {
+            "en": "claude-code v2.1.319",
+            "zh": "claude-code v2.1.319"
+          }
+        },
+        {
+          "storyId": "ghc:modelcontextprotocol/specification@c9b51b3a02",
+          "text": {
+            "en": "specification: fix(schema): restore optional _meta on input requests and responses (…",
+            "zh": "specification: fix(schema): restore optional _meta on input requests and responses (…"
+          }
+        },
+        {
+          "storyId": "ghc:anthropics/claude-code@90380efca7",
+          "text": {
+            "en": "claude-code: mods: add the privacy mod (#107768)",
+            "zh": "claude-code: mods: add the privacy mod (#107768)"
+          }
+        },
+        {
+          "storyId": "ghc:modelcontextprotocol/specification@38353251fa",
+          "text": {
+            "en": "specification: fix(schema): close oneOf type-check bypass and render SEP-2106 Tool e…",
+            "zh": "specification: fix(schema): close oneOf type-check bypass and render SEP-2106 Tool e…"
+          }
+        },
+        {
+          "storyId": "gh:unslothai/unsloth@v0.1.916-beta",
+          "text": {
+            "en": "unsloth Large Performance Fixes",
+            "zh": "unsloth Large Performance Fixes"
+          }
+        }
+      ],
+      "sections": [
+        {
+          "beat": "ai-coding",
+          "storyIds": [
+            "gh:anthropics/claude-code@v2.1.319"
+          ]
+        },
+        {
+          "beat": "agents",
+          "storyIds": [
+            "gh:anthropics/claude-code@v2.1.319",
+            "ghc:modelcontextprotocol/specification@c9b51b3a02",
+            "ghc:anthropics/claude-code@90380efca7",
+            "ghc:modelcontextprotocol/specification@38353251fa",
+            "gh:langchain-ai/langgraph@cli%3D%3D0.4.42",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/taxbit-assist-a-grounded-role-aware-ai-agent-on-amazon-bedrock-agentcore/",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/how-greenlight-financial-built-an-autonomous-soc-solution-on-amazon-bedrock-agentcore/",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/govern-ai-agent-access-with-okta-cross-app-access-and-amazon-bedrock-agentcore-part-2/",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/extend-claude-code-to-remote-sessions-on-amazon-bedrock-agentcore-with-security-controls/",
+            "gh:langchain-ai/langgraph@sdk%3D%3D0.4.14",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/serverless-mcp-server-for-ai-agent-data-lake-access-on-amazon-ecs-fargate/"
+          ]
+        },
+        {
+          "beat": "rl",
+          "storyIds": [
+            "gh:unslothai/unsloth@v0.1.916-beta",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/sagemaker-inference-now-supports-multi-instance-gpu-to-maximize-gpu-utilization-for-model-endpoints/",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/serverless-mcp-server-for-ai-agent-data-lake-access-on-amazon-ecs-fargate/"
+          ]
+        },
+        {
+          "beat": "ai-infra",
+          "storyIds": [
+            "gh:NVIDIA/TensorRT-LLM@v1.4.0rc3",
+            "blog:aws-ml:https://aws.amazon.com/blogs/machine-learning/sagemaker-inference-now-supports-multi-instance-gpu-to-maximize-gpu-utilization-for-model-endpoints/"
+          ]
+        }
+      ],
+      "tags": [
+        "post-training",
+        "orchestration",
+        "evaluation",
+        "mcp",
+        "scheduling",
+        "claude-code"
+      ]
+    },
+    {
+      "id": "2026-11-05-daily",
+      "date": "2026-11-05",
+      "headline": {
+        "en": "14 featured of 16 collected",
+        "zh": "精选 14 条，今日共收录 16 条"
+      },
+      "dek": {
+        "en": "Collected from 9 primary outlets. 8 stories drew on more than one source; each entry links to the artifact it is anchored to.",
+        "zh": "来自 9 个原始渠道。8 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
+      },
+      "deskTake": [],
+      "signals": [
+        {
+          "storyId": "ghc:modelcontextprotocol/specification@bfe9502547",
+          "text": {
+            "en": "specification: fix(release): retain existing PR authentication",
+            "zh": "specification: fix(release): retain existing PR authentication"
+          }
+        },
         {
           "storyId": "arxiv:2611.08449",
           "text": {
             "en": "VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding",
             "zh": "VFlash: Fast, Accurate Visual Planning via Flash Primitive Decoding"
+          }
+        },
+        {
+          "storyId": "arxiv:2611.07909",
+          "text": {
+            "en": "EDGAR: Efficient Diffusion-Driven Gaussian Avatar Refinement via Synthetic Failure",
+            "zh": "EDGAR: Efficient Diffusion-Driven Gaussian Avatar Refinement via Synthetic Failure"
           }
         },
         {
@@ -7296,52 +10090,48 @@
             "en": "WeLM-Image: A Unified Image Generation Model towards Visual Intelligence",
             "zh": "WeLM-Image: A Unified Image Generation Model towards Visual Intelligence"
           }
-        },
-        {
-          "storyId": "arxiv:2611.07909",
-          "text": {
-            "en": "EDGAR: Efficient Diffusion-Driven Gaussian Avatar Refinement via Synthetic Failure",
-            "zh": "EDGAR: Efficient Diffusion-Driven Gaussian Avatar Refinement via Synthetic Failure"
-          }
-        },
-        {
-          "storyId": "blog:hf-blog:https://huggingface.co/blog/phonon-tts",
-          "text": {
-            "en": "A Closer Look at Phonon TTS. Launching High-Quality On-Device Speech That Tops the Benchmarks.",
-            "zh": "A Closer Look at Phonon TTS. Launching High-Quality On-Device Speech That Tops the Benchmarks."
-          }
         }
       ],
       "sections": [
         {
           "beat": "ai-coding",
           "storyIds": [
-            "arxiv:2611.07613"
+            "gh:All-Hands-AI/OpenHands@pr19394-evidence"
           ]
         },
         {
           "beat": "agents",
           "storyIds": [
+            "ghc:modelcontextprotocol/specification@bfe9502547",
             "arxiv:2611.08449",
-            "arxiv:2611.08237",
             "blog:msr:https://www.microsoft.com/en-us/research/blog/formally-verifying-agent-written-full-stack-web-apps-with-pdd-kit/",
-            "arxiv:2611.08483"
+            "arxiv:2611.08483",
+            "gh:All-Hands-AI/OpenHands@pr19394-evidence",
+            "gh:langchain-ai/langchain@langchain-core%3D%3D1.7.6",
+            "arxiv:2611.08237",
+            "gh:langchain-ai/langgraph@1.2.20"
           ]
         },
         {
           "beat": "rl",
           "storyIds": [
             "arxiv:2611.08449",
-            "arxiv:2611.07392"
+            "arxiv:2611.07392",
+            "ghc:volcengine/verl@592cba1353"
+          ]
+        },
+        {
+          "beat": "ai-infra",
+          "storyIds": [
+            "ghc:volcengine/verl@592cba1353"
           ]
         },
         {
           "beat": "multimodal",
           "storyIds": [
-            "arxiv:2611.07392",
             "arxiv:2611.07909",
-            "blog:hf-blog:https://huggingface.co/blog/phonon-tts",
-            "arxiv:2611.08369"
+            "arxiv:2611.07392",
+            "blog:hf-blog:https://huggingface.co/blog/phonon-tts"
           ]
         },
         {
@@ -7353,6 +10143,8 @@
         }
       ],
       "tags": [
+        "security",
+        "specification",
         "post-training",
         "agent-security",
         "evaluation",
@@ -7363,20 +10155,27 @@
       "id": "2026-11-04-daily",
       "date": "2026-11-04",
       "headline": {
-        "en": "7 featured of 7 collected",
-        "zh": "精选 7 条，今日共收录 7 条"
+        "en": "11 featured of 11 collected",
+        "zh": "精选 11 条，今日共收录 11 条"
       },
       "dek": {
-        "en": "Collected from 3 primary outlets. 6 stories drew on more than one source; each entry links to the artifact it is anchored to.",
-        "zh": "来自 3 个原始渠道。6 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
+        "en": "Collected from 7 primary outlets. 6 stories drew on more than one source; each entry links to the artifact it is anchored to.",
+        "zh": "来自 7 个原始渠道。6 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
       },
       "deskTake": [],
       "signals": [
         {
-          "storyId": "arxiv:2611.06741",
+          "storyId": "gh:OpenPipe/ART@v0.5.24",
           "text": {
-            "en": "TailSteer: Trajectory-Tail Steering for Drift-Resistant Multi-turn Image Editing",
-            "zh": "TailSteer: Trajectory-Tail Steering for Drift-Resistant Multi-turn Image Editing"
+            "en": "ART v0.5.24",
+            "zh": "ART v0.5.24"
+          }
+        },
+        {
+          "storyId": "gh:anthropics/claude-code@v2.1.318",
+          "text": {
+            "en": "claude-code v2.1.318",
+            "zh": "claude-code v2.1.318"
           }
         },
         {
@@ -7394,69 +10193,88 @@
           }
         },
         {
-          "storyId": "blog:hf-blog:https://huggingface.co/blog/Dharma-AI/dharma-field-extractor",
+          "storyId": "gh:google-gemini/gemini-cli@v0.68.0-preview.0",
           "text": {
-            "en": "Dharma Field Extractor: Any Document In, Structured Fields in JSON Out",
-            "zh": "Dharma Field Extractor: Any Document In, Structured Fields in JSON Out"
-          }
-        },
-        {
-          "storyId": "arxiv:2611.04527",
-          "text": {
-            "en": "Future Representation Distillation for Imagination-free World Action Models",
-            "zh": "Future Representation Distillation for Imagination-free World Action Models"
+            "en": "gemini-cli Release v0.68.0-preview.0",
+            "zh": "gemini-cli Release v0.68.0-preview.0"
           }
         }
       ],
       "sections": [
         {
+          "beat": "ai-coding",
+          "storyIds": [
+            "gh:anthropics/claude-code@v2.1.318",
+            "gh:google-gemini/gemini-cli@v0.68.0-preview.0"
+          ]
+        },
+        {
           "beat": "agents",
           "storyIds": [
+            "gh:anthropics/claude-code@v2.1.318",
+            "gh:google-gemini/gemini-cli@v0.68.0-preview.0",
             "arxiv:2611.06500"
           ]
         },
         {
           "beat": "rl",
           "storyIds": [
-            "arxiv:2611.06741",
+            "gh:OpenPipe/ART@v0.5.24",
             "arxiv:2611.06817",
-            "arxiv:2611.06976"
+            "arxiv:2611.06976",
+            "arxiv:2611.06741"
+          ]
+        },
+        {
+          "beat": "ai-infra",
+          "storyIds": [
+            "gh:vllm-project/vllm-omni@v0.33.0rc1"
           ]
         },
         {
           "beat": "multimodal",
           "storyIds": [
+            "gh:vllm-project/vllm-omni@v0.33.0rc1",
             "arxiv:2611.06982"
           ]
         },
         {
           "beat": "policy",
           "storyIds": [
-            "blog:hf-blog:https://huggingface.co/blog/Dharma-AI/dharma-field-extractor",
-            "arxiv:2611.04527"
+            "arxiv:2611.04527",
+            "blog:hf-blog:https://huggingface.co/blog/Dharma-AI/dharma-field-extractor"
           ]
         }
       ],
       "tags": [
         "post-training",
+        "ART",
+        "mcp",
+        "claude-code",
         "evaluation",
-        "agent-security",
-        "speculative-decoding"
+        "agent-security"
       ]
     },
     {
       "id": "2026-11-03-daily",
       "date": "2026-11-03",
       "headline": {
-        "en": "5 featured of 5 collected",
-        "zh": "精选 5 条，今日共收录 5 条"
+        "en": "7 featured of 7 collected",
+        "zh": "精选 7 条，今日共收录 7 条"
       },
       "dek": {
-        "en": "Collected from 3 primary outlets. 4 stories drew on more than one source; each entry links to the artifact it is anchored to.",
-        "zh": "来自 3 个原始渠道。4 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
+        "en": "Collected from 5 primary outlets. 4 stories drew on more than one source; each entry links to the artifact it is anchored to.",
+        "zh": "来自 5 个原始渠道。4 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
       },
       "deskTake": [],
       "signals": [
+        {
+          "storyId": "gh:anthropics/claude-code@v2.1.317",
+          "text": {
+            "en": "claude-code v2.1.317",
+            "zh": "claude-code v2.1.317"
+          }
+        },
         {
           "storyId": "arxiv:2611.04277",
           "text": {
@@ -7465,10 +10283,17 @@
           }
         },
         {
-          "storyId": "arxiv:2611.04894",
+          "storyId": "arxiv:2611.04386",
           "text": {
-            "en": "VisSearch-Bench: Evaluating Long Horizon Visual Search in Multimodal Agents",
-            "zh": "VisSearch-Bench: Evaluating Long Horizon Visual Search in Multimodal Agents"
+            "en": "StepX-OPD: Rethinking Multi-Teacher On-Policy Distillation in Diffusion Models",
+            "zh": "StepX-OPD: Rethinking Multi-Teacher On-Policy Distillation in Diffusion Models"
+          }
+        },
+        {
+          "storyId": "gh:crewAIInc/crewAI@1.15.37",
+          "text": {
+            "en": "crewAI 1.15.36",
+            "zh": "crewAI 1.15.36"
           }
         },
         {
@@ -7477,27 +10302,21 @@
             "en": "Transformers Model Integration Contracts",
             "zh": "Transformers Model Integration Contracts"
           }
-        },
-        {
-          "storyId": "arxiv:2611.05376",
-          "text": {
-            "en": "From Autonomous Agents to Cognitive Symbionts: Toward AI-Augmented Human Intelligence",
-            "zh": "From Autonomous Agents to Cognitive Symbionts: Toward AI-Augmented Human Intelligence"
-          }
-        },
-        {
-          "storyId": "arxiv:2611.04386",
-          "text": {
-            "en": "StepX-OPD: Rethinking Multi-Teacher On-Policy Distillation in Diffusion Models",
-            "zh": "StepX-OPD: Rethinking Multi-Teacher On-Policy Distillation in Diffusion Models"
-          }
         }
       ],
       "sections": [
         {
+          "beat": "ai-coding",
+          "storyIds": [
+            "gh:anthropics/claude-code@v2.1.317"
+          ]
+        },
+        {
           "beat": "agents",
           "storyIds": [
+            "gh:anthropics/claude-code@v2.1.317",
             "arxiv:2611.04277",
+            "gh:crewAIInc/crewAI@1.15.37",
             "arxiv:2611.04894",
             "arxiv:2611.05376"
           ]
@@ -7511,20 +10330,23 @@
         {
           "beat": "multimodal",
           "storyIds": [
-            "arxiv:2611.04894",
-            "arxiv:2611.04386"
+            "arxiv:2611.04386",
+            "arxiv:2611.04894"
           ]
         },
         {
           "beat": "policy",
           "storyIds": [
-            "blog:hf-blog:https://huggingface.co/blog/transformers-mic",
-            "arxiv:2611.04386"
+            "arxiv:2611.04386",
+            "blog:hf-blog:https://huggingface.co/blog/transformers-mic"
           ]
         }
       ],
       "tags": [
+        "orchestration",
+        "claude-code",
         "post-training",
+        "crewAI",
         "evaluation"
       ]
     },
@@ -7532,15 +10354,29 @@
       "id": "2026-11-02-daily",
       "date": "2026-11-02",
       "headline": {
-        "en": "2 featured of 2 collected",
-        "zh": "精选 2 条，今日共收录 2 条"
+        "en": "4 featured of 4 collected",
+        "zh": "精选 4 条，今日共收录 4 条"
       },
       "dek": {
-        "en": "Collected from 2 primary outlets. 2 stories drew on more than one source; each entry links to the artifact it is anchored to.",
-        "zh": "来自 2 个原始渠道。2 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
+        "en": "Collected from 4 primary outlets. 2 stories drew on more than one source; each entry links to the artifact it is anchored to.",
+        "zh": "来自 4 个原始渠道。2 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
       },
       "deskTake": [],
       "signals": [
+        {
+          "storyId": "gh:sgl-project/sglang@v0.5.23",
+          "text": {
+            "en": "sglang v0.5.23",
+            "zh": "sglang v0.5.23"
+          }
+        },
+        {
+          "storyId": "gh:vllm-project/vllm@v0.33.0rc3",
+          "text": {
+            "en": "vllm v0.33.0",
+            "zh": "vllm v0.33.0"
+          }
+        },
         {
           "storyId": "arxiv:2611.03743",
           "text": {
@@ -7569,9 +10405,19 @@
           "storyIds": [
             "arxiv:2611.03743"
           ]
+        },
+        {
+          "beat": "ai-infra",
+          "storyIds": [
+            "gh:sgl-project/sglang@v0.5.23",
+            "gh:vllm-project/vllm@v0.33.0rc3"
+          ]
         }
       ],
       "tags": [
+        "scheduling",
+        "sglang",
+        "vllm",
         "post-training",
         "evaluation"
       ]
@@ -7602,72 +10448,6 @@
           "beat": "agents",
           "storyIds": [
             "arxiv:2611.02075"
-          ]
-        }
-      ],
-      "tags": [
-        "evaluation"
-      ]
-    },
-    {
-      "id": "2026-10-31-daily",
-      "date": "2026-10-31",
-      "headline": {
-        "en": "1 featured of 1 collected",
-        "zh": "精选 1 条，今日共收录 1 条"
-      },
-      "dek": {
-        "en": "Collected from 2 primary outlets. 1 stories drew on more than one source; each entry links to the artifact it is anchored to.",
-        "zh": "来自 2 个原始渠道。1 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
-      },
-      "deskTake": [],
-      "signals": [
-        {
-          "storyId": "arxiv:2611.00883",
-          "text": {
-            "en": "Random Is Almost Enough? Stable and Low-Cost Benchmark Compression via BestRand",
-            "zh": "Random Is Almost Enough? Stable and Low-Cost Benchmark Compression via BestRand"
-          }
-        }
-      ],
-      "sections": [
-        {
-          "beat": "agents",
-          "storyIds": [
-            "arxiv:2611.00883"
-          ]
-        }
-      ],
-      "tags": [
-        "evaluation"
-      ]
-    },
-    {
-      "id": "2026-10-30-daily",
-      "date": "2026-10-30",
-      "headline": {
-        "en": "1 featured of 1 collected",
-        "zh": "精选 1 条，今日共收录 1 条"
-      },
-      "dek": {
-        "en": "Collected from 1 primary outlets. 0 stories drew on more than one source; each entry links to the artifact it is anchored to.",
-        "zh": "来自 1 个原始渠道。0 条由多个来源共同支撑；每条均可回溯到它锚定的原始件。"
-      },
-      "deskTake": [],
-      "signals": [
-        {
-          "storyId": "blog:msr:https://www.microsoft.com/en-us/research/blog/from-synthetic-enterprise-data-evaluations-to-real-microsoft-copilot-ai-confidence/",
-          "text": {
-            "en": "From synthetic enterprise data evaluations to real Microsoft Copilot AI confidence",
-            "zh": "From synthetic enterprise data evaluations to real Microsoft Copilot AI confidence"
-          }
-        }
-      ],
-      "sections": [
-        {
-          "beat": "ai-coding",
-          "storyIds": [
-            "blog:msr:https://www.microsoft.com/en-us/research/blog/from-synthetic-enterprise-data-evaluations-to-real-microsoft-copilot-ai-confidence/"
           ]
         }
       ],

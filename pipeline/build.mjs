@@ -18,6 +18,7 @@ import { dirname, resolve } from 'node:path'
 import { fetchHFDaily } from './sources/hf-daily.mjs'
 import { fetchArxiv } from './sources/arxiv-rss.mjs'
 import { fetchGitHubReleases } from './sources/github-releases.mjs'
+import { fetchGitHubCommits } from './sources/github-commits.mjs'
 import { fetchBlogs } from './sources/feeds.mjs'
 import { cluster, applyQuotas } from './lib/cluster.mjs'
 import { classifyBeats, extractTags } from './lib/classify.mjs'
@@ -83,6 +84,13 @@ async function main() {
     items.push(...got)
     health.sources.push(h)
     console.log(`  github          ${h.ok ? 'ok ' : 'ERR'}  ${got.length} kept from ${h.repos} repos`)
+  }
+
+  if (wanted('commits')) {
+    const { items: got, health: h } = await fetchGitHubCommits()
+    items.push(...got)
+    health.sources.push(h)
+    console.log(`  commits         ${h.ok ? 'ok ' : 'ERR'}  ${got.length} kept from ${h.repos} repos`)
   }
 
   if (wanted('blogs')) {

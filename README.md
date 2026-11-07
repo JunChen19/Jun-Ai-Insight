@@ -61,6 +61,7 @@ pipeline/
     hf-daily.mjs            HF 每日论文
     arxiv-rss.mjs           arXiv 四个分类
     github-releases.mjs     29 个仓库的发布
+    github-commits.mjs      关键仓库的 commit 流（按新闻价值过滤）
     feeds.mjs               博客 / HN / newsletter
   lib/
     fetch.mjs               超时、重试、代理隧道
@@ -95,6 +96,10 @@ GitHub Releases                      ~51
 1. **实体键精确匹配**——arXiv ID、`owner/repo@tag`
 2. **交叉引用**——任何来源的正文或链接里出现 arXiv ID，并入该论文；HN 帖子的 `source.url` 指向讨论页、`referencedUrl` 指向论文，这样线索不会被 URL 去重误删
 3. **标题相似度**——7 天窗口内 Jaccard ≥ 0.75
+
+### 新闻价值打分
+
+参考同类站点的选稿标准，`classify.mjs` 里的 `newsValue()` 用查表方式给每条候选打价值分：安全/身份/权限变更、破坏性变更与新模型接入（+2~3），协议与规范修改（+2），实测性能结论（+2）；而 nightly/rc 预发布与依赖流水（-1~-3）。排序分纳入价值项，配额层直接剔除「预发布且无实质信号」与纯流水条目——版本号本身不是新闻，有机制可讲的变化才是。
 
 ### 分类是可审计的
 

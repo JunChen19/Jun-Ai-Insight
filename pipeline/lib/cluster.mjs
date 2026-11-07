@@ -12,6 +12,8 @@
  * under-merging: a false merge invents a corroboration that doesn't exist.
  */
 
+import { newsValue } from './classify.mjs'
+
 const STOP = new Set([
   'the', 'a', 'an', 'of', 'for', 'and', 'or', 'to', 'in', 'on', 'with', 'via',
   'from', 'by', 'at', 'is', 'are', 'as', 'that', 'this', 'we', 'our', 'using',
@@ -188,6 +190,13 @@ function finalize(cluster) {
 
   const weight = Math.max(...cluster.items.map((it) => it.weight ?? 0))
 
+  // News value is computed from the whole cluster's text, so a corroborating
+  // signal item that names the mechanism ("auth bypass") counts even when the
+  // release title alone reads as routine.
+  const clusterText = cluster.items.map((it) => `${it.title}\n${it.summary ?? ''}`).join('\n')
+  const tag = cluster.items[0]?.meta?.tag ?? ''
+  const { value, flags, prerelease } = newsValue({ title: '', summary: clusterText, tag })
+
   return {
     key: cluster.key,
     title: bodySource?.title ?? cluster.items[0].title,
@@ -198,7 +207,10 @@ function finalize(cluster) {
     tags,
     signalLeadDays,
     weight,
-    score: score(cluster, sources, primaries, signalLeadDays, weight, primaryDate),
+    value,
+    valueFlags: flags,
+    prerelease,
+    score: score(cluster, sources, primaries, signalLeadDays, weight, primaryDate, value),
     meta: cluster.items.map((it) => it.meta).filter(Boolean),
   }
 }
@@ -211,12 +223,15 @@ function finalize(cluster) {
  * number and ranking did nothing. Each term now saturates only when it should:
  *
  *   weight        the source's editorial weight (repo priority, HF votes)
+ *   value         the news-value signals in the text (see classify.mjs) — this
+ *                 is what separates "auto mode loses its fallback" from
+ *                 "bump deps, nightly #4021"
  *   corroboration rises sharply with distinct outlet names, since that is the
  *                 actual evidence of importance
  *   freshness     decays over ~3 days so the issue stays current
  *   topicPrior    a small, explicit tiebreak toward the beats this desk covers
  */
-function score(cluster, sources, primaries, signalLeadDays, weight, primaryDate) {
+function score(cluster, sources, primaries, signalLeadDays, weight, primaryDate, value = 0) {
   const outlets = new Set(sources.map((s) => s.name))
   const corroboration = Math.min(4, (outlets.size - 1) * 2)
 
@@ -231,7 +246,7 @@ function score(cluster, sources, primaries, signalLeadDays, weight, primaryDate)
   // Tiny deterministic jitter so ties don't all resolve the same way.
   const jitter = (hashString(cluster.key) % 100) / 1000
 
-  return Number((weight + corroboration + freshness + lead + topicPrior + jitter).toFixed(3))
+  return Number((weight + value * 1.5 + corroboration + freshness + lead + topicPrior + jitter).toFixed(3))
 }
 
 function hashString(s) {
@@ -286,6 +301,12 @@ export function applyQuotas(stories, { dailyCap = DEFAULT_DAILY_CAP } = {}) {
         for (const b of s.beats) perBeat.set(b, (perBeat.get(b) ?? 0) + 1)
         continue
       }
+
+      // Routine prerelease churn (nightly builds, dep bumps) is not news even
+      // when it is the only item a repo produced today. Corroborated items
+      // above already escaped; this only culls uncorroborated noise.
+      if (s.prerelease && (s.value ?? 0) < 2) continue
+      if ((s.value ?? 0) <= -2) continue
 
       let admitted = false
       for (const b of s.beats) {

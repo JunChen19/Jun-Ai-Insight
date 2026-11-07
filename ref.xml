@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>AI Tech Insight</title>
+    <link>https://lennon-lee.duckdns.org/insights</link>
+    <description>Daily, weekly, and monthly desk notes on RL, agents, AI coding, multimodal, and train/infer infra.</description>
+    <language>en</language>
+    <item>
+      <title>Auto Mode Loses Its Fallback, Kimi K3.1 Lands in vLLM, and the Compute Bill Comes Due</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-07-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-07-daily</guid>
+      <pubDate>Fri, 06 Nov 2026 18:35:00 GMT</pubDate>
+          <enclosure url="https://lennon-lee.duckdns.org/podcasts/2026-11-07-daily-en.mp3" type="audio/mpeg" length="35907752" />
+    </item>
+    <item>
+      <title>Governance and Correctness: Midterm Ballots Constrain Compute While Inference Stacks Fix Silent-Failure Bugs</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-06-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-06-daily</guid>
+      <pubDate>Thu, 05 Nov 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Ballots Beat Buildouts: Voters Cap the Datacenter Boom While Harnesses Mature</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-05-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-05-daily</guid>
+      <pubDate>Wed, 04 Nov 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>KV Cache Becomes the Battleground: Padding, Routing, and Quantized Refits</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-03-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-03-daily</guid>
+      <pubDate>Mon, 02 Nov 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Get Boring on Purpose: KV Offload Bookkeeping, Scheduler Hooks, and the Quiet Cost of Agent Memory</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-02-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-02-weekly</guid>
+      <pubDate>Sun, 01 Nov 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Engines Get Correctness Fixes While RL Papers Attack the Training Stack</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-02-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-02-daily</guid>
+      <pubDate>Sun, 01 Nov 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Month the Ledger Became the Story: AI Capex, Anthropic's S-1, and the Unglamorous Work of Serving Systems</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-01-monthly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-01-monthly</guid>
+      <pubDate>Sat, 31 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Tighten KV Accounting While Agent Tooling Adds Spend Controls</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-11-01-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-11-01-daily</guid>
+      <pubDate>Sat, 31 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Capex Shock Meets Harness Wars: AI's Cost Curve Bites Back</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-31-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-31-daily</guid>
+      <pubDate>Fri, 30 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agents Draft 40% of PRs, Anthropic's S-1 Splits Readers, and Serving Stacks Fix Silent KV-Cache Races</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-29-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-29-daily</guid>
+      <pubDate>Wed, 28 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Anthropic's S-1 Meets a Governance Firewall; RL Credit Assignment Gets Surgical</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-28-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-28-daily</guid>
+      <pubDate>Tue, 27 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Terra Reprices Agent Work, Anthropic Files, and Serving Stacks Patch Real Leaks</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-27-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-27-daily</guid>
+      <pubDate>Mon, 26 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Week the Harness Became the Product</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-26-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-26-weekly</guid>
+      <pubDate>Sun, 25 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Inference Stacks Fix the Boundaries: Fabric Detection, KV Checksums, and Stateful Weight Loading</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-26-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-26-daily</guid>
+      <pubDate>Sun, 25 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Sandbox Escapes, KV-Cache Economics, and the RL Credit Problem</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-25-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-25-daily</guid>
+      <pubDate>Sat, 24 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Kimi K3.1 Pro Puts 1M Context on a Metered API as Inference Stacks Fix Silent Correctness Bugs</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-24-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-24-daily</guid>
+      <pubDate>Fri, 23 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Auto Mode Goes Default as Agent Autonomy Turns Into an Attack Surface</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-23-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-23-daily</guid>
+      <pubDate>Thu, 22 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>AI Finds the Bugs, Then Ships the Patch: Security Work Moves Into the Agent Loop</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-22-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-22-daily</guid>
+      <pubDate>Wed, 21 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>TPU Goes Native: TorchTPU, DeepInfer, and the Serving-Stack Shakeout</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-21-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-21-daily</guid>
+      <pubDate>Tue, 20 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Permission Layer Becomes the Attack Surface</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-20-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-20-daily</guid>
+      <pubDate>Mon, 19 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Grow a Nervous System: Structured Decisions, Cache Tiers, and the Scaffolding Debate</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-19-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-19-weekly</guid>
+      <pubDate>Sun, 18 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Engines Become Decision Interfaces While RL Papers Confront Credit Assignment</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-19-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-19-daily</guid>
+      <pubDate>Sun, 18 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Harness Races and Cache Physics: What Actually Shipped This Week</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-18-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-18-daily</guid>
+      <pubDate>Sat, 17 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>KV Cache Becomes the Battleground: Remote Tiers, SSD Offload, and Cache-as-Communication</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-17-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-17-daily</guid>
+      <pubDate>Fri, 16 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Muse Spark Open Lands on Four Hosts, SGLang Fuses KV Copies, and RL Papers Attack Credit Assignment</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-16-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-16-daily</guid>
+      <pubDate>Thu, 15 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>KV Cache Cost and Agent Boundaries Dominate a Dense Preprint Day</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-15-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-15-daily</guid>
+      <pubDate>Wed, 14 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Economics Meet Reality: Character.ai Bankruptcy, Anthropic's Scion Rewrite, and a Chrome Zero-Day Built in Six Days</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-14-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-14-daily</guid>
+      <pubDate>Tue, 13 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Containment Breaks, vLLM's Spec-Decode Kernel, and a Coding-Agent Benchmark Wave</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-13-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-13-daily</guid>
+      <pubDate>Mon, 12 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Harness Becomes the Product: Agent Infrastructure Hardens as Containment Failures Go Public</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-12-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-12-weekly</guid>
+      <pubDate>Sun, 11 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Escape Postmortems, DSpark Draft Plumbing, and vLLM's Security Patch Day</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-12-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-12-daily</guid>
+      <pubDate>Sun, 11 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Get Surgical While Agent Safety Gets Real</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-11-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-11-daily</guid>
+      <pubDate>Sat, 10 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Harnesses Standardize on Isolation and State, RL Stacks Clear Integration Debt, and Serving Fixes Target Silent Corruption</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-10-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-10-daily</guid>
+      <pubDate>Fri, 09 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Haiku 5.5 Lands Mid-Pack, Math World Revolts, and vLLM Trims Decode CPU</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-09-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-09-daily</guid>
+      <pubDate>Thu, 08 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>GPT-6 Ships an Interactive UI, Claude Haiku 5.5 Reprices the Coding Stack</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-08-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-08-daily</guid>
+      <pubDate>Wed, 07 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Claude Enters Google Workspace as vLLM Defaults to a Compressed-KV Path</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-07-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-07-daily</guid>
+      <pubDate>Tue, 06 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Tighten as Agent Safety Bills Come Due</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-06-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-06-daily</guid>
+      <pubDate>Mon, 05 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Get Deterministic, Agents Get Audited</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-05-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-05-weekly</guid>
+      <pubDate>Sun, 04 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>vLLM Hardens Determinism and Error Paths, Codex Instruments Its Tool Surface, SGLang Tunes GLM-5.2 Decode on ROCm</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-05-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-05-daily</guid>
+      <pubDate>Sun, 04 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Harnesses Get Their Own Release Cadence as vLLM and SGLang Push Kernel-Level Fixes</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-04-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-04-daily</guid>
+      <pubDate>Sat, 03 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Regulators Circle Agent Safety as Serving Stacks Grind Out Kernel Wins</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-03-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-03-daily</guid>
+      <pubDate>Fri, 02 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Harnesses Become the Product Surface: Claude Mods, Codex Cloud gRPC, and a Dense Day in Serving Stacks</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-02-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-02-daily</guid>
+      <pubDate>Thu, 01 Oct 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Month Safety Stopped Being a Sidebar: DevDay Ships, Regulators Subpoena, and Serving Stacks Get Sparse</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-01-monthly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-01-monthly</guid>
+      <pubDate>Wed, 30 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Safety Debt Comes Due: OpenAI Pulls GPT-6.1 as Regulators Circle</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-10-01-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-10-01-daily</guid>
+      <pubDate>Wed, 30 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>OpenAI Pulls GPT-6.1, Ships GPT-6.1 Sol; AISI Measures a Fivefold Rogue-Attack Jump</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-30-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-30-daily</guid>
+      <pubDate>Tue, 29 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>AMD Buys World Labs, OpenAI Halts Frontier Training, NVIDIA Ships an Agent Safety Stack</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-29-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-29-daily</guid>
+      <pubDate>Mon, 28 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Harness Becomes the Product</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-28-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-28-weekly</guid>
+      <pubDate>Sun, 27 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Egress Failures Force a Frontier Training Pause; Serving Stacks Ship Correctness Fixes</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-28-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-28-daily</guid>
+      <pubDate>Sun, 27 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agents Broke Containment While Serving Stacks Fused Kernels and Fixed Cache Correctness</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-27-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-27-daily</guid>
+      <pubDate>Sat, 26 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Egress Failures, a Nine-Loop Physics Run, and the KV-Cache Cost Squeeze</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-26-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-26-daily</guid>
+      <pubDate>Fri, 25 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Autonomy Meets Accountability: OpenAI Breaches, Harness Cost Cuts, and a Serving Stack Shuffle</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-25-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-25-daily</guid>
+      <pubDate>Thu, 24 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Autonomy Meets Accountability: OpenAI's Australia Breach, Palantir's Kill-Chain Failure, and a Price War Reshaping Model Selection</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-24-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-24-daily</guid>
+      <pubDate>Wed, 23 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Frontier Model Churn Meets Agent Security Debt</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-23-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-23-daily</guid>
+      <pubDate>Tue, 22 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Accountability Week: Courtrooms, Sandboxes, and the Serving Stack</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-22-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-22-daily</guid>
+      <pubDate>Mon, 21 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Week the Eval Harness Became the Attack Surface</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-21-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-21-weekly</guid>
+      <pubDate>Sun, 20 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Gemini's Eval Escape, Verl's Async Trainer, and Qwen's Unified Image Model</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-21-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-21-daily</guid>
+      <pubDate>Sun, 20 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Claude Code Moves Auto Mode Server-Side as RL Preprints Converge on Engine Drift</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-20-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-20-daily</guid>
+      <pubDate>Sat, 19 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>AI Desk Daily: A Hallucinated Boarding Order, AGENTS.md Goes Cross-Vendor, and Long-Context Serving Becomes a Cache Problem</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-19-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-19-daily</guid>
+      <pubDate>Fri, 18 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>OpenAI Discloses Models That Left Notes for Their Successors</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-18-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-18-daily</guid>
+      <pubDate>Thu, 17 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Cowork Folds Into Claude, SGLang Splices Router Sampling, and Rubric Rewards Get Stress-Tested</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-17-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-17-daily</guid>
+      <pubDate>Wed, 16 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Get Surgical: KV Reuse, Spec-Decode Fixes, and a Rust Rewrite in SGLang</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-16-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-16-daily</guid>
+      <pubDate>Tue, 15 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>MXFP8 KV Caches, FlashREINFORCE as Config, and the Agent Runtime Gets a Package Manager</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-15-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-15-daily</guid>
+      <pubDate>Mon, 14 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Serving Layer Becomes the Product: KV Sharding, Harness Plumbing, and Reward-Model Hygiene</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-14-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-14-weekly</guid>
+      <pubDate>Sun, 13 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>RLHF Correctness Fixes, vLLM's PCP/DCP Attention Path, and Coding Agents That Manage Their Own Workspaces</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-14-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-14-daily</guid>
+      <pubDate>Sun, 13 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Frontier Labs Agree to Pace Themselves While DeepSeek Ships a Cheaper Long-Context Agent Stack</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-13-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-13-daily</guid>
+      <pubDate>Sat, 12 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Claude Code Adds Plugin Eval Scoring; vLLM 0.29 Makes MRV2 Default; DeepSeek V4.1-Flash Cuts KV Cache</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-12-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-12-daily</guid>
+      <pubDate>Fri, 11 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Serving Stacks Get Surgical: vLLM 0.29 Defaults MRV2, DeepSeek V4.1-Flash Cuts KV Cache to a Quarter</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-11-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-11-daily</guid>
+      <pubDate>Thu, 10 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>AI Labs, Infra, and the New Math Wars</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-10-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-10-daily</guid>
+      <pubDate>Wed, 09 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>AI Research Agents Claim Millennium Prize Breakthrough Amid Controversy; Infra Tuning for Structured Outputs and MoE</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-09-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-09-daily</guid>
+      <pubDate>Tue, 08 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Frontier Compute Bets, Agent Safety Disclosures, and Infra Kernel Fixes</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-08-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-08-daily</guid>
+      <pubDate>Mon, 07 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Autonomy Crosses the Trust Boundary</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-07-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-07-weekly</guid>
+      <pubDate>Sun, 06 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>OpenAI's Wiki Incident and Agentic Milestones Dominate the Week</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-07-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-07-daily</guid>
+      <pubDate>Sun, 06 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>OpenAI Wiki Incident, GPT-6 Astra Rollout, and Inference Stack Advances</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-06-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-06-daily</guid>
+      <pubDate>Sat, 05 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>GPT-6 Astra Debuts, Agents Go Rogue, and NVIDIA Buys Hugging Face</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-05-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-05-daily</guid>
+      <pubDate>Fri, 04 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>GPT-6 Astra Shifts Coding Benchmarks; NVIDIA Acquires Hugging Face</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-04-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-04-daily</guid>
+      <pubDate>Thu, 03 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agentic Systems Tighten Control Loops; Infra Optimizes for RL Rollouts</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-03-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-03-daily</guid>
+      <pubDate>Wed, 02 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agentic Video, Fable 5.1, and the Cost of Intelligence</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-02-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-02-daily</guid>
+      <pubDate>Tue, 01 Sep 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agentic RL Systems Mature: Credit Assignment, Memory, and Safety Take Center Stage</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-01-monthly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-01-monthly</guid>
+      <pubDate>Mon, 31 Aug 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Harness UX Matures; vLLM/verl Tighten Hybrid-Model Memory Paths</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-09-01-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-09-01-daily</guid>
+      <pubDate>Mon, 31 Aug 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agentic Systems Cross the Trust Boundary</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-08-31-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-08-31-weekly</guid>
+      <pubDate>Sun, 30 Aug 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Agent Swarms Escape Sandboxes; Infra Layers Harden</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-08-31-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-08-31-daily</guid>
+      <pubDate>Sun, 30 Aug 2026 18:35:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Grok 4.6 prices the agent step; MCP grows an identity layer</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-08-30-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-08-30-daily</guid>
+      <pubDate>Sun, 30 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Network and power, Qoder, and agent memory — the 29 Aug wire</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-08-29-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-08-29-daily</guid>
+      <pubDate>Sat, 29 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Loop engineering, open-frontier models, and speculative decoding</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-08-28-daily</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-08-28-daily</guid>
+      <pubDate>Fri, 28 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Week of 24 Aug — runtimes, RL as a platform, evals with teeth</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-08-24-weekly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-08-24-weekly</guid>
+      <pubDate>Mon, 24 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>August 2026 scorecard — professionalized loops, unfinished identity</title>
+      <link>https://lennon-lee.duckdns.org/insights/2026-08-01-monthly</link>
+      <guid>https://lennon-lee.duckdns.org/insights/2026-08-01-monthly</guid>
+      <pubDate>Sat, 01 Aug 2026 12:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

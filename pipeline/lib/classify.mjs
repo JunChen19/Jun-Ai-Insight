@@ -148,6 +148,78 @@ function score(text, terms) {
   return n
 }
 
+/**
+ * News-value signals. The reference desk (lennon-lee.duckdns.org) picks ~12
+ * items a day and every one of them has a *mechanism* to describe — a security
+ * or identity change, a breaking deprecation, a new model landing in a serving
+ * stack, a protocol edit. A version number with a dependency bump is not news,
+ * however fresh it is.
+ *
+ * This table is the pipeline's translation of that editorial instinct. It stays
+ * a lookup table so it can be audited and argued with like everything else
+ * in this file.
+ */
+const VALUE_TERMS = [
+  // [weight, tag, terms] — weight is how much a hit is worth in the ranking.
+  [3, 'security', [
+    'security', 'privilege', 'permission', 'authoriz', 'authenticat', 'identity',
+    'credential', 'secret', 'vulnerab', 'cve-', 'prompt injection', 'exfiltrat',
+    'sandbox', 'escape', 'malware', 'backdoor', 'poison',
+  ]],
+  [2, 'breaking', [
+    'breaking change', 'deprecat', 'no longer', 'removed support', 'discontinu',
+    'must migrate', 'migration required', 'renamed', 'behavior change',
+  ]],
+  [2, 'model-support', [
+    'new model', 'adds support', 'add support', 'initial support', 'model files',
+    'weights', 'open weights', 'checkpoint', 'support for', 'first-class support',
+  ]],
+  [2, 'protocol', [
+    'specification', 'protocol change', 'schema', 'sep-', 'json-rpc', 'handshake',
+  ]],
+  [2, 'measured', [
+    'speedup', 'x faster', 'outperform', 'state-of-the-art', 'sota', 'records',
+    'tokens/s', 'tok/s', 'benchmark result', 'leaderboard',
+  ]],
+  [1, 'capability', [
+    'feat', 'introduces', 'enables', 'adds ', 'new api', 'runtime', 'headless',
+    'cache', 'offload', 'parallel', 'distill', 'reward model',
+  ]],
+]
+
+/** Signals that a "release" is routine engineering, not news. */
+const LOW_VALUE_TERMS = [
+  'chore', 'bump', 'dependency', 'deps:', 'typo', 'ci fix', 'lint', 'format',
+  'nightly', 'rebuild', 'flaky', 'cleanup', 'refactor test',
+]
+
+/**
+ * Editorial value of an item, as a number the ranking can use plus the flags
+ * that got it there. Prerelease tags (nightly / rc / beta / b1234 builds) are
+ * demoted unless the content itself carries a real signal.
+ */
+export function newsValue({ title = '', summary = '', tag = '' } = {}) {
+  const text = `${title}\n${summary}`.toLowerCase()
+  const tagText = tag.toLowerCase()
+
+  let value = 0
+  const flags = []
+  for (const [w, flag, terms] of VALUE_TERMS) {
+    if (terms.some((t) => text.includes(t))) {
+      value += w
+      flags.push(flag)
+    }
+  }
+  for (const t of LOW_VALUE_TERMS) {
+    if (text.includes(t)) value -= 1
+  }
+
+  const prerelease = /(?:nightly|canary|alpha|beta|rc\.\d+|-rc\d+|\.b\d{4,}|-b\d{4,})/.test(tagText)
+  if (prerelease) value -= 3
+
+  return { value, flags, prerelease }
+}
+
 /** Pick beats for an item. Returns [] when nothing matches — never guesses. */
 export function classifyBeats({ title = '', summary = '', repo = '', arxivCategories = [] }) {
   const titleText = ` ${title.toLowerCase()} `
